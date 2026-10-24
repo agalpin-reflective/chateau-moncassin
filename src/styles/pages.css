@@ -18,7 +18,7 @@
 .facts-list > div + div::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line) }
 .facts-list dt { font-size: 12px; line-height: 20px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper-2) }
 .facts-list dd { color: var(--paper) }
-.todo { display: inline-flex; align-items: center; gap: var(--s-50); padding: 0 var(--s-75); border-radius: 4px; background: rgba(180, 58, 82, 0.18); color: var(--error); font-size: 14px; line-height: 24px; font-weight: 600 }
+.todo { display: inline-flex; align-items: center; gap: var(--s-50); padding: 0 var(--s-75); border-radius: var(--r-sm); background: var(--wine-soft); color: var(--error); font-size: 14px; line-height: 24px; font-weight: 600 }
 .page-actions { margin-top: var(--s-400); display: flex; flex-wrap: wrap; gap: var(--s-200) }
 .page-center { min-height: min(100svh, 880px); display: grid; align-content: center; justify-items: start; gap: var(--s-300) }
 .page-center .seal { margin-bottom: var(--s-100) }

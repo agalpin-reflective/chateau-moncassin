@@ -1,7 +1,7 @@
-.gate { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: calc(env(safe-area-inset-top, 0px) + var(--s-300)) max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + var(--s-300)) max(16px, env(safe-area-inset-left, 0px)); background: rgba(19, 18, 9, 0.78); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); overflow-y: auto }
+.gate { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: calc(env(safe-area-inset-top, 0px) + var(--s-300)) max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + var(--s-300)) max(16px, env(safe-area-inset-left, 0px)); background: var(--ink-veil); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); overflow-y: auto }
 .gate-card { width: 100%; max-width: 480px; display: grid; justify-items: center; gap: var(--s-300); text-align: center }
 .gate-title { font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em }
 .gate-text { color: var(--paper-2); max-width: 36ch }
 .gate-actions { display: flex; flex-wrap: wrap; gap: var(--s-100); justify-content: center }
-.gate-refused { color: var(--paper); background: var(--ink-3); border: 1px solid var(--line-strong); border-radius: 8px; padding: var(--s-200) }
+.gate-refused { color: var(--paper); background: var(--ink-3); border: 1px solid var(--line-strong); border-radius: var(--r-md); padding: var(--s-200) }
 .gate-legal { font-size: 12px; line-height: 16px; color: var(--paper-2) }

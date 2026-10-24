@@ -48,9 +48,9 @@ button, input { font: inherit; color: inherit }
 .w-in { display: inline-block }
 
 /* Buttons */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-75); padding: var(--s-75) var(--s-100); border-radius: 9999px; border: 1px solid transparent; font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: none; cursor: pointer; background: transparent; transition: background-color 0.6s var(--ease), color 0.6s var(--ease), border-color 0.6s var(--ease), transform 0.6s var(--ease) }
-.btn .i { transition: transform 0.7s var(--ease) }
-.btn:hover .i-arrow { transform: translateX(var(--s-50)) }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-75); padding: var(--s-75) var(--s-100); border-radius: var(--r-pill); border: 1px solid transparent; font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: none; cursor: pointer; background: transparent; transition: background-color var(--dur-state) var(--ease), color var(--dur-state) var(--ease), border-color var(--dur-state) var(--ease), transform var(--dur-state) var(--ease) }
+.btn .i { transition: transform var(--dur-state) var(--ease) }
+@media (hover: hover) and (pointer: fine) { .btn:hover .i-arrow { transform: translateX(var(--s-50)) } }
 .btn:active { transform: scale(0.98) }
 .btn-primary { background: var(--paper); color: var(--ink) }
 .btn-primary:hover { background: var(--gold) }
@@ -58,11 +58,13 @@ button, input { font: inherit; color: inherit }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold) }
 .btn-sm { font-size: 14px; line-height: 20px }
 .btn[aria-busy='true'] { cursor: progress; opacity: 0.72 }
+/* Cible tactile d'au moins 44 px sur téléphone. */
+@media (max-width: 639px) { .btn { min-height: 44px } }
 
-.skip { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 16px); z-index: 100; transform: translateY(-200%); background: var(--paper); color: var(--ink); padding: var(--s-75) var(--s-100); border-radius: 9999px; font-weight: 600; text-decoration: none; transition: transform 0.6s var(--ease) }
+.skip { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 16px); z-index: 100; transform: translateY(-200%); background: var(--paper); color: var(--ink); padding: var(--s-75) var(--s-100); border-radius: var(--r-pill); font-weight: 600; text-decoration: none; transition: transform var(--dur-state) var(--ease) }
 .skip:focus-visible { transform: none }
 
-.seal { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 9999px; border: 1px solid var(--gold); color: var(--gold); font-size: 14px; line-height: 20px; font-weight: 600; flex: none }
+.seal { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: var(--r-pill); border: 1px solid var(--gold); color: var(--gold); font-size: 14px; line-height: 20px; font-weight: 600; flex: none }
 .seal-lg { width: 64px; height: 64px; font-size: 24px; line-height: 32px; font-weight: 300 }
 
 .section { padding-block: var(--s-700) }

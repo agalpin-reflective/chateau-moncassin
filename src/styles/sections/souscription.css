@@ -11,7 +11,7 @@
 .opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-100) }
 .opt { position: relative; display: block; cursor: pointer }
 .opt input { position: absolute; opacity: 0; width: 1px; height: 1px }
-.opt-box { display: grid; gap: var(--s-50); height: 100%; padding: var(--s-200); border: 1px solid var(--line-strong); border-radius: 8px; transition: border-color 0.6s var(--ease), background-color 0.6s var(--ease) }
+.opt-box { display: grid; gap: var(--s-50); height: 100%; padding: var(--s-200); border: 1px solid var(--line-strong); border-radius: var(--r-md); transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
 .opt-box strong { font-weight: 600 }
 .opt-box span { font-size: 14px; line-height: 20px; color: var(--paper-2) }
 .opt:hover .opt-box { border-color: var(--paper-3) }
@@ -20,42 +20,42 @@
 .f-row { display: grid; gap: var(--s-300) }
 @media (min-width: 560px) { .f-row { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
 .field { display: grid; gap: var(--s-75); min-width: 0 }
-.field input { width: 100%; min-width: 0; padding: var(--s-100) var(--s-200); border-radius: 8px; border: 1px solid var(--line-strong); background: var(--ink-2); font-size: 16px; line-height: 24px; transition: border-color 0.6s var(--ease), background-color 0.6s var(--ease) }
-.field input::placeholder { color: var(--paper-3) }
+.field input { width: 100%; min-width: 0; padding: var(--s-100) var(--s-200); border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--ink-2); font-size: 16px; line-height: 24px; transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
+.field input::placeholder { color: var(--paper-hint) }
 .field input:hover { border-color: var(--paper-3) }
 .field input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-color: var(--gold) }
 .field input[aria-invalid='true'], .check input[aria-invalid='true'] { border-color: var(--error) }
 .err { display: flex; align-items: center; gap: var(--s-75); font-size: 14px; line-height: 20px; color: var(--error) }
 .check { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--s-100); align-items: start }
-.check input { appearance: none; -webkit-appearance: none; width: 20px; height: 20px; margin: var(--s-25) 0 0; border-radius: 4px; border: 1px solid var(--line-strong); background: var(--ink-2); display: grid; place-items: center; cursor: pointer; transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease) }
-.check input::after { content: ''; width: 10px; height: 6px; border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: translateY(-1px) rotate(-45deg) scale(0); transition: transform 0.5s var(--ease) }
+.check input { appearance: none; -webkit-appearance: none; width: 20px; height: 20px; margin: var(--s-25) 0 0; border-radius: var(--r-sm); border: 1px solid var(--line-strong); background: var(--ink-2); display: grid; place-items: center; cursor: pointer; transition: background-color var(--dur-state) var(--ease), border-color var(--dur-state) var(--ease) }
+.check input::after { content: ''; width: 10px; height: 6px; border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); opacity: 0; transform: translateY(-1px) rotate(-45deg) scale(0.6); transition: transform var(--dur-state) var(--ease), opacity var(--dur-state) var(--ease) }
 .check input:checked { background: var(--gold); border-color: var(--gold) }
-.check input:checked::after { transform: translateY(-1px) rotate(-45deg) scale(1) }
+.check input:checked::after { opacity: 1; transform: translateY(-1px) rotate(-45deg) scale(1) }
 .check label { font-size: 14px; line-height: 20px; color: var(--paper-2); cursor: pointer }
 .check label a { color: var(--paper); text-underline-offset: 3px }
 .check .err { grid-column: 2 }
 .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-200) }
 .form-note { font-size: 12px; line-height: 16px; color: var(--paper-2); display: flex; align-items: center; gap: var(--s-75) }
 .form-skel { position: absolute; inset: 0; display: grid; gap: var(--s-300); align-content: start; background: var(--ink) }
-.sk { background: var(--ink-3); border-radius: 8px; animation: pulse 1.4s var(--ease) infinite alternate }
-.sk-label { height: 20px; width: 120px; border-radius: 4px }
+.sk { background: var(--ink-3); border-radius: var(--r-md); animation: pulse var(--dur-pulse) var(--ease) infinite alternate }
+.sk-label { height: 20px; width: 120px; border-radius: var(--r-sm) }
 .sk-opts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-100) }
 .sk-opt { height: 76px }
 .sk-field { height: 50px }
-.sk-btn { height: 40px; width: 200px; border-radius: 9999px }
+.sk-btn { height: 40px; width: 200px; border-radius: var(--r-pill) }
 @keyframes pulse { from { opacity: 0.45 } to { opacity: 1 } }
-.form-done { display: grid; gap: var(--s-200); padding: var(--s-300); border: 1px solid var(--gold-line); border-radius: 8px; background: var(--gold-soft); margin-top: var(--s-200) }
+.form-done { display: grid; gap: var(--s-200); padding: var(--s-300); border: 1px solid var(--gold-line); border-radius: var(--r-md); background: var(--gold-soft); margin-top: var(--s-200) }
 .form-done:focus { outline: none }
 .form-done:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px }
-.done-icon { width: 40px; height: 40px; border-radius: 9999px; background: var(--gold); color: var(--ink); display: grid; place-items: center }
+.done-icon { width: 40px; height: 40px; border-radius: var(--r-pill); background: var(--gold); color: var(--ink); display: grid; place-items: center }
 .form-done h3 { font-size: 24px; line-height: 32px; font-weight: 400 }
 .form-done p { color: var(--paper-2) }
 .form-done .btn { justify-self: start }
 
 .ticket-wrap { perspective: 1200px }
 @media (min-width: 1024px) { .ticket-wrap { position: sticky; top: var(--s-900) } }
-.ticket { border-radius: 16px; padding: var(--s-75); background: var(--ink-3); border: 1px solid var(--line-strong); box-shadow: 0 32px 64px rgba(0, 0, 0, 0.45); transform-style: preserve-3d }
-.ticket-inner { border-radius: 8px; border: 1px solid var(--gold-line); padding: var(--s-300); display: grid; gap: var(--s-300) }
+.ticket { border-radius: var(--r-lg); padding: var(--s-75); background: var(--ink-3); border: 1px solid var(--line-strong); box-shadow: var(--shadow-ticket); transform-style: preserve-3d }
+.ticket-inner { border-radius: var(--r-md); border: 1px solid var(--gold-line); padding: var(--s-300); display: grid; gap: var(--s-300) }
 @media (min-width: 768px) { .ticket-inner { padding: var(--s-400) } }
 .ticket-top { display: flex; align-items: center; gap: var(--s-200) }
 .ticket-club { font-size: 20px; line-height: 28px; font-weight: 400 }
@@ -66,7 +66,7 @@
 .ticket-rows dt { font-size: 12px; line-height: 20px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper-2) }
 .ticket-rows dd { min-width: 0; overflow-wrap: anywhere }
 .ticket-name { font-size: 20px; line-height: 28px; font-weight: 400 }
-.ticket-name.is-empty { color: var(--paper-3) }
+.ticket-name.is-empty { color: var(--paper-hint) }
 .perforation { height: 1px; border-top: 1px dashed var(--gold-line) }
 .ticket-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--s-100) }
 .ticket-price { font-size: 30px; line-height: 36px; font-weight: 300; font-variant-numeric: tabular-nums }

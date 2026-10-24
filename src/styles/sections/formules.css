@@ -5,14 +5,14 @@
 .formules :focus-visible { outline-color: var(--stone-wine) }
 .cards { margin-top: var(--s-600); display: grid; gap: var(--s-300) }
 @media (min-width: 768px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
-.card { position: relative; display: flex; flex-direction: column; gap: var(--s-300); padding: var(--s-300); background: var(--stone-2); border: 1px solid var(--stone-line); border-radius: 4px; transition: transform 0.8s var(--ease), border-color 0.7s var(--ease) }
+.card { position: relative; display: flex; flex-direction: column; gap: var(--s-300); padding: var(--s-300); background: var(--stone-2); border: 1px solid var(--stone-line); border-radius: var(--r-sm); transition: transform var(--dur-state) var(--ease), border-color var(--dur-state) var(--ease) }
 @media (min-width: 1024px) { .card { padding: var(--s-400) } }
-.card:hover { transform: translateY(-4px); border-color: var(--stone-line-strong) }
+@media (hover: hover) and (pointer: fine) { .card:hover { transform: translateY(-4px); border-color: var(--stone-line-strong) } }
 .card.is-selected { border-color: var(--stone-wine) }
 .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-200) }
 .card-kicker { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--stone-muted); font-weight: 600 }
 .card h3 { margin-top: var(--s-75); font-size: 30px; line-height: 36px; font-weight: 400; letter-spacing: -0.01em }
-.card-badge { display: none; align-items: center; gap: var(--s-50); padding: var(--s-50) var(--s-100); border-radius: 9999px; background: var(--stone-wine); color: var(--stone-2); font-size: 12px; line-height: 16px; font-weight: 600; white-space: nowrap }
+.card-badge { display: none; align-items: center; gap: var(--s-50); padding: var(--s-50) var(--s-100); border-radius: var(--r-pill); background: var(--stone-wine); color: var(--stone-2); font-size: 12px; line-height: 16px; font-weight: 600; white-space: nowrap }
 .card.is-selected .card-badge { display: inline-flex }
 .card-num { display: flex; align-items: baseline; gap: var(--s-200); flex-wrap: wrap }
 .card-num .n { font-size: 96px; line-height: 1; font-weight: 200; color: var(--stone-wine); font-variant-numeric: tabular-nums; letter-spacing: -0.04em }

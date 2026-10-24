@@ -19,7 +19,17 @@
   --gold-soft: rgba(203, 165, 107, 0.14);
   --gold-line: rgba(203, 165, 107, 0.42);
   --wine: #b43a52;
+  /* Variantes plus claires des mêmes teintes, pour le texte : --wine et --paper-3 restent sous 4,5:1 sur les fonds sombres. */
+  --wine-text: #cf697d;
+  --wine-soft: rgba(180, 58, 82, 0.18);
+  --paper-hint: #8c877b;
   --error: #ee8e9d;
+  --line-faint: rgba(238, 231, 219, 0.06);
+  --ink-glass: rgba(19, 18, 9, 0.62);
+  --ink-glass-strong: rgba(19, 18, 9, 0.86);
+  --ink-veil: rgba(19, 18, 9, 0.78);
+  --black-veil: rgba(0, 0, 0, 0.8);
+  --shadow-ticket: 0 32px 64px rgba(0, 0, 0, 0.45);
 
   --stone: #e6e0d5;
   --stone-2: #efeae2;
@@ -34,6 +44,19 @@
 
   --font: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Retour d'état (survol, focus, sélection) : sous 300 ms pour rester réactif. */
+  --dur-state: 0.2s;
+  /* Panneaux et récit : menu, barre de navigation, étapes du cadran. */
+  --dur-panel: 0.7s;
+  --dur-reveal: 1.2s;
+  --dur-pulse: 1.4s;
+  --stagger: 0.05s;
+
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 16px;
+  --r-pill: 9999px;
 
   --s-25: 2px;
   --s-50: 4px;

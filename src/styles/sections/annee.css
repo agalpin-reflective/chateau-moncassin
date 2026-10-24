@@ -6,15 +6,14 @@
 .dial { display: block; width: 100%; height: auto; overflow: visible }
 .dial .ring { fill: none; stroke: var(--line); stroke-width: 1 }
 .dial .ring-dash { stroke-dasharray: 2 6 }
-.dial .ring-faint { stroke: rgba(238, 231, 219, 0.07) }
-.dial .track { fill: none; stroke: rgba(238, 231, 219, 0.06); stroke-width: 10 }
+.dial .track { fill: none; stroke: var(--line-faint); stroke-width: 10 }
 .dial .seg { fill: none; stroke: var(--line-strong); stroke-width: 2; stroke-linecap: round }
 .dial .seg-harvest { stroke: var(--wine); stroke-width: 3 }
 .dial .tick { stroke: var(--line-strong); stroke-width: 1 }
-.dial .mlabel { fill: var(--paper-2); font-size: 15px; font-weight: 600; font-family: var(--font); text-anchor: middle; dominant-baseline: central; transition: fill 0.6s var(--ease) }
+.dial .mlabel { fill: var(--paper-2); font-size: 15px; font-weight: 600; font-family: var(--font); text-anchor: middle; dominant-baseline: central; transition: fill var(--dur-panel) var(--ease) }
 .dial .mlabel.is-on { fill: var(--gold) }
 .dial .progress { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 0 }
-.dial .harvest-label { fill: var(--wine); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; font-family: var(--font); text-anchor: middle }
+.dial .harvest-label { fill: var(--wine-text); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; font-family: var(--font); text-anchor: middle }
 .dial .head-dot { fill: var(--gold) }
 .dial .head-halo { fill: var(--gold-soft); stroke: var(--gold-line); stroke-width: 1 }
 /* Le pied de vigne occupe le haut du cercle intérieur ; le compteur se place sous le sol (57 % de la hauteur du cadran). */
@@ -39,15 +38,15 @@
 .stage-when { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold) }
 .stage h3 { font-size: 30px; line-height: 36px; font-weight: 300; letter-spacing: -0.01em }
 .stage-text { color: var(--paper-2) }
-.stage-harvest .stage-when { color: var(--wine) }
-.stage-badge { display: inline-flex; align-items: center; gap: var(--s-75); justify-self: start; margin-top: var(--s-75); padding: var(--s-50) var(--s-100); border-radius: 9999px; border: 1px solid var(--wine); color: var(--paper); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase }
+.stage-harvest .stage-when { color: var(--wine-text) }
+.stage-badge { display: inline-flex; align-items: center; gap: var(--s-75); justify-self: start; margin-top: var(--s-75); padding: var(--s-50) var(--s-100); border-radius: var(--r-pill); border: 1px solid var(--wine); color: var(--paper); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase }
 .annee-note { grid-area: note; font-size: 14px; line-height: 20px; color: var(--paper-2); display: flex; align-items: center; gap: var(--s-75) }
 .annee-note .i { color: var(--gold) }
 .annee.is-pinned { min-height: 100svh; display: flex; align-items: center; padding-block: var(--s-800) var(--s-300) }
 .annee.is-pinned > .wrap { width: 100% }
 .annee.is-pinned .stages { grid-template-areas: 's' }
-.annee.is-pinned .stage { grid-area: s; opacity: 0; visibility: hidden; transform: translateY(24px); filter: blur(8px); transition: opacity 0.7s var(--ease), transform 0.8s var(--ease), filter 0.7s var(--ease), visibility 0s linear 0.8s }
-.annee.is-pinned .stage.is-active { opacity: 1; visibility: visible; transform: none; filter: none; transition: opacity 0.7s var(--ease), transform 0.8s var(--ease), filter 0.7s var(--ease), visibility 0s }
+.annee.is-pinned .stage { grid-area: s; opacity: 0; visibility: hidden; transform: translateY(24px); filter: blur(8px); transition: opacity var(--dur-panel) var(--ease), transform var(--dur-panel) var(--ease), filter var(--dur-panel) var(--ease), visibility 0s linear var(--dur-panel) }
+.annee.is-pinned .stage.is-active { opacity: 1; visibility: visible; transform: none; filter: none; transition: opacity var(--dur-panel) var(--ease), transform var(--dur-panel) var(--ease), filter var(--dur-panel) var(--ease), visibility 0s }
 .annee.is-pinned .dial-wrap { width: min(78vw, 300px, 38svh) }
 .annee.is-pinned .annee-grid { gap: var(--s-200) }
 @media (min-width: 1024px) {

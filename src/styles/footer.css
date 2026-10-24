@@ -6,7 +6,7 @@
 .foot-brand .name { color: var(--paper); font-size: 18px; line-height: 28px }
 .foot-h { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: var(--s-200) }
 .foot-list { display: grid; gap: var(--s-100); font-size: 14px; line-height: 20px; color: var(--paper-2) }
-.foot-list a { color: var(--paper); text-underline-offset: 3px; transition: color 0.6s var(--ease) }
+.foot-list a { color: var(--paper); text-underline-offset: 3px; transition: color var(--dur-state) var(--ease) }
 .foot-list a:hover { color: var(--gold) }
 .evin { margin-top: var(--s-600); padding-block: var(--s-200); text-align: center; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--paper); position: relative }
 .evin::before, .evin::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: var(--line) }
@@ -14,5 +14,5 @@
 .evin::after { bottom: 0 }
 .foot-bottom { margin-top: var(--s-300); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-200); font-size: 12px; line-height: 16px; color: var(--paper-2) }
 .foot-bottom nav { display: flex; flex-wrap: wrap; gap: var(--s-300) }
-.foot-bottom a { text-decoration: none; transition: color 0.6s var(--ease) }
+.foot-bottom a { text-decoration: none; transition: color var(--dur-state) var(--ease) }
 .foot-bottom a:hover, .foot-bottom a[aria-current='page'] { color: var(--gold) }
