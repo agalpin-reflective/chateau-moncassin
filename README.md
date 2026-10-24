@@ -59,6 +59,14 @@ Le build est un site statique : Vercel, Netlify ou Cloudflare Pages détectent A
 3. Renseigner `SITE_URL` et, le moment venu, les liens Stripe.
 4. Compléter l'hébergeur dans `src/data/site.ts` (mentions légales).
 
+### GitHub Pages
+
+Le workflow `.github/workflows/deploy.yml` publie le site sur GitHub Pages à chaque push sur `main` (ou à la demande depuis l'onglet Actions). L'adresse et le sous chemin (`/chateau-moncassin`) viennent de Pages : avec un domaine personnalisé, le build s'adapte sans modification.
+
+- `BASE_PATH` : sous chemin de publication, lu par `astro.config.mjs` ; tous les liens internes passent par `href()` (`src/lib/url.ts`).
+- `PUBLIC_NOINDEX` : `true` par défaut sur Pages, chaque page porte `noindex` tant que le contenu n'est pas validé. Créer la variable de dépôt `PUBLIC_NOINDEX=false` pour ouvrir le site aux moteurs.
+- Aperçu local identique à Pages : `BASE_PATH=/chateau-moncassin npm run build && BASE_PATH=/chateau-moncassin npx astro preview`, puis ouvrir `/chateau-moncassin/`.
+
 La CI GitHub Actions (`.github/workflows/ci.yml`) lance `npm run check` et `npm run build` à chaque push sur `main` et sur les pull requests. Les variables du dépôt `SITE_URL` et `PUBLIC_STRIPE_LINK_*` sont utilisées si elles existent.
 
 ## Structure

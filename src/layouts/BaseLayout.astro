@@ -9,7 +9,8 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import AgeGate from '../components/AgeGate.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import { site, noindexAll } from '../data/site';
+import { href } from '../lib/url';
 
 interface Props {
   title: string;
@@ -20,7 +21,7 @@ interface Props {
 
 const { title, description, noindex = false, page = 'secondary' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/og-image.jpg', Astro.site);
+const ogImage = new URL(href('og-image.jpg'), Astro.site);
 ---
 <!doctype html>
 <html lang="fr">
@@ -30,12 +31,12 @@ const ogImage = new URL('/og-image.jpg', Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {(noindex || noindexAll) && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#131209" />
     <meta name="color-scheme" content="dark" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href={href('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={href('apple-touch-icon.png')} />
+    <link rel="sitemap" href={href('sitemap-index.xml')} />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />

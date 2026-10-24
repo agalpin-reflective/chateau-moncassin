@@ -39,4 +39,7 @@ export const payment = {
 
 export const paymentEnabled = Boolean(payment.decouverte && payment.domaine);
 
+/** Version de prévisualisation : le site reste accessible par lien mais n'est pas indexé. */
+export const noindexAll = import.meta.env.PUBLIC_NOINDEX === 'true';
+
 export const formatPrice = (value: number) => `${value} € TTC`;

@@ -1,0 +1,52 @@
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; celui en cours va jusqu'au bout.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - id: pages
+        uses: actions/configure-pages@v5
+      - run: npm ci
+      - run: npm run check
+      # L'adresse et le sous chemin viennent de Pages (projet : /chateau-moncassin, domaine dédié : vide).
+      - run: npm run build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PUBLIC_STRIPE_LINK_DECOUVERTE: ${{ vars.PUBLIC_STRIPE_LINK_DECOUVERTE }}
+          PUBLIC_STRIPE_LINK_DOMAINE: ${{ vars.PUBLIC_STRIPE_LINK_DOMAINE }}
+          # Non indexé par défaut tant que le contenu n'est pas validé ; variable de dépôt PUBLIC_NOINDEX=false pour l'ouvrir aux moteurs.
+          PUBLIC_NOINDEX: ${{ vars.PUBLIC_NOINDEX || 'true' }}
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
