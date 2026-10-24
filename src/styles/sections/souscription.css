@@ -14,7 +14,8 @@
 .opt-box { display: grid; gap: var(--s-50); height: 100%; padding: var(--s-200); border: 1px solid var(--line-strong); border-radius: var(--r-md); transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
 .opt-box strong { font-weight: 600 }
 .opt-box span { font-size: 14px; line-height: 20px; color: var(--paper-2) }
-.opt:hover .opt-box { border-color: var(--paper-3) }
+@media (hover: hover) and (pointer: fine) { .opt:hover .opt-box { border-color: var(--paper-3) } }
+.opt:active .opt-box { border-color: var(--paper-3) }
 .opt input:checked + .opt-box { border-color: var(--gold); background: var(--gold-soft) }
 .opt input:focus-visible + .opt-box { outline: 2px solid var(--gold); outline-offset: 3px }
 .f-row { display: grid; gap: var(--s-300) }
@@ -22,7 +23,7 @@
 .field { display: grid; gap: var(--s-75); min-width: 0 }
 .field input { width: 100%; min-width: 0; padding: var(--s-100) var(--s-200); border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--ink-2); font-size: 16px; line-height: 24px; transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
 .field input::placeholder { color: var(--paper-hint) }
-.field input:hover { border-color: var(--paper-3) }
+@media (hover: hover) and (pointer: fine) { .field input:hover { border-color: var(--paper-3) } }
 .field input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-color: var(--gold) }
 .field input[aria-invalid='true'], .check input[aria-invalid='true'] { border-color: var(--error) }
 .err { display: flex; align-items: center; gap: var(--s-75); font-size: 14px; line-height: 20px; color: var(--error) }

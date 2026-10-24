@@ -7,7 +7,8 @@
 .faq-item:last-child::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line) }
 .faq-item summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: var(--s-300); padding-block: var(--s-300); font-size: 18px; line-height: 28px; font-weight: 500; transition: color var(--dur-state) var(--ease) }
 .faq-item summary::-webkit-details-marker { display: none }
-.faq-item summary:hover { color: var(--gold) }
+@media (hover: hover) and (pointer: fine) { .faq-item summary:hover { color: var(--gold) } }
+.faq-item summary:active { color: var(--gold) }
 .faq-item summary .i { color: var(--gold); transition: transform var(--dur-state) var(--ease) }
 .faq-item[open] summary .i { transform: rotate(180deg) }
 .faq-a { overflow: hidden }

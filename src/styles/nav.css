@@ -5,11 +5,13 @@
 .brand { display: flex; align-items: center; gap: var(--s-100); text-decoration: none; font-weight: 600; letter-spacing: 0.04em }
 .nav-links { display: none; gap: var(--s-50) }
 .nav-links a { display: block; padding: var(--s-75) var(--s-100); border-radius: var(--r-pill); font-size: 14px; line-height: 20px; font-weight: 500; color: var(--paper-2); text-decoration: none; transition: color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
-.nav-links a:hover { color: var(--paper) }
+@media (hover: hover) and (pointer: fine) { .nav-links a:hover { color: var(--paper) } }
+.nav-links a:active { color: var(--paper) }
 .nav-links a[aria-current='true'] { color: var(--paper); background: var(--gold-soft) }
 .nav-cta { display: none }
 .burger { position: relative; width: 44px; height: 44px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: transparent; cursor: pointer; flex: none; transition: border-color var(--dur-state) var(--ease) }
-.burger:hover { border-color: var(--gold) }
+@media (hover: hover) and (pointer: fine) { .burger:hover { border-color: var(--gold) } }
+.burger:active { border-color: var(--gold) }
 .burger span { position: absolute; top: calc(50% - 0.75px); left: 12px; right: 12px; height: 1.5px; background: var(--paper); border-radius: var(--r-pill); transition: transform var(--dur-panel) var(--ease) }
 /* Les deux traits partent du centre et se décalent par transform : `top` déclencherait une mise en page à chaque image. */
 .burger span:nth-child(1) { transform: translateY(-3px) }
@@ -19,11 +21,12 @@
 @media (min-width: 420px) { .nav-cta { display: inline-flex } }
 @media (min-width: 1024px) { .nav-links { display: flex } .burger { display: none } .nav-pill { gap: var(--s-300) } }
 
-.menu { position: fixed; inset: 0; z-index: 35; background: var(--black-veil); -webkit-backdrop-filter: blur(64px); backdrop-filter: blur(64px); padding: calc(env(safe-area-inset-top, 0px) + var(--s-900) + var(--s-200)) max(24px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + var(--s-400)) max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-400); opacity: 0; transition: opacity var(--dur-panel) var(--ease); overflow-y: auto }
+.menu { position: fixed; inset: 0; z-index: 35; background: var(--black-veil); -webkit-backdrop-filter: blur(64px); backdrop-filter: blur(64px); padding: calc(env(safe-area-inset-top, 0px) + var(--s-900) + var(--s-200)) max(24px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + var(--s-400)) max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-400); opacity: 0; transition: opacity var(--dur-panel) var(--ease); overflow-y: auto; overscroll-behavior: contain }
 .menu.is-open { opacity: 1 }
 .menu ul { display: grid; gap: var(--s-100) }
 .menu-link { display: block; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em; text-decoration: none; padding-block: var(--s-50); opacity: 0; transform: translateY(48px); transition: opacity var(--dur-panel) var(--ease), transform var(--dur-panel) var(--ease), color var(--dur-state) var(--ease) }
-.menu-link:hover { color: var(--gold) }
+@media (hover: hover) and (pointer: fine) { .menu-link:hover { color: var(--gold) } }
+.menu-link:active { color: var(--gold) }
 .menu.is-open .menu-link { opacity: 1; transform: none }
 .menu.is-open li:nth-child(1) .menu-link { transition-delay: calc(var(--stagger) * 2) }
 .menu.is-open li:nth-child(2) .menu-link { transition-delay: calc(var(--stagger) * 3) }

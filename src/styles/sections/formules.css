@@ -26,5 +26,6 @@
 .card-price { font-size: 24px; line-height: 32px; font-weight: 300; font-variant-numeric: tabular-nums }
 .card-price span { font-size: 14px; line-height: 20px; color: var(--stone-muted) }
 .btn-ink { background: var(--stone-ink); color: var(--stone-2) }
-.btn-ink:hover { background: var(--stone-wine) }
+@media (hover: hover) and (pointer: fine) { .btn-ink:hover { background: var(--stone-wine) } }
+.btn-ink:active { background: var(--stone-wine) }
 .formules-note { margin-top: var(--s-300); display: flex; align-items: center; gap: var(--s-75); font-size: 14px; line-height: 20px; color: var(--stone-muted) }

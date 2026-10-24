@@ -3,7 +3,7 @@
 .xp::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line) }
 .xp:last-child::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line) }
 .xp-icon { width: 48px; height: 48px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); display: grid; place-items: center; color: var(--gold); transition: background-color var(--dur-state) var(--ease), color var(--dur-state) var(--ease), border-color var(--dur-state) var(--ease) }
-.xp:hover .xp-icon { background: var(--gold); color: var(--ink); border-color: var(--gold) }
+@media (hover: hover) and (pointer: fine) { .xp:hover .xp-icon { background: var(--gold); color: var(--ink); border-color: var(--gold) } }
 .xp-body { display: grid; gap: var(--s-100) }
 .xp h3 { font-size: 24px; line-height: 32px; font-weight: 400; letter-spacing: -0.01em; transition: transform var(--dur-state) var(--ease) }
 @media (hover: hover) and (pointer: fine) { .xp:hover h3 { transform: translateX(var(--s-75)) } }
