@@ -1,4 +1,4 @@
-.hero { position: relative; overflow: hidden; padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-900)); padding-bottom: var(--s-700) }
+.hero { position: relative; overflow: hidden; padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-900) + var(--s-400)); padding-bottom: var(--s-700) }
 .hero-grid { display: grid; gap: var(--s-300); align-items: center }
 .hero-copy { display: grid; gap: var(--s-300); max-width: 680px; position: relative; z-index: 2 }
 .hero-title { max-width: 680px; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.03em; background: linear-gradient(90deg, var(--hero-from), var(--hero-to)); -webkit-background-clip: text; background-clip: text; color: transparent }
@@ -15,7 +15,8 @@
 .hero-proof { display: flex; flex-wrap: wrap; gap: var(--s-75) var(--s-300); font-size: 14px; line-height: 20px; color: var(--paper-2) }
 .hero-proof li { display: flex; align-items: center; gap: var(--s-75) }
 .hero-proof .i { color: var(--gold) }
-.hero-visual { order: -1; justify-self: end; width: min(76vw, 360px); margin-right: -14vw; position: relative }
+/* Le verre n'apparaît qu'en mise en page à deux colonnes : sur mobile, le hero commence directement par le message. */
+.hero-visual { display: none; position: relative }
 .glass { position: relative; aspect-ratio: 1 / 1; width: 100%; max-width: 100% }
 .glass-poster, .glass-canvas { position: absolute; inset: 0; width: 100%; height: 100% }
 .glass-canvas { opacity: 0; transition: opacity var(--dur-reveal) var(--ease) }
@@ -25,14 +26,13 @@
 /* Le verre ne réagit qu'à la souris : au doigt, le geste entrerait en conflit avec le défilement. */
 @media (hover: none), (pointer: coarse) { .glass-hint { display: none } }
 .no-webgl .glass-hint { display: none }
-@media (max-width: 1023px) { .glass-hint { justify-content: flex-end; padding-right: calc(14vw + var(--s-200)) } }
 .scroll-cue { display: none }
 @media (min-width: 1024px) {
   .hero { min-height: min(100svh, 980px); display: flex; align-items: center; padding-top: var(--s-900); padding-bottom: var(--s-800) }
   .hero > .wrap { width: 100% }
   .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: var(--s-600) }
   .hero-copy { gap: var(--s-400) }
-  .hero-visual { order: 0; width: min(46vw, 640px); margin-right: -6vw; justify-self: end }
+  .hero-visual { display: block; width: min(46vw, 640px); margin-right: -6vw; justify-self: end }
   .scroll-cue { position: absolute; left: 50%; bottom: var(--s-400); transform: translateX(-50%); display: inline-flex; align-items: center; gap: var(--s-75); font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-2); text-decoration: none; transition: color var(--dur-state) var(--ease) }
   .scroll-cue:active { color: var(--gold) }
 }

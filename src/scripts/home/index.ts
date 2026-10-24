@@ -8,7 +8,10 @@ import { initSubscription } from './subscription';
 
 export function initHome({ gateOpen }: { gateOpen: boolean }) {
   const glass = createGlass();
-  glass.init();
+  /* Le verre n'est affiché qu'à partir de 1024 px : le WebGL démarre seulement s'il devient visible. */
+  const desktop = window.matchMedia('(min-width: 1024px)');
+  if (desktop.matches) glass.init();
+  else desktop.addEventListener('change', (e) => e.matches && glass.init(), { once: true });
   getLenis()?.on('scroll', (lenis) => glass.add(Math.min(0.06, Math.abs(lenis.velocity) * 0.004)));
 
   const hero = createHero();

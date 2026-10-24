@@ -25,6 +25,7 @@ export function createGlass() {
   let firstFrame = true;
   let onScreen = true;
   let pageVisible = !document.hidden;
+  let initialized = false;
 
   let energy = 0.35;
   let swirl = 0.35;
@@ -155,6 +156,8 @@ export function createGlass() {
   };
 
   const init = () => {
+    if (initialized) return;
+    initialized = true;
     if (!fig || !canvas || !hero || reduce) {
       root.classList.add('no-webgl');
       return;

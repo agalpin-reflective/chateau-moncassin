@@ -1,9 +1,15 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import Icon from './Icon.astro';
 import poster from '../assets/robe-poster.webp';
 import { site, formatPrice } from '../data/site';
 import { href } from '../lib/url';
+
+/* Le verre n'existe qu'à partir de 1024 px : sur mobile, l'image n'est pas téléchargée (la source ne correspond pas
+   et l'img retombe sur un pixel vide) et le WebGL ne démarre pas. */
+const DESKTOP = '(min-width: 1024px)';
+const posterImage = await getImage({ src: poster, width: 1000, height: 1000, quality: 86 });
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 ---
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="wrap">
@@ -24,7 +30,10 @@ import { href } from '../lib/url';
       </div>
       <div class="hero-visual">
         <div class="glass" aria-hidden="true">
-          <Image class="glass-poster" src={poster} alt="" width={1000} height={1000} quality={86} loading="eager" fetchpriority="high" />
+          <picture>
+            <source media={DESKTOP} srcset={posterImage.src} type="image/webp" />
+            <img class="glass-poster" src={BLANK} alt="" width="1000" height="1000" loading="eager" fetchpriority="high" decoding="async" />
+          </picture>
           <canvas class="glass-canvas"></canvas>
         </div>
         <p class="glass-hint" aria-hidden="true"><Icon name="refresh-circle-linear" size="sm" /> Bougez le curseur pour faire tourner le verre</p>
