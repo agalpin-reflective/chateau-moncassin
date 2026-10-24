@@ -2,7 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const SITE_URL = process.env.SITE_URL;
+// Une variable de dépôt absente arrive en chaîne vide dans la CI : on la traite comme non définie.
+const SITE_URL = process.env.SITE_URL?.trim() || undefined;
 if (!SITE_URL && process.argv.includes('build')) {
   console.warn('\n[chateau-moncassin] SITE_URL non défini : les URL absolues (canonical, sitemap, partage) pointeront vers localhost.\n');
 }
