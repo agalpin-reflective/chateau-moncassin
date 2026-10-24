@@ -11,3 +11,9 @@ dist/
 # systèmes
 .DS_Store
 *.log
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# skills Claude Code installés localement (environ 90 Mo, démos comprises)
+/.claude/skills/
