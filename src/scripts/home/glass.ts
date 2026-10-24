@@ -1,6 +1,6 @@
 import fragmentSource from './glass.frag.glsl?raw';
 import { $ } from '../lib/dom';
-import { reduce } from '../lib/motion';
+import { reduce, finePointer } from '../lib/motion';
 
 const VERTEX_SOURCE = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}';
 const UNIFORMS = ['uRes', 'uTime', 'uSwirl', 'uAngle', 'uPointer'] as const;
@@ -193,10 +193,12 @@ export function createGlass() {
       if (pageVisible) start();
       else stop();
     });
-    listen(hero, 'pointermove', onPointer as EventListener, { passive: true });
-    listen(hero, 'pointerleave', resetPointer);
-    listen(hero, 'pointercancel', resetPointer);
-    listen(window, 'blur', resetPointer);
+    /* Au doigt, le verre tourne seul et réagit au défilement ; seule la souris le pilote. */
+    if (finePointer) {
+      listen(hero, 'pointermove', onPointer as EventListener, { passive: true });
+      listen(hero, 'pointerleave', resetPointer);
+      listen(window, 'blur', resetPointer);
+    }
     listen(canvas, 'webglcontextlost', (e) => {
       e.preventDefault();
       stop();
