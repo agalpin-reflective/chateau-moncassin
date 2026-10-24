@@ -1,0 +1,47 @@
+---
+import Seal from './Seal.astro';
+import { site, formatPrice } from '../data/site';
+import { href } from '../lib/url';
+
+const path = Astro.url.pathname.replace(/\/$/, '');
+const legalLinks = [
+  { path: '/conditions', label: 'Conditions du parrainage' },
+  { path: '/mentions-legales', label: 'Mentions légales' },
+  { path: '/confidentialite', label: 'Confidentialité' },
+];
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <Seal />
+        <p class="name">{site.name}</p>
+        <p>{site.company}</p>
+        <p>{site.club}</p>
+      </div>
+      <div>
+        <h2 class="foot-h">Le parrainage en bref</h2>
+        <ul class="foot-list">
+          <li>Souscription annuelle de {site.offer.months} mois au tarif de {formatPrice(site.offer.priceTTC)}, sans renouvellement automatique.</li>
+          <li>Parrainage symbolique : aucun droit de propriété sur un pied de vigne.</li>
+          <li>Avantages nominatifs, valables pendant les {site.offer.months} mois suivant l'achat. <a href={href('conditions')}>Toutes les conditions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="foot-h">Informations</h2>
+        <ul class="foot-list">
+          {legalLinks.map((l) => <li><a href={href(l.path)}>{l.label}</a></li>)}
+        </ul>
+      </div>
+    </div>
+    <p class="evin">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+    <div class="foot-bottom">
+      <p>© {year} {site.name} · {site.company}</p>
+      <nav aria-label="Liens de bas de page">
+        {legalLinks.map((l) => <a href={href(l.path)} aria-current={path === l.path ? 'page' : undefined}>{l.label}</a>)}
+        <a href="#top">Retour en haut</a>
+      </nav>
+    </div>
+  </div>
+</footer>

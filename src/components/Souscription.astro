@@ -1,0 +1,117 @@
+---
+import Icon from './Icon.astro';
+import Seal from './Seal.astro';
+import { formules } from '../data/content';
+import { site, payment, paymentEnabled, formatPrice } from '../data/site';
+import { href } from '../lib/url';
+
+const first = formules[0];
+const formulesData = JSON.stringify(
+  Object.fromEntries(formules.map((f) => [f.id, { label: f.label, summary: f.summary }])),
+);
+---
+<section class="sous" id="souscrire" aria-labelledby="sous-title">
+  <div class="wrap">
+    <div class="sous-grid">
+      <div class="sous-copy">
+        <p class="eyebrow" data-reveal>Rejoindre le cercle</p>
+        <h2 class="h2" id="sous-title" data-split>Votre année au rythme de la vigne commence ici</h2>
+        <p data-reveal>Devenez parrain symbolique d'un pied de vigne au Château Moncassin et partagez une expérience authentique autour du vin et du terroir.</p>
+
+        <form
+          class="form"
+          id="form"
+          novalidate
+          data-formules={formulesData}
+          data-link-decouverte={payment.decouverte}
+          data-link-domaine={payment.domaine}
+        >
+          <fieldset>
+            <legend>Votre formule</legend>
+            <div class="opts">
+              {formules.map((fo, i) => (
+                <label class="opt" for={`f-${fo.id}`}>
+                  <input type="radio" name="formule" id={`f-${fo.id}`} value={fo.id} checked={i === 0} />
+                  <span class="opt-box"><strong>{fo.label}</strong><span>{fo.short}</span></span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div class="f-row">
+            <div class="field">
+              <label for="f-prenom">Prénom</label>
+              <input id="f-prenom" name="prenom" type="text" autocomplete="given-name" required aria-describedby="e-prenom" />
+              <p class="err" id="e-prenom" hidden></p>
+            </div>
+            <div class="field">
+              <label for="f-nom">Nom</label>
+              <input id="f-nom" name="nom" type="text" autocomplete="family-name" required aria-describedby="e-nom" />
+              <p class="err" id="e-nom" hidden></p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-email">Adresse email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="prenom.nom@exemple.fr" aria-describedby="e-email" />
+            <p class="err" id="e-email" hidden></p>
+          </div>
+          <div class="check">
+            <input id="f-age" name="age" type="checkbox" required aria-describedby="e-age" />
+            <label for="f-age">J'ai 18 ans ou plus et j'accepte les <a href={href('conditions')}>conditions du parrainage</a>.</label>
+            <p class="err" id="e-age" hidden></p>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit" id="f-submit">
+              <span class="btn-label">{paymentEnabled ? 'Passer au paiement' : 'Valider mon parrainage'}</span>
+              <Icon name="arrow-right-linear" class="i-arrow" />
+            </button>
+          </div>
+          {paymentEnabled ? (
+            <p class="form-note"><Icon name="shield-check-linear" size="sm" /> Paiement sécurisé par Stripe. Vous renseignez votre adresse de livraison à l'étape suivante.</p>
+          ) : (
+            <p class="form-note"><Icon name="shield-check-linear" size="sm" /> Version de démonstration : rien n'est envoyé ni enregistré, aucun paiement n'est demandé.</p>
+          )}
+          <div class="form-skel" id="form-skel" aria-hidden="true" hidden>
+            <span class="sk sk-label"></span>
+            <span class="sk-opts"><span class="sk sk-opt"></span><span class="sk sk-opt"></span></span>
+            <span class="sk sk-field"></span>
+            <span class="sk sk-field"></span>
+            <span class="sk sk-btn"></span>
+          </div>
+          <template id="icon-danger"><Icon name="danger-circle-linear" size="sm" /></template>
+        </form>
+
+        <div class="form-done" id="form-done" tabindex="-1" hidden>
+          <span class="done-icon"><Icon name="check-circle-linear" /></span>
+          <h3 id="done-title">Votre récapitulatif est prêt</h3>
+          <p>Sur le site en ligne, cette étape ouvre le paiement sécurisé de {formatPrice(site.offer.priceTTC)}. Vos bouteilles sont ensuite expédiées et vous réservez votre journée de vendanges auprès du château.</p>
+          <button class="btn btn-ghost" type="button" id="form-edit">Modifier ma demande</button>
+        </div>
+      </div>
+
+      <aside class="ticket-wrap" aria-label="Récapitulatif de votre parrainage">
+        <div class="ticket" id="ticket">
+          <div class="ticket-inner">
+            <div class="ticket-top">
+              <Seal size="lg" />
+              <div>
+                <p class="ticket-club">{site.club}</p>
+                <p class="ticket-house">{site.name}</p>
+              </div>
+            </div>
+            <dl class="ticket-rows">
+              <div><dt>Parrain</dt><dd class="ticket-name is-empty" id="t-name">Votre nom</dd></div>
+              <div><dt>Formule</dt><dd id="t-formule">{first.label}</dd></div>
+              <div><dt>Contenu</dt><dd id="t-content">{first.summary}</dd></div>
+              <div><dt>Durée</dt><dd>{site.offer.months} mois, sans renouvellement automatique</dd></div>
+            </dl>
+            <div class="perforation" aria-hidden="true"></div>
+            <div class="ticket-foot">
+              <p class="ticket-price">{formatPrice(site.offer.priceTTC)}</p>
+              <p>Expédition incluse</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

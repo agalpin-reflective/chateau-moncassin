@@ -1,0 +1,89 @@
+---
+import Icon from './Icon.astro';
+import { stages } from '../data/content';
+
+/* Cadran de 600 × 600 : janvier en haut, sens horaire, un mois = 30°. */
+const C = 300;
+const R = 236;
+const point = (month: number, r: number) => {
+  const a = ((-90 + month * 30) * Math.PI) / 180;
+  return [C + r * Math.cos(a), C + r * Math.sin(a)] as const;
+};
+const f = (n: number) => n.toFixed(2);
+const arc = (from: number, to: number, r: number, gapDeg = 1.4) => {
+  const g = gapDeg / 30;
+  const [x1, y1] = point(from + g, r);
+  const [x2, y2] = point(to - g, r);
+  const large = (to - from) * 30 > 180 ? 1 : 0;
+  return `M${f(x1)} ${f(y1)}A${r} ${r} 0 ${large} 1 ${f(x2)} ${f(y2)}`;
+};
+const harvest = stages.find((s) => s.harvest)!;
+const [hx1, hy1] = point(harvest.from + 0.08, R - 22);
+const [hx2, hy2] = point(harvest.to - 0.08, R - 22);
+const harvestPath = `M${f(hx1)} ${f(hy1)}A${R - 22} ${R - 22} 0 0 1 ${f(hx2)} ${f(hy2)}`;
+const initials = 'JFMAMJJASOND'.split('');
+const [headX, headY] = point(0, R);
+const dialTitle =
+  'Cadran des douze mois de la vigne : ' +
+  stages.map((s) => `${s.title.toLowerCase()} ${s.when.toLowerCase()}`).join(', ') +
+  '.';
+---
+<section class="annee" id="annee" aria-labelledby="annee-title">
+  <div class="wrap">
+    <div class="annee-grid">
+      <div class="annee-head">
+        <p class="eyebrow">Douze mois de parrainage</p>
+        <h2 class="h2" id="annee-title">Une année au rythme de la vigne</h2>
+      </div>
+
+      <div class="dial-wrap">
+        <svg class="dial" viewBox="0 0 600 600" role="img" aria-labelledby="dial-title">
+          <title id="dial-title">{dialTitle}</title>
+          <defs><path id="dial-harvest" d={harvestPath}></path></defs>
+          <circle class="ring" cx={C} cy={C} r="200"></circle>
+          <circle class="ring ring-dash" cx={C} cy={C} r="168"></circle>
+          <circle class="ring ring-faint" cx={C} cy={C} r="136"></circle>
+          <circle class="ring ring-faint" cx={C} cy={C} r="104"></circle>
+          <circle class="track" cx={C} cy={C} r={R}></circle>
+          {stages.map((s) => <path class:list={['seg', { 'seg-harvest': s.harvest }]} d={arc(s.from, s.to, R)}></path>)}
+          {Array.from({ length: 12 }, (_, m) => {
+            const [xa, ya] = point(m, R - 9);
+            const [xb, yb] = point(m, R + 9);
+            return <line class="tick" x1={f(xa)} y1={f(ya)} x2={f(xb)} y2={f(yb)}></line>;
+          })}
+          {initials.map((ch, m) => {
+            const [x, y] = point(m + 0.5, R + 32);
+            return <text class="mlabel" x={f(x)} y={f(y)}>{ch}</text>;
+          })}
+          <circle class="progress" cx={C} cy={C} r={R} pathLength="1" transform={`rotate(-90 ${C} ${C})`}></circle>
+          <text class="harvest-label"><textPath href="#dial-harvest" startOffset="50%">VENDANGES · VOTRE JOURNÉE</textPath></text>
+          <g class="head">
+            <circle class="head-halo" cx={f(headX)} cy={f(headY)} r="14"></circle>
+            <circle class="head-dot" cx={f(headX)} cy={f(headY)} r="6"></circle>
+          </g>
+        </svg>
+        <div class="dial-center" aria-hidden="true">
+          <span class="dial-icons">
+            {stages.map((s) => <Icon name={s.icon} class:list={[{ 'is-on': s.harvest }]} />)}
+          </span>
+          <span class="dial-kicker" id="dial-kicker">Parrainage</span>
+          <span class="dial-num" id="dial-num">12</span>
+          <span class="dial-unit">mois</span>
+        </div>
+      </div>
+
+      <ol class="stages">
+        {stages.map((s) => (
+          <li class:list={['stage', 'is-active', { 'stage-harvest': s.harvest }]} data-from={s.from} data-to={s.to}>
+            <p class="stage-when">{s.when}</p>
+            <h3>{s.title}</h3>
+            <p class="stage-text">{s.text}</p>
+            {s.harvest && <span class="stage-badge"><Icon name="calendar-linear" size="sm" /> Votre journée au domaine</span>}
+          </li>
+        ))}
+      </ol>
+
+      <p class="annee-note"><Icon name="info-circle-linear" size="sm" /> Votre parrainage dure douze mois à partir de votre souscription.</p>
+    </div>
+  </div>
+</section>

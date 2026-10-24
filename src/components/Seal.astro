@@ -1,0 +1,8 @@
+---
+/** Cachet du Cercle des parrains : la lettre M dans un cercle doré. */
+interface Props {
+  size?: 'md' | 'lg';
+}
+const { size = 'md' } = Astro.props;
+---
+<span class:list={['seal', { 'seal-lg': size === 'lg' }]} aria-hidden="true">M</span>

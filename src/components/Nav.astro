@@ -1,0 +1,44 @@
+---
+import Seal from './Seal.astro';
+import { href } from '../lib/url';
+
+const links = [
+  { id: 'annee', label: "L'année" },
+  { id: 'formules', label: 'Formules' },
+  { id: 'privileges', label: 'Privilèges' },
+  { id: 'questions', label: 'Questions' },
+];
+const menu = [
+  { id: 'principe', label: 'Le parrainage' },
+  { id: 'annee', label: "L'année du cep" },
+  { id: 'formules', label: 'Les formules' },
+  { id: 'privileges', label: 'Les privilèges' },
+  { id: 'questions', label: 'Questions' },
+  { id: 'souscrire', label: 'Devenir parrain' },
+];
+---
+<header class="nav" id="site-header">
+  <nav class="nav-pill" aria-label="Navigation principale">
+    <a class="brand" href={href('#top')} aria-label="Château Moncassin, accueil">
+      <Seal />
+      <span>Moncassin</span>
+    </a>
+    <ul class="nav-links">
+      {links.map((l) => <li><a href={href(`#${l.id}`)} data-nav={l.id}>{l.label}</a></li>)}
+    </ul>
+    <a class="btn btn-primary btn-sm nav-cta" href={href('#souscrire')}>Devenir parrain</a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span></span><span></span></button>
+  </nav>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <nav aria-label="Menu">
+    <ul>
+      {menu.map((l) => <li><a class="menu-link" href={href(`#${l.id}`)}>{l.label}</a></li>)}
+    </ul>
+  </nav>
+  <div class="menu-foot">
+    <p>Château Moncassin · SAS CMEV</p>
+    <p>L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+  </div>
+</div>

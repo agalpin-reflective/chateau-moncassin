@@ -1,0 +1,13 @@
+# dépendances et builds
+node_modules/
+dist/
+.astro/
+
+# environnement
+.env
+.env.*
+!.env.example
+
+# systèmes
+.DS_Store
+*.log

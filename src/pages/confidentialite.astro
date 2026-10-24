@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Fill from '../components/Fill.astro';
+import { site, paymentEnabled } from '../data/site';
+---
+<BaseLayout
+  title="Confidentialité · Château Moncassin"
+  description="Comment le site du Cercle des parrains du Château Moncassin traite vos informations."
+>
+  <div class="page" id="top">
+    <div class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">{site.name}</p>
+        <h1 class="page-title">Confidentialité</h1>
+        <p class="page-intro">Ce site collecte le minimum d'informations nécessaire à votre parrainage, et aucune donnée de suivi publicitaire.</p>
+      </header>
+      <div class="prose">
+        <section>
+          <h2>Responsable du traitement</h2>
+          <p>{site.company}, {site.name}. Contact : <Fill value={site.legal.email} /></p>
+        </section>
+        <section>
+          <h2>Informations saisies sur le site</h2>
+          {paymentEnabled ? (
+            <p>Votre adresse email et votre choix de formule sont transmis à notre prestataire de paiement Stripe pour préparer votre commande. Votre nom, votre adresse de livraison et vos informations de paiement sont saisis directement sur la page de paiement sécurisée de Stripe ; le château ne voit jamais vos coordonnées bancaires.</p>
+          ) : (
+            <p>Dans cette version de démonstration, les informations saisies dans le formulaire restent dans votre navigateur : elles ne sont ni envoyées ni enregistrées.</p>
+          )}
+          <p>Ces informations servent uniquement à traiter votre parrainage : expédition de vos bouteilles, réservation de votre journée de vendanges et application de vos avantages au domaine.</p>
+        </section>
+        <section>
+          <h2>Stockage dans votre navigateur</h2>
+          <p>Votre confirmation d'âge est mémorisée dans votre navigateur pour ne pas vous la redemander. Le site n'utilise pas de cookie publicitaire ni d'outil de mesure d'audience.</p>
+        </section>
+        <section>
+          <h2>Durée de conservation et vos droits</h2>
+          <p>Durée de conservation des données de commande : <Fill value={null} /></p>
+          <p>Vous pouvez accéder à vos données, les rectifier ou demander leur suppression en écrivant à <Fill value={site.legal.email} />. Vous pouvez aussi adresser une réclamation à la CNIL.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

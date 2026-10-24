@@ -1,0 +1,42 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import chateau from '../assets/chateau.jpg';
+import { perks } from '../data/content';
+import { site } from '../data/site';
+---
+<section class="privileges" id="privileges" aria-labelledby="priv-title">
+  <figure class="priv-media">
+    <div class="priv-frame">
+      <Picture
+        src={chateau}
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1548]}
+        sizes="100vw"
+        alt="Le Château Moncassin, avec ses deux tours aux toits de tuiles colorées, domine ses rangs de vigne"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <figcaption class="wrap">Le Château Moncassin, demeure du XIXe siècle de style Renaissance, entourée de ses vignes. Photo : {site.photoCredit}</figcaption>
+  </figure>
+  <div class="wrap">
+    <div class="priv-body">
+      <div class="sec-head">
+        <p class="eyebrow" data-reveal>Vos privilèges</p>
+        <h2 class="h2" id="priv-title" data-split>Votre parrainage vous ouvre les portes du château</h2>
+      </div>
+      <ul class="perks" data-reveal-group>
+        {perks.map((p) => (
+          <li class="perk">
+            <span class="perk-icon"><Icon name={p.icon} size="lg" /></span>
+            <p class="perk-num"><span class="n">{p.value}</span><span class="pc">%</span></p>
+            <p class="perk-label">de réduction</p>
+            <p class="perk-scope">{p.scope}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="fine" data-reveal><Icon name="info-circle-linear" size="sm" /> Avantages nominatifs, valables pendant les 12 mois du parrainage, selon les conditions de réservation et de vente du château.</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,37 @@
+---
+import Icon from './Icon.astro';
+import { formules } from '../data/content';
+import { site, formatPrice } from '../data/site';
+import { href } from '../lib/url';
+---
+<section class="formules" id="formules" aria-labelledby="formules-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>La carte des formules</p>
+      <h2 class="h2" id="formules-title" data-split>Choisissez votre expérience de parrainage</h2>
+      <p data-reveal>Les deux formules sont comprises dans le tarif annuel de {formatPrice(site.offer.priceTTC)}. Vous faites votre choix au moment de la souscription.</p>
+    </div>
+    <div class="cards" data-reveal-group>
+      {formules.map((fo, i) => (
+        <article class:list={['card', { 'is-selected': i === 0 }]} data-formule={fo.id} aria-labelledby={`formule-${fo.id}`}>
+          <div class="card-head">
+            <div>
+              <p class="card-kicker">{fo.kicker}</p>
+              <h3 id={`formule-${fo.id}`}>{fo.title}</h3>
+            </div>
+            <span class="card-badge"><Icon name="check-circle-linear" size="sm" /> Votre choix</span>
+          </div>
+          <p class="card-num"><span class="n">{fo.bottles}</span><span class="u">{fo.bottlesLabel}</span></p>
+          <ul class="card-list">
+            {fo.items.map((it) => <li><Icon name={it.icon} /> {it.text}</li>)}
+          </ul>
+          <div class="card-foot">
+            <p class="card-price">{formatPrice(site.offer.priceTTC)} <span>· {site.offer.months} mois</span></p>
+            <a class="btn btn-ink" href={href('#souscrire')} data-choose={fo.id}>Choisir {fo.title.toLowerCase()} <Icon name="arrow-right-linear" class="i-arrow" /></a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="formules-note"><Icon name="restart-linear" size="sm" /> Souscription annuelle, sans renouvellement automatique.</p>
+  </div>
+</section>

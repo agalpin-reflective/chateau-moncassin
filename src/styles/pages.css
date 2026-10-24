@@ -1,0 +1,29 @@
+/* Pages secondaires : mentions légales, conditions, confidentialité, merci, 404 */
+.page { padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-900) + var(--s-400)); padding-bottom: var(--s-900) }
+.page-head { display: grid; gap: var(--s-200); max-width: 720px }
+.page-title { font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em }
+@media (min-width: 768px) { .page-title { font-size: 48px; line-height: 1 } }
+.page-intro { font-size: 18px; line-height: 28px; color: var(--paper-2) }
+.prose { margin-top: var(--s-600); max-width: 720px; display: grid; gap: var(--s-600) }
+.prose section { display: grid; gap: var(--s-200) }
+.prose h2 { font-size: 24px; line-height: 32px; font-weight: 400 }
+.prose p, .prose li { color: var(--paper-2) }
+.prose ul { display: grid; gap: var(--s-100); padding-left: var(--s-300); list-style: disc }
+.prose li::marker { color: var(--gold) }
+.prose a { color: var(--paper); text-underline-offset: 3px }
+.prose strong { color: var(--paper); font-weight: 600 }
+.facts-list { display: grid; gap: 0 }
+.facts-list > div { position: relative; display: grid; gap: var(--s-50); padding-block: var(--s-200) }
+@media (min-width: 640px) { .facts-list > div { grid-template-columns: 200px minmax(0, 1fr); gap: var(--s-300) } }
+.facts-list > div + div::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line) }
+.facts-list dt { font-size: 12px; line-height: 20px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper-2) }
+.facts-list dd { color: var(--paper) }
+.todo { display: inline-flex; align-items: center; gap: var(--s-50); padding: 0 var(--s-75); border-radius: 4px; background: rgba(180, 58, 82, 0.18); color: var(--error); font-size: 14px; line-height: 24px; font-weight: 600 }
+.page-actions { margin-top: var(--s-400); display: flex; flex-wrap: wrap; gap: var(--s-200) }
+.page-center { min-height: min(100svh, 880px); display: grid; align-content: center; justify-items: start; gap: var(--s-300) }
+.page-center .seal { margin-bottom: var(--s-100) }
+.page-steps { margin-top: var(--s-600); display: grid; gap: var(--s-300); max-width: 720px }
+.page-steps li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--s-200); align-items: start }
+.page-steps .step-n { margin: 0 }
+.page-steps h2 { font-size: 20px; line-height: 28px; font-weight: 500 }
+.page-steps p { color: var(--paper-2) }

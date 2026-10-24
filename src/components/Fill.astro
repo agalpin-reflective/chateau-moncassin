@@ -1,0 +1,8 @@
+---
+/** Affiche une information du château, ou un repère « À compléter » tant qu'elle manque. */
+interface Props {
+  value: string | null | undefined;
+}
+const { value } = Astro.props;
+---
+{value ? <Fragment>{value}</Fragment> : <mark class="todo">À compléter</mark>}

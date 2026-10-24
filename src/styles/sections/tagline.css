@@ -1,0 +1,7 @@
+.tagline { padding-block: var(--s-800) }
+@media (min-width: 1024px) { .tagline { padding-block: var(--s-900) } }
+.tagline-inner { display: grid; gap: var(--s-300) }
+.tagline-text { max-width: 680px; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em; text-wrap: balance }
+@media (min-width: 768px) { .tagline-text { font-size: 48px; line-height: 1 } }
+@media (min-width: 1024px) { .tagline-inner { padding-left: calc(100% / 12) } .tagline-text { font-size: 60px; line-height: 1; max-width: 880px } }
+.tagline-sign { display: flex; align-items: center; gap: var(--s-100); font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-2) }

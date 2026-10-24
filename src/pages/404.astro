@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seal from '../components/Seal.astro';
+import { href } from '../lib/url';
+---
+<BaseLayout
+  title="Page introuvable · Château Moncassin"
+  description="Cette page n'existe pas."
+  noindex
+>
+  <div class="page" id="top">
+    <div class="wrap page-center">
+      <Seal size="lg" />
+      <p class="eyebrow">Erreur 404</p>
+      <h1 class="page-title">Ce rang de vigne n'existe pas</h1>
+      <p class="page-intro">La page que vous cherchez n'est plus à cette adresse. Revenez au domaine pour retrouver le parrainage.</p>
+      <div class="page-actions">
+        <a class="btn btn-primary" href={href('')}>Retour au domaine</a>
+        <a class="btn btn-ghost" href={href('#formules')}>Voir les formules</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

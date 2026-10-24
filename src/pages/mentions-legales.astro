@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Fill from '../components/Fill.astro';
+import { site } from '../data/site';
+
+const l = site.legal;
+---
+<BaseLayout
+  title="Mentions légales · Château Moncassin"
+  description="Mentions légales du site du Cercle des parrains du Château Moncassin."
+>
+  <div class="page" id="top">
+    <div class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">{site.name}</p>
+        <h1 class="page-title">Mentions légales</h1>
+      </header>
+      <div class="prose">
+        <section>
+          <h2>Éditeur du site</h2>
+          <dl class="facts-list">
+            <div><dt>Raison sociale</dt><dd>{site.company}</dd></div>
+            <div><dt>Forme</dt><dd>{l.legalForm}</dd></div>
+            <div><dt>Capital social</dt><dd><Fill value={l.capital} /></dd></div>
+            <div><dt>Siège social</dt><dd><Fill value={l.address} /></dd></div>
+            <div><dt>RCS</dt><dd><Fill value={l.rcs} /></dd></div>
+            <div><dt>SIRET</dt><dd><Fill value={l.siret} /></dd></div>
+            <div><dt>TVA intracommunautaire</dt><dd><Fill value={l.vat} /></dd></div>
+            <div><dt>Directeur de la publication</dt><dd><Fill value={l.publicationDirector} /></dd></div>
+            <div><dt>Contact</dt><dd><Fill value={l.email} /> <Fill value={l.phone} /></dd></div>
+          </dl>
+        </section>
+        <section>
+          <h2>Hébergement</h2>
+          <dl class="facts-list">
+            <div><dt>Hébergeur</dt><dd><Fill value={l.host.name} /></dd></div>
+            <div><dt>Adresse</dt><dd><Fill value={l.host.address} /></dd></div>
+          </dl>
+        </section>
+        <section>
+          <h2>Crédits</h2>
+          <ul>
+            <li>Photographie du château : {site.photoCredit}.</li>
+            <li>Icônes : Solar, sous licence CC BY 4.0.</li>
+            <li>Police de caractères : Manrope, sous licence SIL Open Font License.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Santé</h2>
+          <p>L'abus d'alcool est dangereux pour la santé. À consommer avec modération. La vente d'alcool aux mineurs est interdite.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

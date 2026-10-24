@@ -1,0 +1,23 @@
+---
+import { steps } from '../data/content';
+---
+<section class="section" id="etapes" aria-labelledby="etapes-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>Comment devenir parrain</p>
+      <h2 class="h2" id="etapes-title" data-split>Quatre étapes, une année au domaine</h2>
+    </div>
+    <div class="steps-wrap">
+      <div class="steps-line" aria-hidden="true"><span class="steps-fill"></span></div>
+      <ol class="steps" data-reveal-group>
+        {steps.map((s, i) => (
+          <li class="step">
+            <span class="step-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>

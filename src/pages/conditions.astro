@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, formatPrice } from '../data/site';
+import { formules, perks } from '../data/content';
+import { href } from '../lib/url';
+---
+<BaseLayout
+  title="Conditions du parrainage · Château Moncassin"
+  description="Conditions du parrainage symbolique d'un pied de vigne au Château Moncassin : durée, tarif, formules, avantages et livraison."
+>
+  <div class="page" id="top">
+    <div class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">{site.club}</p>
+        <h1 class="page-title">Conditions du parrainage</h1>
+        <p class="page-intro">Ce qu'il faut savoir avant de devenir parrain d'un pied de vigne au {site.name}.</p>
+      </header>
+      <div class="prose">
+        <section>
+          <h2>Nature du parrainage</h2>
+          <p>Le parrainage est <strong>symbolique</strong> : il ne confère aucun droit de propriété sur un pied de vigne. Il donne accès, pendant sa durée, aux contenus de la formule choisie et aux avantages réservés aux parrains.</p>
+        </section>
+        <section>
+          <h2>Durée et tarif</h2>
+          <ul>
+            <li>Souscription annuelle de {site.offer.months} mois, au tarif de {formatPrice(site.offer.priceTTC)}.</li>
+            <li>Abonnement nominatif, sans renouvellement automatique.</li>
+            <li>Expédition incluse.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Formules</h2>
+          <p>Les deux formules sont comprises dans le tarif annuel. Le choix est effectué lors de la souscription.</p>
+          <ul>
+            {formules.map((f) => <li><strong>{f.title}</strong> : {f.summary}, livraison incluse.</li>)}
+          </ul>
+        </section>
+        <section>
+          <h2>Journée de vendanges</h2>
+          <p>La journée de vendanges, accompagnée d'un repas pour une personne, se réserve auprès du {site.name}.</p>
+        </section>
+        <section>
+          <h2>Avantages des parrains</h2>
+          <ul>
+            {perks.map((p) => <li>{p.value} % de réduction {p.scope.charAt(0).toLowerCase() + p.scope.slice(1)}.</li>)}
+          </ul>
+          <p>Avantages nominatifs, valables pendant les {site.offer.months} mois suivant l'achat, selon les conditions de réservation et de vente du château.</p>
+        </section>
+        <section>
+          <h2>Conditions générales de vente</h2>
+          <p>Les conditions générales de vente du château (commande, paiement, livraison, droit de rétractation, réclamations) complètent ces conditions. <mark class="todo">À compléter</mark></p>
+        </section>
+        <section>
+          <p>L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+          <div class="page-actions">
+            <a class="btn btn-primary" href={href('#souscrire')}>Devenir parrain</a>
+            <a class="btn btn-ghost" href={href('#formules')}>Voir les formules</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

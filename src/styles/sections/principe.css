@@ -1,0 +1,20 @@
+.principe-grid { display: grid; gap: var(--s-600); align-items: center }
+.principe-copy { display: grid; gap: var(--s-300); max-width: 600px }
+.principe-copy > p:not(.eyebrow):not(.lead) { color: var(--paper-2) }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-200); padding-top: var(--s-300); position: relative; margin-top: var(--s-200) }
+.facts::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line) }
+.facts dt { font-size: 12px; line-height: 16px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper-2) }
+.facts dd { margin-top: var(--s-75); font-size: 20px; line-height: 28px; font-weight: 300; font-variant-numeric: tabular-nums }
+@media (min-width: 768px) { .facts dd { font-size: 24px; line-height: 32px } }
+.principe-media { position: relative; justify-self: center; width: 100%; max-width: 560px }
+.principe-frame { overflow: hidden; border-radius: 2px; aspect-ratio: 1 / 1 }
+.principe-frame img { width: 100%; height: 100%; object-fit: cover }
+.principe-media figcaption { margin-top: var(--s-100); font-size: 14px; line-height: 20px; color: var(--paper-2); max-width: 44ch }
+.stamp { position: absolute; right: var(--s-200); top: calc(-1 * var(--s-600)); width: 112px; height: 112px; border-radius: 9999px; background: var(--ink); display: grid; place-items: center; color: var(--gold) }
+.stamp svg { position: absolute; inset: 0; width: 100%; height: 100% }
+.stamp text { fill: var(--gold); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; font-family: var(--font) }
+.stamp-m { font-size: 24px; line-height: 32px; font-weight: 300 }
+@media (min-width: 1024px) {
+  .principe-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-900) }
+  .stamp { right: auto; left: calc(-1 * var(--s-600)); top: auto; bottom: var(--s-600); width: 128px; height: 128px }
+}

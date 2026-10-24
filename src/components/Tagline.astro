@@ -1,0 +1,12 @@
+---
+import Seal from './Seal.astro';
+import { site } from '../data/site';
+---
+<section class="tagline" aria-label="Notre promesse">
+  <div class="wrap">
+    <div class="tagline-inner">
+      <p class="tagline-text" id="tagline">Une année entière au rythme de la vigne, et une journée au domaine quand vient la récolte.</p>
+      <p class="tagline-sign"><Seal /> {site.club}</p>
+    </div>
+  </div>
+</section>

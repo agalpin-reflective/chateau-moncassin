@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import { faq } from '../data/content';
+import { href } from '../lib/url';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+<section class="section" id="questions" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="faq-grid">
+      <div class="faq-side">
+        <p class="eyebrow" data-reveal>Questions fréquentes</p>
+        <h2 class="h2" id="faq-title" data-split>Avant de rejoindre le cercle</h2>
+        <p class="muted" data-reveal>Tout ce qu'il faut savoir sur le parrainage, les formules et vos avantages au domaine.</p>
+        <a class="btn btn-ghost" href={href('#souscrire')} data-reveal>Devenir parrain <Icon name="arrow-right-linear" class="i-arrow" /></a>
+      </div>
+      <div class="faq-list" data-reveal-group>
+        {faq.map((item) => (
+          <details class="faq-item">
+            <summary>{item.q} <Icon name="alt-arrow-down-linear" /></summary>
+            <div class="faq-a"><p>{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline></script>
+</section>

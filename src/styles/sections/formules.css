@@ -1,0 +1,30 @@
+.formules { background: var(--stone); color: var(--stone-ink); padding-block: var(--s-700) }
+@media (min-width: 1024px) { .formules { padding-block: var(--s-900) } }
+.formules .eyebrow { color: var(--stone-wine) }
+.formules .sec-head p:not(.eyebrow) { color: var(--stone-muted) }
+.formules :focus-visible { outline-color: var(--stone-wine) }
+.cards { margin-top: var(--s-600); display: grid; gap: var(--s-300) }
+@media (min-width: 768px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+.card { position: relative; display: flex; flex-direction: column; gap: var(--s-300); padding: var(--s-300); background: var(--stone-2); border: 1px solid var(--stone-line); border-radius: 4px; transition: transform 0.8s var(--ease), border-color 0.7s var(--ease) }
+@media (min-width: 1024px) { .card { padding: var(--s-400) } }
+.card:hover { transform: translateY(-4px); border-color: var(--stone-line-strong) }
+.card.is-selected { border-color: var(--stone-wine) }
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-200) }
+.card-kicker { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--stone-muted); font-weight: 600 }
+.card h3 { margin-top: var(--s-75); font-size: 30px; line-height: 36px; font-weight: 400; letter-spacing: -0.01em }
+.card-badge { display: none; align-items: center; gap: var(--s-50); padding: var(--s-50) var(--s-100); border-radius: 9999px; background: var(--stone-wine); color: var(--stone-2); font-size: 12px; line-height: 16px; font-weight: 600; white-space: nowrap }
+.card.is-selected .card-badge { display: inline-flex }
+.card-num { display: flex; align-items: baseline; gap: var(--s-200); flex-wrap: wrap }
+.card-num .n { font-size: 96px; line-height: 1; font-weight: 200; color: var(--stone-wine); font-variant-numeric: tabular-nums; letter-spacing: -0.04em }
+@media (min-width: 1024px) { .card-num .n { font-size: 128px } }
+.card-num .u { font-size: 18px; line-height: 28px; color: var(--stone-ink); max-width: 16ch }
+.card-list { display: grid }
+.card-list li { position: relative; display: flex; align-items: center; gap: var(--s-100); padding-block: var(--s-100) }
+.card-list li + li::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--stone-line) }
+.card-list .i { color: var(--stone-wine) }
+.card-foot { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-200) }
+.card-price { font-size: 24px; line-height: 32px; font-weight: 300; font-variant-numeric: tabular-nums }
+.card-price span { font-size: 14px; line-height: 20px; color: var(--stone-muted) }
+.btn-ink { background: var(--stone-ink); color: var(--stone-2) }
+.btn-ink:hover { background: var(--stone-wine) }
+.formules-note { margin-top: var(--s-300); display: flex; align-items: center; gap: var(--s-75); font-size: 14px; line-height: 20px; color: var(--stone-muted) }

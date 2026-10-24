@@ -1,0 +1,18 @@
+.privileges { padding-bottom: var(--s-700) }
+@media (min-width: 1024px) { .privileges { padding-bottom: var(--s-900) } }
+.priv-frame { overflow: hidden; aspect-ratio: 4 / 3; max-height: 82svh }
+@media (min-width: 768px) { .priv-frame { aspect-ratio: 1548 / 860 } }
+.priv-frame img { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 40% }
+.priv-media figcaption { padding-top: var(--s-100); font-size: 12px; line-height: 16px; color: var(--paper-2) }
+.priv-body { padding-top: var(--s-600); display: grid; gap: var(--s-600) }
+.perks { display: grid; gap: var(--s-400) }
+@media (min-width: 768px) { .perks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-300) } }
+.perk { display: grid; gap: var(--s-100); align-content: start }
+.perk-icon { color: var(--gold) }
+.perk-num { display: flex; align-items: baseline; gap: var(--s-50); font-variant-numeric: tabular-nums }
+.perk-num .n { font-size: 96px; line-height: 1; font-weight: 200; letter-spacing: -0.04em }
+.perk-num .pc { font-size: 36px; line-height: 40px; font-weight: 300; color: var(--gold) }
+.perk-label { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-2) }
+.perk-scope { font-size: 18px; line-height: 28px; max-width: 24ch }
+.fine { font-size: 14px; line-height: 20px; color: var(--paper-2); display: flex; gap: var(--s-75); align-items: flex-start; max-width: 72ch }
+.fine .i { color: var(--gold); margin-top: var(--s-25) }

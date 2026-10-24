@@ -1,0 +1,21 @@
+---
+/** Icônes Solar (licence CC BY 4.0) intégrées en SVG au build, sans requête réseau. */
+import { icons } from '@iconify-json/solar/icons.json';
+
+interface Props {
+  name: string;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { name, size = 'md', class: className } = Astro.props;
+const icon = (icons as Record<string, { body: string } | undefined>)[name];
+if (!icon) throw new Error(`Icône Solar inconnue : ${name}`);
+---
+<svg
+  class:list={['i', { 'i-sm': size === 'sm', 'i-lg': size === 'lg' }, className]}
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  focusable="false"
+  set:html={icon.body}
+/>

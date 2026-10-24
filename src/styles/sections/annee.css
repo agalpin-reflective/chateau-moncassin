@@ -1,0 +1,52 @@
+.annee { position: relative; padding-block: var(--s-700) }
+@media (min-width: 1024px) { .annee { padding-block: var(--s-900) } }
+.annee-grid { display: grid; gap: var(--s-300); grid-template-areas: 'head' 'dial' 'stages' 'note' }
+.annee-head { grid-area: head; display: grid; gap: var(--s-200) }
+.dial-wrap { grid-area: dial; position: relative; justify-self: center; width: min(84vw, 360px) }
+.dial { display: block; width: 100%; height: auto; overflow: visible }
+.dial .ring { fill: none; stroke: var(--line); stroke-width: 1 }
+.dial .ring-dash { stroke-dasharray: 2 6 }
+.dial .ring-faint { stroke: rgba(238, 231, 219, 0.07) }
+.dial .track { fill: none; stroke: rgba(238, 231, 219, 0.06); stroke-width: 10 }
+.dial .seg { fill: none; stroke: var(--line-strong); stroke-width: 2; stroke-linecap: round }
+.dial .seg-harvest { stroke: var(--wine); stroke-width: 3 }
+.dial .tick { stroke: var(--line-strong); stroke-width: 1 }
+.dial .mlabel { fill: var(--paper-2); font-size: 15px; font-weight: 600; font-family: var(--font); text-anchor: middle; dominant-baseline: central; transition: fill 0.6s var(--ease) }
+.dial .mlabel.is-on { fill: var(--gold) }
+.dial .progress { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 0 }
+.dial .harvest-label { fill: var(--wine); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; font-family: var(--font); text-anchor: middle }
+.dial .head-dot { fill: var(--gold) }
+.dial .head-halo { fill: var(--gold-soft); stroke: var(--gold-line); stroke-width: 1 }
+.dial-center { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--s-75); text-align: center; pointer-events: none }
+.dial-icons { position: relative; width: 32px; height: 32px; color: var(--gold) }
+.dial-icons .i { position: absolute; inset: 0; width: 32px; height: 32px; opacity: 0; transform: scale(0.8); transition: opacity 0.6s var(--ease), transform 0.7s var(--ease) }
+.dial-icons .i.is-on { opacity: 1; transform: none }
+.dial-kicker { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-2) }
+.dial-num { font-size: 48px; line-height: 1; font-weight: 200; font-variant-numeric: tabular-nums; letter-spacing: -0.02em }
+.dial-unit { font-size: 14px; line-height: 20px; color: var(--paper-2) }
+.annee.is-pinned .dial-unit { display: none }
+.stages { grid-area: stages; display: grid; gap: var(--s-400) }
+.stage { display: grid; gap: var(--s-75); max-width: 520px }
+.stage-when { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold) }
+.stage h3 { font-size: 30px; line-height: 36px; font-weight: 300; letter-spacing: -0.01em }
+.stage-text { color: var(--paper-2) }
+.stage-harvest .stage-when { color: var(--wine) }
+.stage-badge { display: inline-flex; align-items: center; gap: var(--s-75); justify-self: start; margin-top: var(--s-75); padding: var(--s-50) var(--s-100); border-radius: 9999px; border: 1px solid var(--wine); color: var(--paper); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase }
+.annee-note { grid-area: note; font-size: 14px; line-height: 20px; color: var(--paper-2); display: flex; align-items: center; gap: var(--s-75) }
+.annee-note .i { color: var(--gold) }
+.annee.is-pinned { min-height: 100svh; display: flex; align-items: center; padding-block: var(--s-800) var(--s-300) }
+.annee.is-pinned > .wrap { width: 100% }
+.annee.is-pinned .stages { grid-template-areas: 's' }
+.annee.is-pinned .stage { grid-area: s; opacity: 0; visibility: hidden; transform: translateY(24px); filter: blur(8px); transition: opacity 0.7s var(--ease), transform 0.8s var(--ease), filter 0.7s var(--ease), visibility 0s linear 0.8s }
+.annee.is-pinned .stage.is-active { opacity: 1; visibility: visible; transform: none; filter: none; transition: opacity 0.7s var(--ease), transform 0.8s var(--ease), filter 0.7s var(--ease), visibility 0s }
+.annee.is-pinned .dial-wrap { width: min(78vw, 300px, 38svh) }
+.annee.is-pinned .annee-grid { gap: var(--s-200) }
+@media (min-width: 1024px) {
+  .annee-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); grid-template-areas: 'dial head' 'dial stages' 'dial note'; column-gap: var(--s-900); row-gap: var(--s-400); align-content: center; align-items: start }
+  .dial-wrap { width: min(560px, 100%) }
+  .annee.is-pinned .dial-wrap { width: min(540px, 100%, 70svh) }
+  .annee.is-pinned .annee-grid { row-gap: var(--s-400); align-items: center }
+  .annee-head { align-self: end }
+  .annee-note { align-self: start }
+  .stage h3 { font-size: 36px; line-height: 40px }
+}

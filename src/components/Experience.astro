@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+import { experiences } from '../data/content';
+---
+<section class="section" id="experience" aria-labelledby="xp-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>Ce que comprend le parrainage</p>
+      <h2 class="h2" id="xp-title" data-split>Bien plus qu'un pied de vigne</h2>
+    </div>
+    <ul class="xp-list" data-reveal-group>
+      {experiences.map((x) => (
+        <li class="xp">
+          <span class="xp-icon"><Icon name={x.icon} size="lg" /></span>
+          <div class="xp-body">
+            <h3>{x.title}</h3>
+            <p>{x.text}</p>
+          </div>
+          <p class="xp-tag"><Icon name={x.tagIcon} size="sm" /> {x.tag}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

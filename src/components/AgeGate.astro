@@ -1,0 +1,18 @@
+---
+import Seal from './Seal.astro';
+import Icon from './Icon.astro';
+---
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-text" hidden>
+  <div class="gate-card">
+    <Seal size="lg" />
+    <p class="eyebrow">Château Moncassin</p>
+    <h2 class="gate-title" id="gate-title">Le Cercle des parrains</h2>
+    <p class="gate-text" id="gate-text">Ce site présente des vins. Pour entrer, confirmez que vous avez 18 ans ou plus.</p>
+    <div class="gate-actions">
+      <button class="btn btn-primary" type="button" id="gate-yes">J'ai 18 ans ou plus, entrer <Icon name="arrow-right-linear" class="i-arrow" /></button>
+      <button class="btn btn-ghost" type="button" id="gate-no">J'ai moins de 18 ans</button>
+    </div>
+    <p class="gate-refused" id="gate-refused" role="status" hidden>Ce site est réservé aux personnes majeures. Nous serons heureux de vous accueillir à vos 18 ans.</p>
+    <p class="gate-legal">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+  </div>
+</div>

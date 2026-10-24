@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import poster from '../assets/robe-poster.webp';
+import { site, formatPrice } from '../data/site';
+import { href } from '../lib/url';
+---
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow hero-eyebrow">{site.name} · {site.club}</p>
+        <h1 class="hero-title" id="hero-title">Devenez parrain<br /> d'un pied de vigne</h1>
+        <p class="hero-sub">Pendant douze mois, vivez au rythme du Château Moncassin : vos bouteilles livrées chez vous, une journée de vendanges avec repas au domaine et des réductions réservées aux parrains.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href={href('#formules')}>Choisir ma formule <Icon name="arrow-right-linear" class="i-arrow" /></a>
+          <p class="hero-price"><strong>{formatPrice(site.offer.priceTTC)}</strong> pour {site.offer.months} mois</p>
+        </div>
+        <ul class="hero-proof">
+          <li><Icon name="check-circle-linear" size="sm" /> Sans renouvellement automatique</li>
+          <li><Icon name="check-circle-linear" size="sm" /> Expédition incluse</li>
+          <li><Icon name="check-circle-linear" size="sm" /> Deux formules au même tarif</li>
+        </ul>
+      </div>
+      <div class="hero-visual">
+        <div class="glass" aria-hidden="true">
+          <Image class="glass-poster" src={poster} alt="" width={1000} height={1000} quality={86} loading="eager" fetchpriority="high" />
+          <canvas class="glass-canvas"></canvas>
+        </div>
+        <p class="glass-hint" aria-hidden="true"><Icon name="refresh-circle-linear" size="sm" /> <span class="hint-fine">Bougez le curseur pour faire tourner le verre</span><span class="hint-touch">Faites glisser pour faire tourner le verre</span></p>
+      </div>
+    </div>
+  </div>
+  <a class="scroll-cue" href={href('#principe')}>Découvrir le parrainage <Icon name="alt-arrow-down-linear" size="sm" /></a>
+</section>

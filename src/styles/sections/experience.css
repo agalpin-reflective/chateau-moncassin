@@ -1,0 +1,17 @@
+.xp-list { margin-top: var(--s-600); display: grid }
+.xp { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: var(--s-200) var(--s-300); padding-block: var(--s-400) }
+.xp::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line) }
+.xp:last-child::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line) }
+.xp-icon { width: 48px; height: 48px; border-radius: 9999px; border: 1px solid var(--line-strong); display: grid; place-items: center; color: var(--gold); transition: background-color 0.7s var(--ease), color 0.7s var(--ease), border-color 0.7s var(--ease) }
+.xp:hover .xp-icon { background: var(--gold); color: var(--ink); border-color: var(--gold) }
+.xp-body { display: grid; gap: var(--s-100) }
+.xp h3 { font-size: 24px; line-height: 32px; font-weight: 400; letter-spacing: -0.01em; transition: transform 0.8s var(--ease) }
+.xp:hover h3 { transform: translateX(var(--s-75)) }
+.xp-body p { color: var(--paper-2); max-width: 56ch }
+.xp-tag { grid-column: 2; display: flex; align-items: center; gap: var(--s-75); font-size: 14px; line-height: 20px; font-weight: 500; color: var(--gold) }
+@media (min-width: 1024px) {
+  .xp { grid-template-columns: 64px minmax(0, 1.3fr) minmax(0, 0.7fr); align-items: start; padding-block: var(--s-500) }
+  .xp-icon { width: 64px; height: 64px }
+  .xp h3 { font-size: 30px; line-height: 36px }
+  .xp-tag { grid-column: 3; justify-self: end; padding-top: var(--s-75) }
+}

@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seal from '../components/Seal.astro';
+import { site } from '../data/site';
+import { href } from '../lib/url';
+
+const next = [
+  { title: 'Vos cadeaux sont préparés', text: "Vos bouteilles et, selon votre formule, votre tee shirt vous sont expédiés, frais d'envoi inclus." },
+  { title: 'Réservez votre journée de vendanges', text: `Contactez le ${site.name} pour choisir votre journée au domaine, repas compris.` },
+  { title: 'Profitez de vos privilèges', text: 'Vos réductions nominatives sont valables pendant les douze mois qui suivent votre achat.' },
+];
+---
+<BaseLayout
+  title="Bienvenue dans le cercle · Château Moncassin"
+  description="Votre parrainage d'un pied de vigne au Château Moncassin est confirmé."
+  noindex
+>
+  <div class="page" id="top">
+    <div class="wrap">
+      <header class="page-head">
+        <Seal size="lg" />
+        <p class="eyebrow">Paiement confirmé</p>
+        <h1 class="page-title">Bienvenue dans {site.club.charAt(0).toLowerCase() + site.club.slice(1)}</h1>
+        <p class="page-intro">Merci pour votre parrainage. Votre année au rythme de la vigne commence aujourd'hui.</p>
+      </header>
+      <ol class="page-steps">
+        {next.map((s, i) => (
+          <li>
+            <span class="step-n">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h2>{s.title}</h2>
+              <p>{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="page-actions">
+        <a class="btn btn-primary" href={href('')}>Retour au site</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

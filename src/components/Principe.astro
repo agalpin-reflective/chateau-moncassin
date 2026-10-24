@@ -1,0 +1,40 @@
+---
+import { Picture } from 'astro:assets';
+import vendanges from '../assets/vendanges.jpg';
+import { site, formatPrice } from '../data/site';
+---
+<section class="section principe" id="principe" aria-labelledby="principe-title">
+  <div class="wrap">
+    <div class="principe-grid">
+      <div class="principe-copy">
+        <p class="eyebrow" data-reveal>Le parrainage</p>
+        <h2 class="h2" id="principe-title" data-split>Le vin se goûte.<br /> Au château, il se vit.</h2>
+        <p class="lead" data-reveal>Au Château Moncassin, vous vivez le vignoble autrement. Devenez le parrain symbolique d'un pied de vigne et entrez dans l'univers du domaine : ses vins, ses vendanges, ses paysages et ses moments de convivialité.</p>
+        <p data-reveal>Un parrainage imaginé pour celles et ceux qui aiment le vin, les belles rencontres et les expériences authentiques.</p>
+        <dl class="facts" data-reveal>
+          <div><dt>Durée</dt><dd>{site.offer.months} mois</dd></div>
+          <div><dt>Tarif</dt><dd>{formatPrice(site.offer.priceTTC)}</dd></div>
+          <div><dt>Au domaine</dt><dd>1 journée</dd></div>
+        </dl>
+      </div>
+      <figure class="principe-media">
+        <div class="principe-frame">
+          <Picture
+            src={vendanges}
+            formats={['avif', 'webp']}
+            widths={[480, 760]}
+            sizes="(min-width: 1024px) 560px, 92vw"
+            alt="Une vendangeuse coupe une grappe de raisin noir sous le tronc noueux d'une vieille vigne"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="stamp" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><defs><path id="stamp-c" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path></defs><text><textPath href="#stamp-c" textLength="286" lengthAdjust="spacing">LE CERCLE DES PARRAINS · CHÂTEAU MONCASSIN · </textPath></text></svg>
+          <span class="stamp-m">M</span>
+        </div>
+        <figcaption>Le pied de vigne en fin d'été : un tronc noueux, des grappes mûres, la récolte qui commence.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
