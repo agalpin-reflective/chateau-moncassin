@@ -1,5 +1,6 @@
 import { $, $$ } from '../lib/dom';
 import { gsap, ScrollTrigger, motion } from '../lib/motion';
+import { createVine } from './vine';
 
 const CENTER = 300;
 const RADIUS = 236;
@@ -15,11 +16,10 @@ export function initYearDial(): void {
   const heads = $$<SVGCircleElement>('.dial .head circle');
   const labels = $$<SVGTextElement>('.dial .mlabel');
   const stages = $$('.stage', section);
-  const icons = $$<SVGElement>('.dial-icons .i');
   const num = $('#dial-num');
   const kicker = $('#dial-kicker');
   const bounds = stages.map((s) => Number(s.dataset.to));
-  const harvestIndex = stages.findIndex((s) => s.classList.contains('stage-harvest'));
+  const vine = createVine(section);
   let current = -1;
 
   const set = (value: number) => {
@@ -35,6 +35,7 @@ export function initYearDial(): void {
     const month = p * 12;
     if (num) num.textContent = String(Math.min(12, Math.floor(month) + 1)).padStart(2, '0');
     labels.forEach((l, i) => l.classList.toggle('is-on', i < month));
+    vine?.seek(month);
     let index = stages.length - 1;
     for (let i = 0; i < bounds.length; i++) {
       if (month < bounds[i]) {
@@ -45,7 +46,6 @@ export function initYearDial(): void {
     if (index !== current) {
       current = index;
       stages.forEach((s, i) => s.classList.toggle('is-active', i === index));
-      icons.forEach((ic, i) => ic.classList.toggle('is-on', i === index));
     }
   };
 
@@ -54,7 +54,7 @@ export function initYearDial(): void {
     set(1);
     if (num) num.textContent = '12';
     stages.forEach((s) => s.classList.add('is-active'));
-    icons.forEach((ic, i) => ic.classList.toggle('is-on', i === harvestIndex));
+    vine?.ripe();
     current = -1;
   };
 

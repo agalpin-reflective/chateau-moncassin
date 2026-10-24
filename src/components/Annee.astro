@@ -26,7 +26,35 @@ const [headX, headY] = point(0, R);
 const dialTitle =
   'Cadran des douze mois de la vigne : ' +
   stages.map((s) => `${s.title.toLowerCase()} ${s.when.toLowerCase()}`).join(', ') +
-  '.';
+  ". Au centre, le pied de vigne change au fil des saisons.";
+
+/* Le pied de vigne au centre du cadran : un cep taillé en cordon, quatre rameaux, deux grappes. */
+const shoots = [
+  'M238 262C236 242 229 220 223 196',
+  'M270 262C270 240 267 216 263 188',
+  'M330 262C330 240 333 216 337 188',
+  'M362 262C364 242 371 220 377 196',
+];
+const buds = [238, 270, 330, 362];
+/* Une feuille par point : position du pétiole, inclinaison, taille. */
+const leaves = [
+  { x: 231, y: 228, r: -58, s: 0.9 },
+  { x: 268, y: 222, r: 38, s: 0.85 },
+  { x: 332, y: 222, r: -38, s: 0.85 },
+  { x: 369, y: 228, r: 58, s: 0.9 },
+  { x: 223, y: 196, r: -24, s: 1 },
+  { x: 263, y: 188, r: -8, s: 1.05 },
+  { x: 337, y: 188, r: 8, s: 1.05 },
+  { x: 377, y: 196, r: 24, s: 1 },
+];
+/* Feuille palmée à cinq lobes, pétiole en (0, 0), symétrique pour que l'origine des transformations tombe sur le pétiole. */
+const leafPath =
+  'M0 0V-3C-3 0-8 0-10-3L-16-9L-10-12L-14-21L-6-19L0-28L6-19L14-21L10-12L16-9L10-3C8 0 3 0 0-3ZM0-3V-23M0-3L-11-17M0-3L11-17M0-3L-12-8M0-3L12-8';
+/* Grappes en triangle : 4, 3, 2 puis 1 grain. */
+const berries = [4, 3, 2, 1].flatMap((n, row) =>
+  Array.from({ length: n }, (_, i) => ({ x: (i - (n - 1) / 2) * 8.4, y: 14 + row * 7.6 })),
+);
+const clusters = [252, 348];
 ---
 <section class="annee" id="annee" aria-labelledby="annee-title">
   <div class="wrap">
@@ -42,8 +70,6 @@ const dialTitle =
           <defs><path id="dial-harvest" d={harvestPath}></path></defs>
           <circle class="ring" cx={C} cy={C} r="200"></circle>
           <circle class="ring ring-dash" cx={C} cy={C} r="168"></circle>
-          <circle class="ring ring-faint" cx={C} cy={C} r="136"></circle>
-          <circle class="ring ring-faint" cx={C} cy={C} r="104"></circle>
           <circle class="track" cx={C} cy={C} r={R}></circle>
           {stages.map((s) => <path class:list={['seg', { 'seg-harvest': s.harvest }]} d={arc(s.from, s.to, R)}></path>)}
           {Array.from({ length: 12 }, (_, m) => {
@@ -57,18 +83,39 @@ const dialTitle =
           })}
           <circle class="progress" cx={C} cy={C} r={R} pathLength="1" transform={`rotate(-90 ${C} ${C})`}></circle>
           <text class="harvest-label"><textPath href="#dial-harvest" startOffset="50%">VENDANGES · VOTRE JOURNÉE</textPath></text>
+          <g class="vine">
+            <path class="vine-ground" d="M258 330H342"></path>
+            <path class="vine-wire" d="M206 262H394"></path>
+            <path class="vine-wood" d="M293 330C291 318 296 308 293 297C290 286 295 276 294 267M307 330C309 318 304 309 307 298C310 287 306 277 306 267"></path>
+            <path class="vine-wood vine-arm" d="M294 267C284 262 262 261 226 262M306 267C316 262 338 261 374 262"></path>
+            {buds.map((x) => <circle class="vine-bud" cx={x} cy="262" r="3"></circle>)}
+            {shoots.map((d) => <path class="vine-shoot" d={d} pathLength="1"></path>)}
+            {leaves.map((l) => (
+              <g transform={`translate(${l.x} ${l.y})`}>
+                <g class="vine-leaf-fall">
+                  <g transform={`rotate(${l.r}) scale(${l.s})`}>
+                    <path class="vine-leaf" d={leafPath}></path>
+                  </g>
+                </g>
+              </g>
+            ))}
+            {clusters.map((x) => (
+              <g transform={`translate(${x} 263)`}>
+                <g class="vine-cluster">
+                  <path class="vine-stem" d="M0 0V9"></path>
+                  {berries.map((b) => <circle class="vine-berry" cx={b.x} cy={b.y} r="3.7"></circle>)}
+                </g>
+              </g>
+            ))}
+          </g>
           <g class="head">
             <circle class="head-halo" cx={f(headX)} cy={f(headY)} r="14"></circle>
             <circle class="head-dot" cx={f(headX)} cy={f(headY)} r="6"></circle>
           </g>
         </svg>
         <div class="dial-center" aria-hidden="true">
-          <span class="dial-icons">
-            {stages.map((s) => <Icon name={s.icon} class:list={[{ 'is-on': s.harvest }]} />)}
-          </span>
           <span class="dial-kicker" id="dial-kicker">Parrainage</span>
-          <span class="dial-num" id="dial-num">12</span>
-          <span class="dial-unit">mois</span>
+          <span class="dial-count"><span class="dial-num" id="dial-num">12</span><span class="dial-unit">mois</span></span>
         </div>
       </div>
 

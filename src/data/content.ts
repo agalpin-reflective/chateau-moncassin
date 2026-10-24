@@ -55,23 +55,23 @@ export const formules: Formule[] = [
 /** L'année de la vigne, en mois de début et de fin (0 = janvier, 12 = fin décembre). */
 export const stages = [
   {
-    from: 0, to: 3, icon: 'scissors-linear', when: 'Janvier à mars', title: 'La taille',
+    from: 0, to: 3, when: 'Janvier à mars', title: 'La taille',
     text: "La vigne dort. Le vigneron taille chaque pied pour choisir les bourgeons qui porteront les raisins de l'année.",
   },
   {
-    from: 3, to: 6, icon: 'leaf-linear', when: 'Avril à juin', title: 'Le réveil',
+    from: 3, to: 6, when: 'Avril à juin', title: 'Le réveil',
     text: 'Les bourgeons éclosent, les premières feuilles se déploient, puis la vigne fleurit et les petites grappes se forment.',
   },
   {
-    from: 6, to: 8, icon: 'sun-2-linear', when: 'Juillet et août', title: 'La véraison',
+    from: 6, to: 8, when: 'Juillet et août', title: 'La véraison',
     text: 'Les grappes grossissent sous le soleil et changent de couleur. Le raisin noir prend sa teinte et se gorge de sucre.',
   },
   {
-    from: 8, to: 10, icon: 'wineglass-linear', when: 'Septembre et octobre', title: 'Les vendanges', harvest: true,
+    from: 8, to: 10, when: 'Septembre et octobre', title: 'Les vendanges', harvest: true,
     text: 'Le raisin est mûr. Vous rejoignez le domaine pour vivre la récolte, approcher le travail de la vigne et partager un repas.',
   },
   {
-    from: 10, to: 12, icon: 'history-linear', when: 'Novembre et décembre', title: 'Le chai',
+    from: 10, to: 12, when: 'Novembre et décembre', title: 'Le chai',
     text: "La vigne se met au repos. Au chai, les vins de l'année prennent forme, et le cycle recommence.",
   },
 ];
