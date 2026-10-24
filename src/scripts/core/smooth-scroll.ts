@@ -4,13 +4,14 @@ import { ease } from '../lib/ease';
 
 let lenis: Lenis | null = null;
 const locks = new Set<string>();
+const raf = (time: number) => lenis?.raf(time * 1000);
 
 /** Lenis est le seul moteur de défilement du site, synchronisé avec ScrollTrigger. */
 export function initSmoothScroll(): Lenis | null {
   if (!motion || lenis) return lenis;
   lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time) => lenis?.raf(time * 1000));
+  gsap.ticker.add(raf);
   gsap.ticker.lagSmoothing(0);
   return lenis;
 }
@@ -38,6 +39,8 @@ export function scrollToTarget(target: HTMLElement): void {
 }
 
 export function destroySmoothScroll(): void {
+  gsap.ticker.remove(raf);
+  lenis?.off('scroll', ScrollTrigger.update);
   lenis?.destroy();
   lenis = null;
 }

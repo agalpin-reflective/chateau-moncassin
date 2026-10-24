@@ -27,7 +27,8 @@ export function createHero() {
   const prepare = () => {
     if (!motion || prepared) return;
     prepared = true;
-    gsap.set('.hero-eyebrow, .hero-sub, .hero-cta, .hero-proof', { autoAlpha: 0, y: 24 });
+    /* Opacité seule : le bouton reste cliquable et joignable au clavier pendant l'entrée. */
+    gsap.set('.hero-eyebrow, .hero-sub, .hero-cta, .hero-proof', { opacity: 0, y: 24 });
     gsap.set(words, { yPercent: 110 });
     gsap.set('.glass', { autoAlpha: 0, scale: 0.86 });
     gsap.set('.glass-hint', { autoAlpha: 0 });
@@ -39,10 +40,10 @@ export function createHero() {
     gsap
       .timeline({ defaults: { ease } })
       .to('.glass', { autoAlpha: 1, scale: 1, duration: 2 }, 0)
-      .to('.hero-eyebrow', { autoAlpha: 1, y: 0, duration: 1 }, 0.15)
+      .to('.hero-eyebrow', { opacity: 1, y: 0, duration: 1 }, 0.15)
       .to(words, { yPercent: 0, duration: 1.3, stagger: 0.07 }, 0.25)
-      .to('.hero-sub', { autoAlpha: 1, y: 0, duration: 1.1 }, 0.6)
-      .to('.hero-cta, .hero-proof', { autoAlpha: 1, y: 0, duration: 1, stagger: 0.1 }, 0.75)
+      .to('.hero-sub', { opacity: 1, y: 0, duration: 1.1 }, 0.5)
+      .to('.hero-cta, .hero-proof', { opacity: 1, y: 0, duration: 1, stagger: 0.1 }, 0.55)
       .to('.glass-hint', { autoAlpha: 1, duration: 1 }, 1.2);
   };
 

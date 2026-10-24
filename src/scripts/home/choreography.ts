@@ -7,7 +7,9 @@ import { initYearDial } from './year-dial';
 /**
  * Animations liées au défilement, créées dans l'ordre de la page pour que
  * l'épinglage du cadran décale correctement les déclencheurs qui le suivent.
- * Les apparitions ne masquent que les éléments situés sous la ligne de flottaison au chargement.
+ * Les apparitions ne masquent que les éléments situés sous la ligne de flottaison au chargement,
+ * et seulement par l'opacité : un élément en visibility hidden ne peut pas recevoir le focus,
+ * ce qui rendrait la FAQ ou les boutons injoignables au clavier avant d'avoir défilé jusqu'à eux.
  */
 export function initChoreography(): void {
   if (motion) {
@@ -37,24 +39,33 @@ export function initChoreography(): void {
   if (!motion || !('IntersectionObserver' in window)) return;
 
   const timelines = new Map<Element, gsap.core.Timeline>();
+  const reveal = (el: Element) => {
+    timelines.get(el)?.play();
+    timelines.delete(el);
+    io.unobserve(el);
+  };
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        timelines.get(entry.target)?.play();
-        timelines.delete(entry.target);
-        io.unobserve(entry.target);
+        if (entry.isIntersecting) reveal(entry.target);
       });
     },
     { rootMargin: '0px 0px -10% 0px', threshold: 0.01 },
   );
+  /* Le focus clavier peut atteindre un élément avant qu'il n'entre dans la zone d'apparition. */
+  document.addEventListener('focusin', (e) => {
+    const target = e.target as Element;
+    timelines.forEach((_, el) => {
+      if (el.contains(target)) reveal(el);
+    });
+  });
   const belowFold = (el: Element) => el.getBoundingClientRect().top > window.innerHeight * 0.92;
   const register = (el: Element, tl: gsap.core.Timeline) => {
     timelines.set(el, tl);
     io.observe(el);
   };
-  const hiddenState = { y: 64, autoAlpha: 0, filter: 'blur(12px)' };
-  const shownState = { y: 0, autoAlpha: 1, filter: 'blur(0px)', duration: 1.1, ease, clearProps: 'filter,transform' };
+  const hiddenState = { y: 64, opacity: 0, filter: 'blur(12px)' };
+  const shownState = { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease, clearProps: 'filter,transform,opacity' };
 
   $$('[data-split]').forEach((el) => {
     const words = splitWords(el);

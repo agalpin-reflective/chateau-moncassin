@@ -2,9 +2,12 @@
  * Découpe un titre en mots animables.
  * Le texte d'origine reste lisible par les lecteurs d'écran dans un span `.sr-only`,
  * la version découpée est masquée avec aria-hidden.
+ * Un titre qui contient autre chose que du texte et des <br> (lien, mise en valeur) n'est pas découpé :
+ * la découpe aplatirait ce balisage.
  */
 export function splitWords(el: HTMLElement | null): HTMLElement[] {
   if (!el || el.dataset.splitDone) return [];
+  if (Array.from(el.children).some((child) => child.tagName !== 'BR')) return [];
   el.dataset.splitDone = '1';
   const label = (el.textContent ?? '').replace(/\s+/g, ' ').trim();
   const visual = document.createElement('span');

@@ -37,6 +37,12 @@ export function createGlass() {
   let lastPX: number | null = null;
   let lastPY = 0;
   let lastPT = 0;
+  let pointerDirty = false;
+  const cleanups: (() => void)[] = [];
+  const listen = (target: EventTarget, type: string, handler: EventListener, options?: AddEventListenerOptions) => {
+    target.addEventListener(type, handler, options);
+    cleanups.push(() => target.removeEventListener(type, handler, options));
+  };
 
   const compile = (ctx: WebGLRenderingContext, type: number, source: string) => {
     const shader = ctx.createShader(type);
@@ -96,6 +102,14 @@ export function createGlass() {
     energy *= Math.pow(0.4, dt);
     swirl += (Math.min(energy, 2.2) - swirl) * Math.min(1, dt * 2.5);
     angle += dt * (0.1 + swirl * 1.4);
+    if (pointerDirty && lastPX !== null) {
+      /* Une seule lecture de layout par image, quel que soit le nombre d'événements pointeur reçus. */
+      pointerDirty = false;
+      const rect = fig.getBoundingClientRect();
+      const radius = rect.width * 0.42;
+      tx = Math.max(-1.2, Math.min(1.2, (lastPX - (rect.left + rect.width / 2)) / radius));
+      ty = Math.max(-1.2, Math.min(1.2, -(lastPY - (rect.top + rect.height / 2)) / radius));
+    }
     px += (tx - px) * Math.min(1, dt * 4);
     py += (ty - py) * Math.min(1, dt * 4);
     gl.uniform2f(uniforms.uRes, canvas.width, canvas.height);
@@ -125,13 +139,9 @@ export function createGlass() {
     tx = 0;
     ty = 0;
     lastPX = null;
+    pointerDirty = false;
   };
   const onPointer = (e: PointerEvent) => {
-    if (!fig) return;
-    const rect = fig.getBoundingClientRect();
-    const radius = rect.width * 0.42;
-    tx = Math.max(-1.2, Math.min(1.2, (e.clientX - (rect.left + rect.width / 2)) / radius));
-    ty = Math.max(-1.2, Math.min(1.2, -(e.clientY - (rect.top + rect.height / 2)) / radius));
     const now = e.timeStamp || performance.now();
     if (lastPX !== null) {
       const dist = Math.hypot(e.clientX - lastPX, e.clientY - lastPY);
@@ -141,6 +151,7 @@ export function createGlass() {
     lastPX = e.clientX;
     lastPY = e.clientY;
     lastPT = now;
+    pointerDirty = true;
   };
 
   const init = () => {
@@ -165,29 +176,33 @@ export function createGlass() {
       return;
     }
     resize();
-    new ResizeObserver(resize).observe(fig);
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(fig);
+    cleanups.push(() => resizeObserver.disconnect());
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([entry]) => {
+      const io = new IntersectionObserver(([entry]) => {
         onScreen = entry.isIntersecting;
         if (onScreen) start();
         else stop();
-      }).observe(fig);
+      });
+      io.observe(fig);
+      cleanups.push(() => io.disconnect());
     }
-    document.addEventListener('visibilitychange', () => {
+    listen(document, 'visibilitychange', () => {
       pageVisible = !document.hidden;
       if (pageVisible) start();
       else stop();
     });
-    hero.addEventListener('pointermove', onPointer, { passive: true });
-    hero.addEventListener('pointerleave', resetPointer);
-    hero.addEventListener('pointercancel', resetPointer);
-    window.addEventListener('blur', resetPointer);
-    canvas.addEventListener('webglcontextlost', (e) => {
+    listen(hero, 'pointermove', onPointer as EventListener, { passive: true });
+    listen(hero, 'pointerleave', resetPointer);
+    listen(hero, 'pointercancel', resetPointer);
+    listen(window, 'blur', resetPointer);
+    listen(canvas, 'webglcontextlost', (e) => {
       e.preventDefault();
       stop();
       fig.classList.remove('is-live');
     });
-    canvas.addEventListener('webglcontextrestored', () => {
+    listen(canvas, 'webglcontextrestored', () => {
       try {
         if (gl) setup(gl);
         resize();
@@ -203,6 +218,7 @@ export function createGlass() {
 
   const destroy = () => {
     stop();
+    cleanups.splice(0).forEach((cleanup) => cleanup());
     if (gl) {
       if (buffer) gl.deleteBuffer(buffer);
       if (program) gl.deleteProgram(program);
