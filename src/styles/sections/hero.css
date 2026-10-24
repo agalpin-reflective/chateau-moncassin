@@ -4,6 +4,9 @@
 .hero-title { max-width: 680px; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.03em; background: linear-gradient(90deg, var(--hero-from), var(--hero-to)); -webkit-background-clip: text; background-clip: text; color: transparent }
 .hero-title.is-split { background: none; color: var(--paper) }
 .hero-title .w-in { background-image: linear-gradient(90deg, var(--hero-from), var(--hero-to)); background-repeat: no-repeat; -webkit-background-clip: text; background-clip: text; color: transparent }
+/* Avec une hauteur de ligne de 1, les jambages (p, g) dépassent la boîte et le dégradé, limité à la boîte, ne les peint pas :
+   on prolonge la zone peinte sous la ligne de base sans changer la hauteur des lignes. */
+.hero-title, .hero-title .w-in { padding-bottom: 0.14em; margin-bottom: -0.14em }
 @media (max-width: 389px) { .hero-title { font-size: 30px; line-height: 36px } }
 @media (min-width: 768px) { .hero-title { font-size: 48px; line-height: 1 } }
 @media (min-width: 1024px) { .hero-title { font-size: 60px; line-height: 1 } }
