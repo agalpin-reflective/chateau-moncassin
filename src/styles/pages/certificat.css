@@ -1,0 +1,64 @@
+/* Page du certificat (/merci). Feuille chargée par cette page seulement : la règle @page ne doit pas toucher les autres. */
+.merci .page-head { max-width: 760px }
+.cert { margin-top: var(--s-600); display: grid; gap: var(--s-600); align-items: start }
+@media (min-width: 1100px) { .cert { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: var(--s-700) } }
+
+/* La feuille : une page A4 paysage posée sur le fond sombre. */
+.cert-stage { display: grid; gap: var(--s-200); perspective: 1600px }
+@media (min-width: 1100px) { .cert-stage { position: sticky; top: var(--s-900) } }
+.cert-tilt, .cert-sheet { transform-style: preserve-3d }
+.cert-sheet { aspect-ratio: 842 / 595; background: var(--sheet); border-radius: var(--r-xs); box-shadow: var(--shadow-ticket); overflow: hidden; transition: opacity var(--dur-state) var(--ease) }
+.cert-svg { display: block; width: 100%; height: 100% }
+/* Tant que le nom manque, le certificat reste un brouillon. */
+.cert-sheet.is-draft { opacity: 0.72 }
+.cert-noscript { padding: var(--s-400); color: var(--stone-ink) }
+.cert-caption { display: flex; gap: var(--s-75); align-items: flex-start; font-size: 12px; line-height: 16px; color: var(--paper-2) }
+.cert-caption .i { color: var(--gold) }
+
+/* Le dessin : couleurs et polices des jetons, appliquées aux classes posées par certificate/svg.ts. */
+.cert-fill-none { fill: none }
+.cert-fill-ink { fill: var(--stone-ink) }
+.cert-fill-muted { fill: var(--stone-muted) }
+.cert-fill-wine { fill: var(--stone-wine) }
+.cert-fill-gold { fill: var(--gold) }
+.cert-stroke-ink { stroke: var(--stone-ink) }
+.cert-stroke-muted { stroke: var(--stone-muted) }
+.cert-stroke-wine { stroke: var(--stone-wine) }
+.cert-stroke-gold { stroke: var(--gold) }
+.cert-svg path { stroke-linecap: round; stroke-linejoin: round }
+.cert-font-display { font-family: var(--font-display); font-weight: 400 }
+.cert-font-text { font-family: var(--font); font-weight: 400 }
+.cert-font-label { font-family: var(--font); font-weight: 600 }
+
+/* Le panneau de réglages. */
+.cert-form { margin-top: 0; padding: var(--s-300); border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--ink-2) }
+@media (min-width: 768px) { .cert-form { padding: var(--s-400) } }
+.cert-form-title { font-size: 24px; line-height: 32px }
+.cert-form .field input, .cert-form .field textarea { background: var(--ink) }
+.cert-gift { display: grid; gap: var(--s-300) }
+.cert-actions { display: flex; flex-wrap: wrap; gap: var(--s-100) }
+.cert-actions .btn { padding: var(--s-100) var(--s-200) }
+.cert-actions .btn:disabled { opacity: 0.45; cursor: not-allowed }
+.cert-status { min-height: 20px; font-size: 14px; line-height: 20px; color: var(--gold) }
+.cert-tips { display: grid; gap: var(--s-100); padding-top: var(--s-300); border-top: 1px solid var(--line); font-size: 14px; line-height: 20px; color: var(--paper-2) }
+.cert-tips li { display: flex; gap: var(--s-75); align-items: flex-start }
+.cert-tips .i { color: var(--gold); margin-top: var(--s-25) }
+.cert:not([data-mode='cadeau']) .tip-gift { display: none }
+
+.merci-next { margin-top: var(--s-800); font-size: 30px; line-height: 36px }
+.merci .page-steps { margin-top: var(--s-400) }
+.merci .page-steps h3 { font-family: var(--font); font-size: 20px; line-height: 28px; font-weight: 500 }
+
+/* Impression : la feuille seule, pleine page, en A4 paysage. */
+@page { size: A4 landscape; margin: 0 }
+@media print {
+  /* !important : cette feuille est chargée avant la feuille globale, dont les règles de même poids l'emporteraient. */
+  html, body { height: 100vh; overflow: hidden; background: var(--sheet) !important }
+  /* Tout ce qui n'est pas la feuille sort du flux : un élément seulement masqué garderait sa place et ajouterait des pages blanches. */
+  body > :not(main), .merci .page-head, .cert-caption, .cert-form, .merci-next, .merci .page-steps, .merci .page-actions { display: none !important }
+  main, .page.merci, .merci .wrap { padding: 0 !important; margin: 0 !important; max-width: none !important }
+  .cert { display: block; margin: 0 }
+  .cert-stage { display: block; position: static; perspective: none }
+  .cert-tilt, .cert-sheet { transform: none !important }
+  .cert-sheet { width: 100vw; height: 100vh; aspect-ratio: auto; border-radius: 0; box-shadow: none; opacity: 1 !important; break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact }
+}

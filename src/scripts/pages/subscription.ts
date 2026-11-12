@@ -1,8 +1,9 @@
 import { $, $$ } from '../lib/dom';
 import { gsap, ScrollTrigger, finePointer, motion } from '../lib/motion';
 import { ease } from '../lib/ease';
+import { newReference, saveOrder } from '../lib/order';
 
-type Key = 'prenom' | 'nom' | 'email' | 'age';
+type Key = 'prenom' | 'nom' | 'bprenom' | 'bnom' | 'email' | 'age';
 interface FormuleInfo {
   label: string;
   summary: string;
@@ -11,6 +12,8 @@ interface FormuleInfo {
 const MESSAGES = {
   prenom: 'Indiquez votre prénom.',
   nom: 'Indiquez votre nom.',
+  bprenom: 'Indiquez le prénom de la personne.',
+  bnom: 'Indiquez le nom de la personne.',
   emailEmpty: 'Indiquez votre adresse email.',
   emailBad: 'Cette adresse semble incomplète. Exemple : prenom.nom@exemple.fr',
   age: 'Cochez cette case pour confirmer votre majorité et accepter les conditions.',
@@ -35,6 +38,8 @@ export function initSubscription(): void {
   const fields = {
     prenom: $<HTMLInputElement>('#f-prenom', form)!,
     nom: $<HTMLInputElement>('#f-nom', form)!,
+    bprenom: $<HTMLInputElement>('#f-bprenom', form)!,
+    bnom: $<HTMLInputElement>('#f-bnom', form)!,
     email: $<HTMLInputElement>('#f-email', form)!,
     age: $<HTMLInputElement>('#f-age', form)!,
   };
@@ -43,6 +48,10 @@ export function initSubscription(): void {
   const ticketName = $('#t-name');
   const ticketFormule = $('#t-formule');
   const ticketContent = $('#t-content');
+  const ticketGiver = $('#t-giver');
+  const ticketGiverRow = $('#t-giver-row');
+  const giftFields = $('#gift-fields', form);
+  const messageField = $<HTMLTextAreaElement>('#f-message', form);
   const submitButton = $<HTMLButtonElement>('#f-submit', form)!;
   const submitLabel = $('.btn-label', submitButton)!;
   const idleLabel = submitLabel.textContent ?? '';
@@ -51,8 +60,12 @@ export function initSubscription(): void {
 
   const selected = () => $<HTMLInputElement>('input[name="formule"]:checked', form)?.value ?? 'decouverte';
 
+  const isGift = () => $<HTMLInputElement>('input[name="pour"]:checked', form)?.value === 'cadeau';
+  const fullName = (first: HTMLInputElement, last: HTMLInputElement) => `${first.value.trim()} ${last.value.trim()}`.trim();
+
   const errorFor = (key: Key): string => {
     if (key === 'age') return fields.age.checked ? '' : MESSAGES.age;
+    if ((key === 'bprenom' || key === 'bnom') && !isGift()) return '';
     const value = fields[key].value.trim();
     if (key === 'email') {
       if (!value) return MESSAGES.emailEmpty;
@@ -78,11 +91,26 @@ export function initSubscription(): void {
     }
   };
 
+  /* Le ticket porte le nom qui figurera sur le certificat : l'acheteur, ou la personne à qui il offre le parrainage. */
   const updateName = () => {
-    if (!ticketName) return;
-    const name = `${fields.prenom.value.trim()} ${fields.nom.value.trim()}`.trim();
-    ticketName.textContent = name || 'Votre nom';
-    ticketName.classList.toggle('is-empty', !name);
+    const gift = isGift();
+    const buyer = fullName(fields.prenom, fields.nom);
+    const name = gift ? fullName(fields.bprenom, fields.bnom) : buyer;
+    if (ticketName) {
+      ticketName.textContent = name || (gift ? 'Son nom' : 'Votre nom');
+      ticketName.classList.toggle('is-empty', !name);
+    }
+    if (ticketGiverRow) ticketGiverRow.hidden = !gift;
+    if (ticketGiver) ticketGiver.textContent = buyer || 'Votre nom';
+  };
+
+  const setGift = (gift: boolean) => {
+    const radio = $<HTMLInputElement>(gift ? '#f-pour-cadeau' : '#f-pour-moi', form);
+    if (radio && !radio.checked) radio.checked = true;
+    if (giftFields) giftFields.hidden = !gift;
+    if (!gift) (['bprenom', 'bnom'] as Key[]).forEach((key) => showError(key, ''));
+    updateName();
+    if (motion) ScrollTrigger.refresh();
   };
 
   const setFormule = (id: string, animate = true) => {
@@ -106,11 +134,13 @@ export function initSubscription(): void {
       if (submitted) showError(key, errorFor(key));
     });
   });
-  fields.prenom.addEventListener('input', updateName);
-  fields.nom.addEventListener('input', updateName);
+  [fields.prenom, fields.nom, fields.bprenom, fields.bnom].forEach((field) => field.addEventListener('input', updateName));
+  $$<HTMLInputElement>('input[name="pour"]', form).forEach((radio) => radio.addEventListener('change', () => setGift(radio.value === 'cadeau')));
   $$<HTMLInputElement>('input[name="formule"]', form).forEach((radio) => radio.addEventListener('change', () => setFormule(radio.value)));
   /* Formule choisie sur l'accueil, ou conservée par le navigateur au retour sur la page. */
-  setFormule(new URLSearchParams(location.search).get('formule') ?? selected(), false);
+  const params = new URLSearchParams(location.search);
+  setFormule(params.get('formule') ?? selected(), false);
+  setGift(params.get('pour') === 'cadeau' || isGift());
 
   const setBusy = (busy: boolean, label = idleLabel) => {
     submitButton.disabled = busy;
@@ -133,12 +163,26 @@ export function initSubscription(): void {
       return;
     }
 
+    /* La souscription reste dans le navigateur : la page du certificat la relit au retour du paiement. */
     const formule = selected();
+    const gift = isGift();
+    const buyer = fullName(fields.prenom, fields.nom);
+    const reference = newReference();
+    saveOrder({
+      buyer,
+      gift,
+      recipient: gift ? fullName(fields.bprenom, fields.bnom) : buyer,
+      message: gift ? (messageField?.value.trim() ?? '') : '',
+      formule,
+      date: new Date().toISOString(),
+      reference,
+    });
+
     const link = links[formule];
     if (link) {
       const url = new URL(link);
       url.searchParams.set('prefilled_email', fields.email.value.trim());
-      url.searchParams.set('client_reference_id', `${formule}_${Date.now()}`);
+      url.searchParams.set('client_reference_id', `${formule}_${reference}`);
       url.searchParams.set('locale', 'fr');
       setBusy(true, 'Redirection vers le paiement sécurisé');
       window.location.assign(url.toString());

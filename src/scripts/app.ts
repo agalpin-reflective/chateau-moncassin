@@ -5,6 +5,7 @@ import { initNav } from './core/nav';
 import { gateNeeded, initGate } from './core/gate';
 import { initHome } from './home';
 import { initSubscription } from './pages/subscription';
+import { initThanks } from './pages/thanks';
 
 document.documentElement.classList.add('js');
 
@@ -13,6 +14,7 @@ initNav();
 
 const home = $('[data-page="home"]') ? initHome({ gateOpen: gateNeeded() }) : null;
 initSubscription();
+initThanks();
 
 initGate(() => {
   home?.enter();

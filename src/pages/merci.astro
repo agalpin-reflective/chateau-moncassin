@@ -1,41 +1,105 @@
 ---
+import '../styles/pages/certificat.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Logo from '../components/Logo.astro';
-import { site } from '../data/site';
+import Icon from '../components/Icon.astro';
+import { site, paymentEnabled } from '../data/site';
+import { formules, thanks } from '../data/content';
 import { href } from '../lib/url';
 
-const next = [
-  { title: 'Vos cadeaux sont préparés', text: "Vos bouteilles et, selon votre formule, votre tee shirt vous sont expédiés, frais d'envoi inclus." },
-  { title: 'Réservez votre journée de vendanges', text: `Contactez le ${site.name} pour choisir votre journée au domaine, repas compris.` },
-  { title: 'Profitez de vos privilèges', text: 'Vos réductions nominatives sont valables pendant les douze mois qui suivent votre achat.' },
-];
+const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id, { label: f.label, summary: f.summary }])));
 ---
 <BaseLayout
-  title="Bienvenue dans le cercle · Château Moncassin"
-  description="Votre parrainage d'un pied de vigne au Château Moncassin est confirmé."
+  title="Votre certificat de parrainage · Château Moncassin"
+  description="Votre parrainage d'un pied de vigne au Château Moncassin est confirmé : téléchargez votre certificat."
   noindex
 >
-  <div class="page" id="top">
+  <div class="page merci" id="top">
     <div class="wrap">
       <header class="page-head">
-        <Logo size="lg" />
-        <p class="eyebrow">Paiement confirmé</p>
-        <h1 class="page-title">Bienvenue dans {site.club.charAt(0).toLowerCase() + site.club.slice(1)}</h1>
-        <p class="page-intro">Merci pour votre parrainage. Votre année au rythme de la vigne commence aujourd'hui.</p>
+        <p class="eyebrow">{paymentEnabled ? thanks.eyebrow : thanks.eyebrowDemo}</p>
+        <h1 class="page-title" id="merci-title">{thanks.copy.titleSelf}</h1>
+        <p class="page-intro">{thanks.intro}</p>
       </header>
+
+      <section class="cert" id="certificat" aria-label="Votre certificat de parrainage" data-formules={formulesData} data-copy={JSON.stringify(thanks.copy)}>
+        <div class="cert-stage">
+          <div class="cert-tilt">
+            <div class="cert-sheet" id="cert-sheet">
+              <noscript><p class="cert-noscript">{thanks.noscript}</p></noscript>
+            </div>
+          </div>
+          <p class="cert-caption"><Icon name="info-circle-linear" size="sm" /> {thanks.caption}</p>
+        </div>
+
+        <form class="form cert-form" id="cert-form" novalidate>
+          <h2 class="cert-form-title">{thanks.formTitle}</h2>
+          <fieldset>
+            <legend>Ce parrainage est</legend>
+            <div class="opts">
+              <label class="opt" for="c-pour-moi">
+                <input type="radio" name="pour" id="c-pour-moi" value="moi" checked />
+                <span class="opt-box"><strong>Pour moi</strong><span>À mon nom</span></span>
+              </label>
+              <label class="opt" for="c-pour-cadeau">
+                <input type="radio" name="pour" id="c-pour-cadeau" value="cadeau" />
+                <span class="opt-box"><strong>Pour offrir</strong><span>Avec une dédicace</span></span>
+              </label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="c-name">Nom inscrit sur le certificat</label>
+            <input id="c-name" name="name" type="text" autocomplete="off" maxlength="60" placeholder="Prénom et nom du parrain" />
+          </div>
+          <div class="cert-gift" id="cert-gift" hidden>
+            <div class="field">
+              <label for="c-giver">De la part de</label>
+              <input id="c-giver" name="giver" type="text" autocomplete="off" maxlength="60" placeholder="Votre prénom, ou vos prénoms" />
+            </div>
+            <div class="field">
+              <label for="c-message">Votre message <span class="optional">facultatif</span></label>
+              <textarea id="c-message" name="message" rows="3" maxlength="140"></textarea>
+              <p class="hint" id="c-count" aria-hidden="true"></p>
+            </div>
+          </div>
+          <fieldset>
+            <legend>Formule</legend>
+            <div class="opts">
+              {formules.map((fo, i) => (
+                <label class="opt" for={`c-${fo.id}`}>
+                  <input type="radio" name="formule" id={`c-${fo.id}`} value={fo.id} checked={i === 0} />
+                  <span class="opt-box"><strong>{fo.label}</strong><span>{fo.short}</span></span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div class="cert-actions">
+            <button class="btn btn-primary" type="button" id="cert-download" disabled>
+              <Icon name="download-minimalistic-linear" />
+              <span class="btn-label">Télécharger le PDF</span>
+            </button>
+            <button class="btn btn-ghost" type="button" id="cert-print" disabled><Icon name="printer-minimalistic-linear" /> Imprimer</button>
+          </div>
+          <p class="cert-status" id="cert-status" role="status"></p>
+          <ul class="cert-tips">
+            {thanks.tips.map((tip) => <li class:list={[{ 'tip-gift': tip.gift }]}><Icon name={tip.icon} size="sm" /> {tip.text}</li>)}
+          </ul>
+        </form>
+      </section>
+
+      <h2 class="merci-next">{thanks.nextTitle}</h2>
       <ol class="page-steps">
-        {next.map((s, i) => (
+        {thanks.next.map((s, i) => (
           <li>
             <span class="step-n">{String(i + 1).padStart(2, '0')}</span>
             <div>
-              <h2>{s.title}</h2>
-              <p>{s.text}</p>
+              <h3>{s.title}</h3>
+              <p>{s.text.replace('{house}', site.name)}</p>
             </div>
           </li>
         ))}
       </ol>
       <div class="page-actions">
-        <a class="btn btn-primary" href={href('')}>Retour au site</a>
+        <a class="btn btn-ghost" href={href('')}>Retour au site</a>
       </div>
     </div>
   </div>

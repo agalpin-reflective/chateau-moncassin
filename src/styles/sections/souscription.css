@@ -22,10 +22,14 @@
 .f-row { display: grid; gap: var(--s-300) }
 @media (min-width: 560px) { .f-row { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
 .field { display: grid; gap: var(--s-75); min-width: 0 }
-.field input { width: 100%; min-width: 0; padding: var(--s-100) var(--s-200); border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--ink-2); font-size: 16px; line-height: 24px; transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
+.field input, .field textarea { width: 100%; min-width: 0; padding: var(--s-100) var(--s-200); border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--ink-2); font-size: 16px; line-height: 24px; transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease) }
 .field input::placeholder { color: var(--paper-hint) }
-@media (hover: hover) and (pointer: fine) { .field input:hover { border-color: var(--paper-3) } }
-.field input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-color: var(--gold) }
+.field textarea { display: block; resize: vertical; min-height: 72px; font: inherit; color: inherit }
+.optional { font-weight: 400; color: var(--paper-2) }
+.hint { font-size: 12px; line-height: 16px; color: var(--paper-2) }
+.gift-grid { display: grid; gap: var(--s-300) }
+@media (hover: hover) and (pointer: fine) { .field input:hover, .field textarea:hover { border-color: var(--paper-3) } }
+.field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-color: var(--gold) }
 .field input[aria-invalid='true'], .check input[aria-invalid='true'] { border-color: var(--error) }
 .err { display: flex; align-items: center; gap: var(--s-75); font-size: 14px; line-height: 20px; color: var(--error) }
 .check { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--s-100); align-items: start }
@@ -52,7 +56,7 @@
 .done-icon { width: 40px; height: 40px; border-radius: var(--r-pill); background: var(--gold); color: var(--ink); display: grid; place-items: center }
 .form-done h3 { font-size: 24px; line-height: 32px; font-weight: 400 }
 .form-done p { color: var(--paper-2) }
-.form-done .btn { justify-self: start }
+.done-actions { display: flex; flex-wrap: wrap; gap: var(--s-100) }
 
 .ticket-wrap { perspective: 1200px }
 @media (min-width: 1024px) { .ticket-wrap { position: sticky; top: var(--s-900) } }

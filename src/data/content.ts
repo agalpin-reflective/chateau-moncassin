@@ -234,3 +234,37 @@ export const certificate = {
   reference: 'Référence {reference}',
   legal: "Parrainage symbolique : il ne confère aucun droit de propriété sur un pied de vigne. L'abus d'alcool est dangereux pour la santé. À consommer avec modération.",
 };
+
+/** Page du certificat, affichée après la souscription (/merci). */
+export const thanks = {
+  eyebrow: 'Paiement confirmé',
+  eyebrowDemo: 'Version de démonstration',
+  intro: "Merci pour votre parrainage. Votre année au rythme de la vigne commence aujourd'hui, et votre certificat est prêt : vérifiez le nom, puis téléchargez ou imprimez la page.",
+  formTitle: 'Personnalisez votre certificat',
+  caption: 'Aperçu du certificat. Le PDF est une page A4 en paysage, prête à imprimer.',
+  noscript: "L'aperçu et le téléchargement du certificat ont besoin de JavaScript.",
+  /** Textes utilisés par le script de la page. */
+  copy: {
+    titleSelf: 'Bienvenue dans le cercle',
+    titleGift: 'Votre cadeau est prêt',
+    placeholder: 'Nom du parrain',
+    giverPlaceholder: 'votre prénom',
+    alt: 'Certificat de parrainage au nom de',
+    missing: 'Indiquez le nom à inscrire pour télécharger le certificat.',
+    preparing: 'Préparation du PDF',
+    done: 'Le certificat a été téléchargé.',
+    missingGlyphs: "Certains caractères n'existent pas dans les polices du PDF et ont été remplacés. Pour les conserver, utilisez Imprimer puis « Enregistrer au format PDF ».",
+    failed: "Le PDF n'a pas pu être préparé sur cet appareil. Utilisez Imprimer puis « Enregistrer au format PDF ».",
+  },
+  tips: [
+    { icon: 'gift-linear', gift: true, text: "Pour l'offrir : imprimez le certificat et glissez la page dans une enveloppe, ou envoyez le PDF par message." },
+    { icon: 'printer-minimalistic-linear', gift: false, text: 'Impression : format A4, orientation paysage, sans marges si votre imprimante le permet.' },
+    { icon: 'shield-check-linear', gift: false, text: 'Le certificat est créé dans votre navigateur : les noms saisis ici ne sont envoyés nulle part.' },
+  ],
+  nextTitle: 'Et maintenant',
+  next: [
+    { title: 'Vos cadeaux sont préparés', text: "Les bouteilles et, selon la formule, le tee shirt sont expédiés à l'adresse indiquée au paiement, frais d'envoi inclus." },
+    { title: 'Réservez la journée de vendanges', text: 'Contactez le {house} pour choisir la journée au domaine, repas compris.' },
+    { title: 'Profitez des privilèges', text: "Les réductions sont nominatives : elles sont au nom inscrit sur le certificat, pendant les douze mois qui suivent l'achat." },
+  ],
+};

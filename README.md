@@ -50,7 +50,16 @@ Pour activer le paiement :
 3. Définir la page de confirmation sur `https://<votre-domaine>/merci`.
 4. Renseigner les deux URL dans les variables d'environnement, puis redéployer.
 
-Le formulaire envoie vers Stripe l'email prérempli (`prefilled_email`), la langue (`locale=fr`) et une référence `client_reference_id` de la forme `domaine_1729…` pour retrouver la formule choisie.
+Le formulaire envoie vers Stripe l'email prérempli (`prefilled_email`), la langue (`locale=fr`) et une référence `client_reference_id` de la forme `domaine_MWDPE12X` : la formule, puis la référence imprimée sur le certificat.
+
+### Certificat de parrainage
+
+Après le paiement, la page `/merci` affiche le certificat, au nom du parrain et daté du jour de la souscription, et le propose en PDF (A4 paysage) ou à l'impression. Deux cas sont prévus dès le formulaire : « pour moi » (certificat au nom de l'acheteur) et « pour offrir » (certificat au nom de la personne, avec « Un cadeau de … » et un message facultatif).
+
+- Le site est statique : la souscription est gardée dans le navigateur (`localStorage`, voir `src/scripts/lib/order.ts`) le temps du paiement. Sur un autre appareil, la page propose de saisir le nom.
+- Le certificat n'est donc **pas une preuve d'achat** : n'importe qui peut en créer un. La référence imprimée permet de le rapprocher d'un paiement Stripe. Pour un certificat émis par le château (envoi par email après paiement), il faudra un traitement côté serveur branché sur le webhook Stripe.
+- Le dessin est décrit une seule fois (`src/scripts/certificate/layout.ts`) et rendu deux fois : en SVG pour l'aperçu et l'impression, en PDF vectoriel avec `pdf-lib` pour le téléchargement (module chargé au clic seulement, environ 1 Mo).
+- Contrôle hors navigateur : `node tools/render-certificate.mjs exemple.pdf` (ajouter `cadeau` pour la variante offerte).
 
 ## Déploiement
 
@@ -81,15 +90,18 @@ src/
     site.ts          informations du château, tarif, liens de paiement
     content.ts       formules, année de la vigne, tee shirt, alentours, FAQ, avantages
     logo.ts          tracé du logo officiel du château
+    vine.ts          géométrie du pied de vigne (cadran, tee shirt, certificat)
   layouts/           gabarit commun (SEO, navigation, porte d'âge, pied de page)
   pages/             accueil, souscrire, conditions, mentions légales, confidentialité, merci, 404, robots.txt
   scripts/
     app.ts           point d'entrée commun à toutes les pages
     core/            défilement, navigation, porte d'âge
     home/            verre WebGL, intro du hero, cadran de l'année, cep, tee shirt, apparitions, FAQ
-    pages/           formulaire de souscription
+    pages/           formulaire de souscription, page du certificat
+    certificate/     dessin du certificat, rendu SVG et rendu PDF
   styles/            tokens, base, une feuille par section
 tools/render-poster.py   régénère l'image fixe du verre à partir de la même formule que le shader
+tools/render-certificate.mjs   génère un certificat d'exemple en PDF avec le code de la page
 ```
 
 ## À compléter par le château

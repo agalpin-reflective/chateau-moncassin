@@ -20,6 +20,7 @@ Site Astro statique du Cercle des parrains du Château Moncassin. Lire le README
 - Rien ne doit dépendre de la hauteur d'écran en direct (media query `height`, unités `vh` ou `svh` sur une hauteur de section) : sur téléphone, la barre du navigateur la fait varier pendant le défilement. Passer par la hauteur figée de `year-dial.ts` (`--annee-vh`).
 - L'année de la vigne va de novembre à octobre (`vineMonths`, `stages` dans `content.ts`) ; la frise du cep (`home/vine.ts`) suit le même découpage.
 - Le formulaire de souscription vit sur la page `/souscrire`, jamais sur l'accueil. Les cartes des formules y renvoient avec `?formule=`.
+- Certificat (`/merci`) : la mise en page n'existe qu'à un endroit, `scripts/certificate/layout.ts`. L'aperçu SVG et le PDF la lisent tous les deux : ne jamais retoucher l'un sans l'autre, et contrôler le PDF avec `node tools/render-certificate.mjs`. Le module PDF reste en import dynamique (1 Mo).
 - Une apparition au défilement ne doit masquer un élément que s'il est sous la ligne de flottaison au chargement.
 - Ne jamais présenter d'image, d'avis ou de logo qui ne vient pas du château. Les informations légales manquantes restent marquées « À compléter ».
 - La mention loi Évin doit rester visible dans le pied de page, le menu et la porte d'âge.

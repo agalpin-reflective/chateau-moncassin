@@ -12,6 +12,7 @@ import { href } from '../lib/url';
       <p class="rejoindre-text" data-reveal>Devenez parrain symbolique d'un pied de vigne au Château Moncassin et partagez une expérience authentique autour du vin et du terroir.</p>
       <div class="rejoindre-cta" data-reveal>
         <a class="btn btn-primary" href={href('souscrire')}>Devenir parrain <Icon name="arrow-right-linear" class="i-arrow" /></a>
+        <a class="btn btn-ghost" href={`${href('souscrire')}?pour=cadeau`}><Icon name="gift-linear" /> Offrir un parrainage</a>
         <p class="rejoindre-price"><strong>{formatPrice(site.offer.priceTTC)}</strong> pour {site.offer.months} mois, expédition incluse</p>
       </div>
     </div>

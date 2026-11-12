@@ -37,20 +37,55 @@ const formulesData = JSON.stringify(
               ))}
             </div>
           </fieldset>
+          <fieldset>
+            <legend>Ce parrainage est</legend>
+            <div class="opts">
+              <label class="opt" for="f-pour-moi">
+                <input type="radio" name="pour" id="f-pour-moi" value="moi" checked />
+                <span class="opt-box"><strong>Pour moi</strong><span>Le certificat sera à mon nom</span></span>
+              </label>
+              <label class="opt" for="f-pour-cadeau">
+                <input type="radio" name="pour" id="f-pour-cadeau" value="cadeau" />
+                <span class="opt-box"><strong>Pour offrir</strong><span>Le certificat sera au nom de la personne</span></span>
+              </label>
+            </div>
+          </fieldset>
           <div class="f-row">
             <div class="field">
-              <label for="f-prenom">Prénom</label>
+              <label for="f-prenom">Votre prénom</label>
               <input id="f-prenom" name="prenom" type="text" autocomplete="given-name" required aria-describedby="e-prenom" />
               <p class="err" id="e-prenom" hidden></p>
             </div>
             <div class="field">
-              <label for="f-nom">Nom</label>
+              <label for="f-nom">Votre nom</label>
               <input id="f-nom" name="nom" type="text" autocomplete="family-name" required aria-describedby="e-nom" />
               <p class="err" id="e-nom" hidden></p>
             </div>
           </div>
+          <fieldset class="gift" id="gift-fields" hidden>
+            <legend>La personne à qui vous offrez le parrainage</legend>
+            <div class="gift-grid">
+              <div class="f-row">
+                <div class="field">
+                  <label for="f-bprenom">Son prénom</label>
+                  <input id="f-bprenom" name="bprenom" type="text" autocomplete="off" aria-describedby="e-bprenom" />
+                  <p class="err" id="e-bprenom" hidden></p>
+                </div>
+                <div class="field">
+                  <label for="f-bnom">Son nom</label>
+                  <input id="f-bnom" name="bnom" type="text" autocomplete="off" aria-describedby="e-bnom" />
+                  <p class="err" id="e-bnom" hidden></p>
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-message">Votre message sur le certificat <span class="optional">facultatif</span></label>
+                <textarea id="f-message" name="message" rows="2" maxlength="140" aria-describedby="h-message"></textarea>
+                <p class="hint" id="h-message">140 caractères au plus. Vous pourrez encore le modifier avant de télécharger le certificat.</p>
+              </div>
+            </div>
+          </fieldset>
           <div class="field">
-            <label for="f-email">Adresse email</label>
+            <label for="f-email">Votre adresse email</label>
             <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="prenom.nom@exemple.fr" aria-describedby="e-email" />
             <p class="err" id="e-email" hidden></p>
           </div>
@@ -83,8 +118,11 @@ const formulesData = JSON.stringify(
         <div class="form-done" id="form-done" tabindex="-1" hidden>
           <span class="done-icon"><Icon name="check-circle-linear" /></span>
           <h3 id="done-title">Votre récapitulatif est prêt</h3>
-          <p>Sur le site en ligne, cette étape ouvre le paiement sécurisé de {formatPrice(site.offer.priceTTC)}. Vos bouteilles sont ensuite expédiées et vous réservez votre journée de vendanges auprès du château.</p>
-          <button class="btn btn-ghost" type="button" id="form-edit">Modifier ma demande</button>
+          <p>Sur le site en ligne, cette étape ouvre le paiement sécurisé de {formatPrice(site.offer.priceTTC)}, puis la page du certificat de parrainage. Vous pouvez déjà voir à quoi il ressemblera.</p>
+          <div class="done-actions">
+            <a class="btn btn-primary" href={href('merci')}>Voir mon certificat <Icon name="arrow-right-linear" class="i-arrow" /></a>
+            <button class="btn btn-ghost" type="button" id="form-edit">Modifier ma demande</button>
+          </div>
         </div>
       </div>
 
@@ -100,6 +138,7 @@ const formulesData = JSON.stringify(
             </div>
             <dl class="ticket-rows">
               <div><dt>Parrain</dt><dd class="ticket-name is-empty" id="t-name">Votre nom</dd></div>
+              <div id="t-giver-row" hidden><dt>Offert par</dt><dd id="t-giver"></dd></div>
               <div><dt>Formule</dt><dd id="t-formule">{first.label}</dd></div>
               <div><dt>Contenu</dt><dd id="t-content">{first.summary}</dd></div>
               <div><dt>Durée</dt><dd>{site.offer.months} mois, sans renouvellement automatique</dd></div>
