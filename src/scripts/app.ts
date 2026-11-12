@@ -4,6 +4,7 @@ import { initSmoothScroll, scrollToTarget, destroySmoothScroll } from './core/sm
 import { initNav } from './core/nav';
 import { gateNeeded, initGate } from './core/gate';
 import { initHome } from './home';
+import { initSubscription } from './pages/subscription';
 
 document.documentElement.classList.add('js');
 
@@ -11,6 +12,7 @@ initSmoothScroll();
 initNav();
 
 const home = $('[data-page="home"]') ? initHome({ gateOpen: gateNeeded() }) : null;
+initSubscription();
 
 initGate(() => {
   home?.enter();

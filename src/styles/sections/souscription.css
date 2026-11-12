@@ -1,5 +1,6 @@
-.sous { padding-block: var(--s-700); position: relative }
-@media (min-width: 1024px) { .sous { padding-block: var(--s-900) } }
+/* Page dédiée : la section commence sous la barre de navigation flottante. */
+.sous { position: relative; padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-900) + var(--s-400)); padding-bottom: var(--s-700) }
+@media (min-width: 1024px) { .sous { padding-bottom: var(--s-900) } }
 .sous-grid { display: grid; gap: var(--s-600) }
 @media (min-width: 1024px) { .sous-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--s-900); align-items: start } }
 .sous-copy { display: grid; gap: var(--s-300); max-width: 600px }
@@ -70,5 +71,5 @@
 .ticket-name.is-empty { color: var(--paper-hint) }
 .perforation { height: 1px; border-top: 1px dashed var(--gold-line) }
 .ticket-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--s-100) }
-.ticket-price { font-size: 30px; line-height: 36px; font-weight: 300; font-variant-numeric: tabular-nums }
+.ticket-price { font-size: 30px; line-height: 36px; font-weight: 400; font-variant-numeric: tabular-nums }
 .ticket-foot p:last-child { font-size: 14px; line-height: 20px; color: var(--paper-2) }

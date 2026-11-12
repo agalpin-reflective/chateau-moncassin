@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import vendanges from '../assets/vendanges.jpg';
+import Logo from './Logo.astro';
 import { site, formatPrice } from '../data/site';
 ---
 <section class="section principe" id="principe" aria-labelledby="principe-title">
@@ -31,7 +32,7 @@ import { site, formatPrice } from '../data/site';
         </div>
         <div class="stamp" aria-hidden="true">
           <svg viewBox="0 0 120 120"><defs><path id="stamp-c" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path></defs><text><textPath href="#stamp-c" textLength="286" lengthAdjust="spacing">LE CERCLE DES PARRAINS · CHÂTEAU MONCASSIN · </textPath></text></svg>
-          <span class="stamp-m">M</span>
+          <Logo size="sm" class="stamp-logo" />
         </div>
         <figcaption>Le pied de vigne en fin d'été : un tronc noueux, des grappes mûres, la récolte qui commence.</figcaption>
       </figure>

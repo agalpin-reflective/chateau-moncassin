@@ -9,5 +9,5 @@
 }
 .step { position: relative; display: grid; gap: var(--s-100); align-content: start }
 .step-n { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: var(--r-pill); border: 1px solid var(--gold-line); background: var(--ink); color: var(--gold); font-size: 14px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 1; margin-bottom: var(--s-100) }
-.step h3 { font-size: 20px; line-height: 28px; font-weight: 500 }
+.step h3 { font-size: 20px; line-height: 28px; font-weight: 400 }
 .step p { color: var(--paper-2) }

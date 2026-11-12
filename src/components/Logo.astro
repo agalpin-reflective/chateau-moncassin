@@ -1,0 +1,14 @@
+---
+/**
+ * Logo du Château Moncassin. Le tracé est défini une seule fois dans BaseLayout (symbole #logo-cm).
+ * En petite taille, un contour épaissit le trait du château, trop fin pour rester lisible sous 80 px de large.
+ */
+import { logo } from '../data/logo';
+
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+const { size = 'md', class: className } = Astro.props;
+---
+<svg class:list={['logo', `logo-${size}`, className]} viewBox={`-4 -4 ${logo.width + 8} ${logo.height + 8}`} aria-hidden="true" focusable="false"><use href="#logo-cm"></use></svg>

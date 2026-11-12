@@ -1,5 +1,5 @@
 ---
-import Seal from './Seal.astro';
+import Logo from './Logo.astro';
 import { site, formatPrice } from '../data/site';
 import { href } from '../lib/url';
 
@@ -15,7 +15,7 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <Seal />
+        <Logo size="md" />
         <p class="name">{site.name}</p>
         <p>{site.company}</p>
         <p>{site.club}</p>

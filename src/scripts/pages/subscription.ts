@@ -1,7 +1,6 @@
 import { $, $$ } from '../lib/dom';
 import { gsap, ScrollTrigger, finePointer, motion } from '../lib/motion';
 import { ease } from '../lib/ease';
-import { FORMULE_EVENT } from '../core/nav';
 
 type Key = 'prenom' | 'nom' | 'email' | 'age';
 interface FormuleInfo {
@@ -19,7 +18,8 @@ const MESSAGES = {
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /**
- * Formulaire de souscription et récapitulatif nominatif.
+ * Formulaire de souscription et récapitulatif nominatif (page /souscrire).
+ * La formule peut arriver par l'adresse (?formule=domaine) depuis les cartes de l'accueil.
  * Si les liens de paiement Stripe sont configurés, la validation redirige vers le paiement
  * avec l'email prérempli ; sinon le formulaire reste en mode démonstration.
  */
@@ -85,15 +85,14 @@ export function initSubscription(): void {
     ticketName.classList.toggle('is-empty', !name);
   };
 
-  const setFormule = (id: string) => {
+  const setFormule = (id: string, animate = true) => {
     const info = formules[id];
     if (!info) return;
     const radio = $<HTMLInputElement>(`#f-${id}`, form);
     if (radio && !radio.checked) radio.checked = true;
     if (ticketFormule) ticketFormule.textContent = info.label;
     if (ticketContent) ticketContent.textContent = info.summary;
-    $$('.card').forEach((card) => card.classList.toggle('is-selected', card.dataset.formule === id));
-    if (motion) gsap.fromTo([ticketFormule, ticketContent], { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.6, ease, stagger: 0.06 });
+    if (motion && animate) gsap.fromTo([ticketFormule, ticketContent], { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.6, ease, stagger: 0.06 });
   };
 
   /* La validation au départ du champ n'intervient qu'après une première tentative d'envoi :
@@ -110,7 +109,8 @@ export function initSubscription(): void {
   fields.prenom.addEventListener('input', updateName);
   fields.nom.addEventListener('input', updateName);
   $$<HTMLInputElement>('input[name="formule"]', form).forEach((radio) => radio.addEventListener('change', () => setFormule(radio.value)));
-  document.addEventListener(FORMULE_EVENT, (e) => setFormule(String((e as CustomEvent<string>).detail)));
+  /* Formule choisie sur l'accueil, ou conservée par le navigateur au retour sur la page. */
+  setFormule(new URLSearchParams(location.search).get('formule') ?? selected(), false);
 
   const setBusy = (busy: boolean, label = idleLabel) => {
     submitButton.disabled = busy;

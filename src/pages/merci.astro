@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Seal from '../components/Seal.astro';
+import Logo from '../components/Logo.astro';
 import { site } from '../data/site';
 import { href } from '../lib/url';
 
@@ -18,7 +18,7 @@ const next = [
   <div class="page" id="top">
     <div class="wrap">
       <header class="page-head">
-        <Seal size="lg" />
+        <Logo size="lg" />
         <p class="eyebrow">Paiement confirmé</p>
         <h1 class="page-title">Bienvenue dans {site.club.charAt(0).toLowerCase() + site.club.slice(1)}</h1>
         <p class="page-intro">Merci pour votre parrainage. Votre année au rythme de la vigne commence aujourd'hui.</p>

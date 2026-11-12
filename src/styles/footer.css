@@ -4,7 +4,7 @@
 .foot-brand { display: grid; gap: var(--s-100); align-content: start }
 .foot-brand p { color: var(--paper-2); font-size: 14px; line-height: 20px }
 .foot-brand .name { color: var(--paper); font-size: 18px; line-height: 28px }
-.foot-h { font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: var(--s-200) }
+.foot-h { font-family: var(--font); font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: var(--s-200) }
 .foot-list { display: grid; gap: var(--s-100); font-size: 14px; line-height: 20px; color: var(--paper-2) }
 .foot-list a { color: var(--paper); text-underline-offset: 3px; transition: color var(--dur-state) var(--ease) }
 @media (hover: hover) and (pointer: fine) { .foot-list a:hover { color: var(--gold) } }

@@ -1,7 +1,7 @@
 /* Pages secondaires : mentions légales, conditions, confidentialité, merci, 404 */
 .page { padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-900) + var(--s-400)); padding-bottom: var(--s-900) }
 .page-head { display: grid; gap: var(--s-200); max-width: 720px }
-.page-title { font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em }
+.page-title { font-size: 36px; line-height: 40px; font-weight: 400; letter-spacing: -0.01em }
 @media (min-width: 768px) { .page-title { font-size: 48px; line-height: 1 } }
 .page-intro { font-size: 18px; line-height: 28px; color: var(--paper-2) }
 .prose { margin-top: var(--s-600); max-width: 720px; display: grid; gap: var(--s-600) }
@@ -21,9 +21,9 @@
 .todo { display: inline-flex; align-items: center; gap: var(--s-50); padding: 0 var(--s-75); border-radius: var(--r-sm); background: var(--wine-soft); color: var(--error); font-size: 14px; line-height: 24px; font-weight: 600 }
 .page-actions { margin-top: var(--s-400); display: flex; flex-wrap: wrap; gap: var(--s-200) }
 .page-center { min-height: min(100svh, 880px); display: grid; align-content: center; justify-items: start; gap: var(--s-300) }
-.page-center .seal { margin-bottom: var(--s-100) }
+.page-center .logo { margin-bottom: var(--s-100) }
 .page-steps { margin-top: var(--s-600); display: grid; gap: var(--s-300); max-width: 720px }
 .page-steps li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--s-200); align-items: start }
 .page-steps .step-n { margin: 0 }
-.page-steps h2 { font-size: 20px; line-height: 28px; font-weight: 500 }
+.page-steps h2 { font-size: 20px; line-height: 28px; font-weight: 400 }
 .page-steps p { color: var(--paper-2) }

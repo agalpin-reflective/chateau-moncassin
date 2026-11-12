@@ -7,7 +7,7 @@ Site du parrainage symbolique d'un pied de vigne au Château Moncassin (SAS CMEV
 - [Astro 7](https://astro.build) en sortie statique, TypeScript strict
 - GSAP + ScrollTrigger pour les animations, Lenis comme unique moteur de défilement
 - Shader WebGL brut pour le verre de vin du hero (image fixe de repli si WebGL manque ou si le mouvement réduit est demandé)
-- Police Manrope et icônes Solar auto-hébergées (aucune requête vers Google Fonts ou un CDN)
+- Polices Vidaloka (titres) et Manrope (texte), icônes Solar, le tout auto-hébergé (aucune requête vers Google Fonts ou un CDN)
 - Images optimisées au build (AVIF, WebP) via `astro:assets`
 - Sitemap, `robots.txt`, balises Open Graph, données structurées FAQ
 
@@ -38,6 +38,8 @@ Variables d'environnement (voir `.env.example`) :
 | `PUBLIC_STRIPE_LINK_DOMAINE` | lien de paiement Stripe de la formule domaine |
 
 ### Paiement
+
+Le formulaire de souscription se trouve sur une page dédiée, `/souscrire` ; les cartes des formules de l'accueil y renvoient avec la formule présélectionnée (`/souscrire?formule=domaine`).
 
 Tant que les deux liens Stripe sont vides, le formulaire reste en **mode démonstration** : rien n'est envoyé, le visiteur voit un récapitulatif et un message l'indique.
 
@@ -74,16 +76,18 @@ La CI GitHub Actions (`.github/workflows/ci.yml`) lance `npm run check` et `npm 
 ```
 src/
   assets/            photos sources et image fixe du verre (optimisées au build)
-  components/        une section de la page d'accueil par composant
+  components/        une section de la page d'accueil par composant, plus le logo, le cep (Vine) et le formulaire
   data/
     site.ts          informations du château, tarif, liens de paiement
-    content.ts       formules, étapes de l'année, FAQ, avantages
+    content.ts       formules, année de la vigne, tee shirt, alentours, FAQ, avantages
+    logo.ts          tracé du logo officiel du château
   layouts/           gabarit commun (SEO, navigation, porte d'âge, pied de page)
-  pages/             accueil, conditions, mentions légales, confidentialité, merci, 404, robots.txt
+  pages/             accueil, souscrire, conditions, mentions légales, confidentialité, merci, 404, robots.txt
   scripts/
     app.ts           point d'entrée commun à toutes les pages
     core/            défilement, navigation, porte d'âge
-    home/            verre WebGL, intro du hero, cadran de l'année, apparitions, FAQ, souscription
+    home/            verre WebGL, intro du hero, cadran de l'année, cep, tee shirt, apparitions, FAQ
+    pages/           formulaire de souscription
   styles/            tokens, base, une feuille par section
 tools/render-poster.py   régénère l'image fixe du verre à partir de la même formule que le shader
 ```
@@ -98,10 +102,13 @@ Les champs manquants s'affichent « À compléter » en rouge sur les pages conc
 - Liens de paiement Stripe
 - Droits d'utilisation de la photo du château (source citée : tripadvisor.pt)
 - Photos originales du domaine si possible (vignes, chai, bouteilles du château)
+- Visuel définitif du tee shirt (la section de l'accueil montre un aperçu dessiné, non contractuel)
+- Section Casteljaloux : noms des établissements, distances et liens, si le château souhaite les afficher
+- Calendrier des travaux du vignoble (`stages` dans `content.ts`), repris d'une frise générique : à valider par le vigneron
 
 ## Règles éditoriales et visuelles
 
-- Une seule police (Manrope), pas d'italique, graisses de 200 à 700.
+- Deux polices : Vidaloka pour les titres et les grands chiffres (graisse 400 uniquement), Manrope pour le texte (graisses de 200 à 700). Pas d'italique.
 - Pas de trait d'union dans les textes affichés : on écrit « tee shirt » et les questions évitent l'inversion du sujet.
 - Tailles de texte et espacements limités aux paliers définis dans `src/styles/tokens.css`.
 - Toutes les transitions utilisent la courbe `cubic-bezier(0.32, 0.72, 0, 1)`.
@@ -111,4 +118,5 @@ Les champs manquants s'affichent « À compléter » en rouge sur les pages conc
 
 - Photographie du château : tripadvisor.pt (droits à confirmer)
 - Icônes : [Solar](https://icon-sets.iconify.design/solar/), CC BY 4.0
-- Police : [Manrope](https://fonts.google.com/specimen/Manrope), SIL Open Font License
+- Polices : [Vidaloka](https://fonts.google.com/specimen/Vidaloka) et [Manrope](https://fonts.google.com/specimen/Manrope), SIL Open Font License
+- Logo : fourni par le château, vectorisé dans `src/data/logo.ts`

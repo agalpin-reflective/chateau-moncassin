@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Souscription from '../components/Souscription.astro';
+import { site, formatPrice } from '../data/site';
+---
+<BaseLayout
+  title="Devenir parrain · Château Moncassin"
+  description={`Souscrivez votre parrainage d'un pied de vigne au Château Moncassin : choisissez votre formule, ${site.offer.months} mois pour ${formatPrice(site.offer.priceTTC)}, expédition incluse.`}
+>
+  <Souscription />
+</BaseLayout>

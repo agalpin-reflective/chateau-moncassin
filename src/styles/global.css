@@ -8,9 +8,12 @@
 @import './sections/experience.css';
 @import './sections/tagline.css';
 @import './sections/formules.css';
+@import './sections/tee.css';
+@import './sections/alentours.css';
 @import './sections/privileges.css';
 @import './sections/etapes.css';
 @import './sections/faq.css';
 @import './sections/souscription.css';
+@import './sections/rejoindre.css';
 @import './footer.css';
 @import './pages.css';

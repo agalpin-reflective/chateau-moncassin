@@ -1,32 +1,33 @@
 ---
-import Seal from './Seal.astro';
+import Logo from './Logo.astro';
 import { href } from '../lib/url';
 
 const links = [
+  { id: 'privileges', label: 'Privilèges' },
   { id: 'annee', label: "L'année" },
   { id: 'formules', label: 'Formules' },
-  { id: 'privileges', label: 'Privilèges' },
+  { id: 'alentours', label: 'Casteljaloux' },
   { id: 'questions', label: 'Questions' },
 ];
 const menu = [
   { id: 'principe', label: 'Le parrainage' },
+  { id: 'privileges', label: 'Les privilèges' },
   { id: 'annee', label: "L'année du cep" },
   { id: 'formules', label: 'Les formules' },
-  { id: 'privileges', label: 'Les privilèges' },
+  { id: 'alentours', label: 'Casteljaloux' },
   { id: 'questions', label: 'Questions' },
-  { id: 'souscrire', label: 'Devenir parrain' },
 ];
 ---
 <header class="nav" id="site-header">
   <nav class="nav-pill" aria-label="Navigation principale">
     <a class="brand" href={href('#top')} aria-label="Château Moncassin, accueil">
-      <Seal />
+      <Logo size="sm" />
       <span>Moncassin</span>
     </a>
     <ul class="nav-links">
       {links.map((l) => <li><a href={href(`#${l.id}`)} data-nav={l.id}>{l.label}</a></li>)}
     </ul>
-    <a class="btn btn-primary btn-sm nav-cta" href={href('#souscrire')}>Devenir parrain</a>
+    <a class="btn btn-primary btn-sm nav-cta" href={href('souscrire')}>Devenir parrain</a>
     <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span></span><span></span></button>
   </nav>
 </header>
@@ -35,6 +36,7 @@ const menu = [
   <nav aria-label="Menu">
     <ul>
       {menu.map((l) => <li><a class="menu-link" href={href(`#${l.id}`)}>{l.label}</a></li>)}
+      <li><a class="menu-link" href={href('souscrire')}>Devenir parrain</a></li>
     </ul>
   </nav>
   <div class="menu-foot">

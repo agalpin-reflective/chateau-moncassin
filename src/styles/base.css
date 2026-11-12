@@ -1,5 +1,5 @@
 *, *::before, *::after { box-sizing: border-box }
-html { background: var(--ink); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent }
+html { background: var(--ink); font-synthesis: none; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent }
 /* Contrôles : clic immédiat (pas d'attente du double tap) et pas de sélection du libellé à l'appui long. Le texte de contenu reste sélectionnable. */
 a, button, summary, label { touch-action: manipulation }
 .btn, button, summary, .opt, .nav-links a, .menu-link, .brand { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none }
@@ -21,7 +21,9 @@ body {
 }
 h1, h2, h3, p, ul, ol, dl, dd, figure, fieldset { margin: 0 }
 ul, ol { padding: 0; list-style: none }
-h1, h2, h3 { font-weight: 300; text-wrap: balance }
+h1, h2, h3 { text-wrap: balance }
+/* Titres et grands chiffres en Vidaloka, toujours en graisse 400 (la seule de la famille). */
+h1, h2, h3, .display, .brand span, .menu-link, .tagline-text, .dial-num, .perk-num, .card-num .n, .card-price, .ticket-price, .ticket-club, .ticket-name, .facts dd, .foot-brand .name { font-family: var(--font-display); font-weight: 400 }
 p, li, dd, figcaption { text-wrap: pretty }
 a { color: inherit }
 img { display: block; max-width: 100%; height: auto }
@@ -43,7 +45,7 @@ button, input { font: inherit; color: inherit }
 
 /* Type */
 .eyebrow { font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold) }
-.h2 { font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em }
+.h2 { font-size: 36px; line-height: 40px; font-weight: 400; letter-spacing: -0.01em }
 @media (min-width: 768px) { .h2 { font-size: 48px; line-height: 1 } }
 .lead { font-size: 18px; line-height: 28px; color: var(--paper) }
 .muted { color: var(--paper-2) }
@@ -69,8 +71,12 @@ button, input { font: inherit; color: inherit }
 .skip { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 16px); z-index: 100; transform: translateY(-200%); background: var(--paper); color: var(--ink); padding: var(--s-75) var(--s-100); border-radius: var(--r-pill); font-weight: 600; text-decoration: none; transition: transform var(--dur-state) var(--ease) }
 .skip:focus-visible { transform: none }
 
-.seal { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: var(--r-pill); border: 1px solid var(--gold); color: var(--gold); font-size: 14px; line-height: 20px; font-weight: 600; flex: none }
-.seal-lg { width: 64px; height: 64px; font-size: 24px; line-height: 32px; font-weight: 300 }
+.sprite { position: absolute }
+/* Logo du château : largeur fixée par la taille, hauteur déduite du tracé. */
+.logo { display: block; flex: none; width: 72px; height: auto; aspect-ratio: 434 / 288; fill: currentColor; color: var(--gold); overflow: visible }
+.logo-sm { width: 44px; stroke: currentColor; stroke-width: 3; stroke-linejoin: round }
+.logo-md { stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round }
+.logo-lg { width: 128px }
 
 .section { padding-block: var(--s-700) }
 @media (min-width: 1024px) { .section { padding-block: var(--s-900) } }

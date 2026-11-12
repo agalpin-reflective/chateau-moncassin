@@ -4,7 +4,7 @@ import { createGlass } from './glass';
 import { createHero } from './hero';
 import { initChoreography } from './choreography';
 import { initFaq } from './faq';
-import { initSubscription } from './subscription';
+import { initTee } from './tee';
 
 export function initHome({ gateOpen }: { gateOpen: boolean }) {
   const glass = createGlass();
@@ -19,7 +19,7 @@ export function initHome({ gateOpen }: { gateOpen: boolean }) {
 
   initChoreography();
   initFaq();
-  initSubscription();
+  initTee();
 
   const refresh = () => {
     hero.paint();

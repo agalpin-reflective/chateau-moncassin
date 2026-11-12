@@ -1,0 +1,33 @@
+---
+/**
+ * Le pied de vigne (géométrie dans data/vine.ts). Il sert au cadran et au dos du tee shirt.
+ * Sans script, il s'affiche à maturité ; sur le cadran, home/vine.ts le cale sur le mois courant.
+ */
+import { vine } from '../data/vine';
+---
+<g class="vine">
+  <path class="vine-ground" d={vine.ground}></path>
+  <path class="vine-wire" d={vine.wire}></path>
+  <path class="vine-wood" d={vine.trunk}></path>
+  <path class="vine-wood vine-arm" d={vine.arm}></path>
+  {vine.buds.map((x) => <g transform={`translate(${x} ${vine.budY + 6})`}><path class="vine-drop" d={vine.drop}></path></g>)}
+  {vine.buds.map((x) => <circle class="vine-bud" cx={x} cy={vine.budY} r="3"></circle>)}
+  {vine.shoots.map((d) => <path class="vine-shoot" d={d} pathLength="1"></path>)}
+  {vine.leaves.map((l) => (
+    <g transform={`translate(${l.x} ${l.y})`}>
+      <g class="vine-leaf-fall">
+        <g transform={`rotate(${l.r}) scale(${l.s})`}>
+          <path class="vine-leaf" d={vine.leaf}></path>
+        </g>
+      </g>
+    </g>
+  ))}
+  {vine.clusters.map((x) => (
+    <g transform={`translate(${x} ${vine.clusterY})`}>
+      <g class="vine-cluster">
+        <path class="vine-stem" d={vine.stem}></path>
+        {vine.berries.map((b) => <circle class="vine-berry" cx={b.x} cy={b.y} r={vine.berryRadius}></circle>)}
+      </g>
+    </g>
+  ))}
+</g>

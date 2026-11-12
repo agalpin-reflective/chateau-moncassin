@@ -30,7 +30,7 @@ Section pierre :
 Ajustements : `--wine-text` et `--paper-hint` ont été ajoutés le 2026-10-26, en éclaircissant la teinte, parce que `--wine` (3.28) et `--paper-3` (3.07) servaient de couleur de texte sous le seuil.
 
 ## Typography
-- Display/heading font: Manrope, graisse 200 à 300 pour les titres, une seule famille (règle de la DA)
+- Display/heading font: Vidaloka 400 (la lettre du monogramme CM du logo), pour les titres et les grands chiffres. Changement demandé par le client le 2026-11-12, en remplacement de Manrope 200 à 300
 - Body font: Manrope 400, 16/24
 - Scale: paliers 12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 96, 128 px
 - Pas d'italique. Seul le titre du hero porte un dégradé de texte (blanc vers gris, exception assumée de la DA)
@@ -48,7 +48,7 @@ Ajustements : `--wine-text` et `--paper-hint` ont été ajoutés le 2026-10-26, 
 - Section separation: padding fixe, plus une section pierre en rupture de teinte (Formules)
 
 ## Structure
-- Macrostructure: récit long en une page. Hero (verre WebGL), principe, cadran épinglé des douze mois, contenu du parrainage, phrase manifeste, formules, privilèges, étapes, FAQ, souscription
+- Macrostructure: récit long en une page. Hero (verre WebGL), principe, privilèges, cadran épinglé des douze mois (novembre à octobre), contenu du parrainage, phrase manifeste, formules, tee shirt, Casteljaloux, étapes, FAQ, appel final. Le formulaire est sur une page dédiée (`/souscrire`)
 - Narrative arc: hook (hero) → solution (principe) → how it works (cadran, étapes) → proof (formules, privilèges) → close (souscription)
 - Shared chrome: barre pilule centrée et flottante ; pied de page en trois colonnes avec mention loi Évin
 
@@ -70,7 +70,7 @@ cave, chaleureux, éditorial, retenu
 - Anchor asset: `src/assets/robe-poster.webp` (le verre, rendu par le même calcul que le shader)
 - Asset style: icônes Solar linéaires, trait fin ; dessin au trait doré pour le cep du cadran (schéma, pas une illustration)
 - Illustration vs. photography split: photos du château uniquement (règle du projet : aucune image hors château) ; pas d'illustration de banque d'images
-- Logo: cachet « M » dans un cercle doré, à remplacer par le logo officiel du château s'il existe
+- Logo: logo officiel du château (silhouette et monogramme CM), tracé dans `src/data/logo.ts`, affiché en or sur fond sombre
 
 ## Motion
 - Feel: lent et feutré pour le récit, immédiat pour les retours d'état

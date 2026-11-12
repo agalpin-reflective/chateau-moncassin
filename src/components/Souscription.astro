@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import Seal from './Seal.astro';
+import Logo from './Logo.astro';
 import { formules } from '../data/content';
 import { site, payment, paymentEnabled, formatPrice } from '../data/site';
 import { href } from '../lib/url';
@@ -10,13 +10,13 @@ const formulesData = JSON.stringify(
   Object.fromEntries(formules.map((f) => [f.id, { label: f.label, summary: f.summary }])),
 );
 ---
-<section class="sous" id="souscrire" aria-labelledby="sous-title">
+<section class="sous" id="top" aria-labelledby="sous-title">
   <div class="wrap">
     <div class="sous-grid">
       <div class="sous-copy">
-        <p class="eyebrow" data-reveal>Rejoindre le cercle</p>
-        <h2 class="h2" id="sous-title" data-split>Votre année au rythme de la vigne commence ici</h2>
-        <p data-reveal>Devenez parrain symbolique d'un pied de vigne au Château Moncassin et partagez une expérience authentique autour du vin et du terroir.</p>
+        <p class="eyebrow">Rejoindre le cercle</p>
+        <h1 class="h2" id="sous-title">Devenir parrain d'un pied de vigne</h1>
+        <p>Choisissez votre formule et indiquez le nom du parrain. {site.offer.months} mois de parrainage pour {formatPrice(site.offer.priceTTC)}, expédition incluse, sans renouvellement automatique.</p>
 
         <form
           class="form"
@@ -92,7 +92,7 @@ const formulesData = JSON.stringify(
         <div class="ticket" id="ticket">
           <div class="ticket-inner">
             <div class="ticket-top">
-              <Seal size="lg" />
+              <Logo size="md" />
               <div>
                 <p class="ticket-club">{site.club}</p>
                 <p class="ticket-house">{site.name}</p>

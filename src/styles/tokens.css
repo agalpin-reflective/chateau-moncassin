@@ -42,6 +42,9 @@
   --hero-from: #ffffff;
   --hero-to: #9b9b9b;
 
+  /* Deux familles : Vidaloka (la lettre du logo CM) pour les titres et les grands chiffres, Manrope pour le texte et l'interface.
+     Vidaloka n'existe qu'en graisse 400 : ne jamais lui demander de gras. */
+  --font-display: 'Vidaloka', 'Iowan Old Style', 'Times New Roman', serif;
   --font: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
   /* Retour d'état (survol, focus, sélection) : sous 300 ms pour rester réactif. */

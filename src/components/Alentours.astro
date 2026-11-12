@@ -1,0 +1,32 @@
+---
+/** Autour du château : ce que l'on trouve à Casteljaloux, pour transformer la journée au domaine en séjour. */
+import Icon from './Icon.astro';
+import { nearby, nearbyIntro, perks } from '../data/content';
+import { href } from '../lib/url';
+
+const stay = perks[0];
+---
+<section class="section alentours" id="alentours" aria-labelledby="alentours-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>{nearbyIntro.eyebrow}</p>
+      <h2 class="h2" id="alentours-title" data-split>{nearbyIntro.title}</h2>
+      <p data-reveal>{nearbyIntro.text}</p>
+    </div>
+    <ul class="near" data-reveal>
+      {nearby.map((n) => (
+        <li class="near-item">
+          <span class="near-icon"><Icon name={n.icon} size="lg" /></span>
+          <div>
+            <h3>{n.title}</h3>
+            <p>{n.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="near-perk" data-reveal>
+      <Icon name="bed-linear" />
+      <span>Pour rester sur place : {stay.value} % de réduction {stay.scope.charAt(0).toLowerCase() + stay.scope.slice(1)} du château, réservée aux parrains. <a href={href('#privileges')}>Voir vos privilèges</a></span>
+    </p>
+  </div>
+</section>

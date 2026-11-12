@@ -2,9 +2,6 @@ import { $, $$ } from '../lib/dom';
 import { reduce } from '../lib/motion';
 import { lockScroll, scrollToTarget } from './smooth-scroll';
 
-/** Événement émis quand un bouton « Choisir la formule … » est cliqué. */
-export const FORMULE_EVENT = 'cercle:formule';
-
 export function initNav(): void {
   const header = $('#site-header');
   const burger = $<HTMLButtonElement>('.burger');
@@ -59,9 +56,6 @@ export function initNav(): void {
     const target = id ? document.getElementById(id) : null;
     if (!target) return;
     e.preventDefault();
-    if (link.dataset.choose) {
-      document.dispatchEvent(new CustomEvent(FORMULE_EVENT, { detail: link.dataset.choose }));
-    }
     closeMenu(false);
     scrollToTarget(target);
   });
@@ -77,7 +71,7 @@ export function initNav(): void {
   }
 
   const links = $$<HTMLAnchorElement>('[data-nav]');
-  const sections = ['top', 'principe', 'annee', 'experience', 'formules', 'privileges', 'etapes', 'questions', 'souscrire']
+  const sections = ['top', 'principe', 'privileges', 'annee', 'experience', 'formules', 'tee', 'alentours', 'etapes', 'questions', 'rejoindre']
     .map((id) => document.getElementById(id))
     .filter((el): el is HTMLElement => Boolean(el));
   if (!links.length || !sections.length) return;

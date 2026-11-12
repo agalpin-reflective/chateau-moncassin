@@ -1,0 +1,84 @@
+---
+/**
+ * Aperçu du tee shirt de la formule domaine : le logo du château devant, l'année d'inscription et le pied de vigne au dos.
+ * Dessin vectoriel retourné en 3D par home/tee.ts. Sans script, les deux faces s'affichent côte à côte.
+ */
+import Icon from './Icon.astro';
+import Vine from './Vine.astro';
+import { logo } from '../data/logo';
+import { site } from '../data/site';
+import { tee } from '../data/content';
+import { href } from '../lib/url';
+
+const year = new Date().getFullYear();
+/* Gabarit de 480 × 520 : manches à plat, col en haut. Seule l'encolure change entre les deux faces. */
+const outline = (neck: string) =>
+  `M176 44L112 66L24 132L66 204L120 168V478Q120 494 136 494H344Q360 494 360 478V168L414 204L456 132L368 66L304 44${neck}Z`;
+const neckFront = 'C292 96 188 96 176 44';
+const neckBack = 'C286 64 194 64 176 44';
+/* Vu de face, l'intérieur du dos apparaît dans l'encolure. */
+const inside = `M176 44C194 64 286 64 304 44${neckFront}Z`;
+const seams = 'M35 125L77 197M445 125L403 197M120 480H360';
+const folds = 'M120 168C125 204 121 236 127 268M360 168C355 204 359 236 353 268';
+const logoWidth = 156;
+const logoHeight = (logoWidth * (logo.height + 8)) / (logo.width + 8);
+---
+<section class="section tee-section" id="tee" aria-labelledby="tee-title">
+  <div class="wrap">
+    <div class="tee-grid">
+      <div class="tee-copy">
+        <p class="eyebrow" data-reveal>{tee.eyebrow}</p>
+        <h2 class="h2" id="tee-title" data-split>{tee.title}</h2>
+        <p class="lead" data-reveal>{tee.text}</p>
+        <ul class="tee-points" data-reveal>
+          {tee.points.map((p) => <li><Icon name={p.icon} /> {p.text}</li>)}
+        </ul>
+        <div class="tee-actions" data-reveal>
+          <a class="btn btn-primary" href={`${href('souscrire')}?formule=domaine`}>Choisir la formule domaine <Icon name="arrow-right-linear" class="i-arrow" /></a>
+        </div>
+        <p class="fine" data-reveal><Icon name="info-circle-linear" size="sm" /> {tee.note}</p>
+      </div>
+
+      <div class="tee-visual" data-reveal>
+        <div class="tee-stage">
+          <div class="tee-tilt">
+            <div class="tee" id="tee-model">
+              <div class="tee-face tee-front">
+                <svg viewBox="0 0 480 520" role="img" aria-label={`Le tee shirt vu de face : le logo du ${site.name} imprimé sur la poitrine`}>
+                  <path class="tee-inside" d={inside}></path>
+                  <path class="tee-fabric" d={outline(neckFront)}></path>
+                  <path class="tee-rib" d="M166 48C182 110 298 110 314 48"></path>
+                  <path class="tee-seam" d={seams}></path>
+                  <path class="tee-fold" d={folds}></path>
+                  <g class="tee-print">
+                    <use class="tee-logo" href="#logo-cm" x={240 - logoWidth / 2} y="148" width={logoWidth} height={logoHeight}></use>
+                    <text class="tee-name" x="240" y="290">{site.name}</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="tee-face tee-back">
+                <svg viewBox="0 0 480 520" role="img" aria-label={`Le tee shirt vu de dos : l'année d'inscription ${year} et le pied de vigne`}>
+                  <path class="tee-fabric" d={outline(neckBack)}></path>
+                  <path class="tee-rib" d="M168 50C190 76 290 76 312 50"></path>
+                  <path class="tee-seam" d={seams}></path>
+                  <path class="tee-fold" d={folds}></path>
+                  <g class="tee-print">
+                    <text class="tee-label" x="240" y="122">{tee.backTop}</text>
+                    <text class="tee-year" x="240" y="196" data-tee-year>{year}</text>
+                    <g transform="translate(240 222) scale(1.1) translate(-300 -180)"><Vine /></g>
+                    <text class="tee-name" x="240" y="424">{site.name}</text>
+                    <text class="tee-label" x="240" y="446">{tee.backBottom}</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tee-toggle" role="group" aria-label="Face du tee shirt affichée">
+          <button type="button" data-tee-side="front" aria-pressed="true">Devant</button>
+          <button type="button" data-tee-side="back" aria-pressed="false">Dos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -52,27 +52,66 @@ export const formules: Formule[] = [
   },
 ];
 
-/** L'année de la vigne, en mois de début et de fin (0 = janvier, 12 = fin décembre). */
-export const stages = [
+/**
+ * L'année de la vigne suit le cycle du vignoble : elle commence en novembre, après les vendanges,
+ * et s'achève en octobre. Les mois sont comptés depuis novembre (0 = début novembre, 12 = fin octobre).
+ */
+export const vineMonths = [
+  { initial: 'N', short: 'Nov', name: 'novembre' },
+  { initial: 'D', short: 'Déc', name: 'décembre' },
+  { initial: 'J', short: 'Janv', name: 'janvier' },
+  { initial: 'F', short: 'Févr', name: 'février' },
+  { initial: 'M', short: 'Mars', name: 'mars' },
+  { initial: 'A', short: 'Avril', name: 'avril' },
+  { initial: 'M', short: 'Mai', name: 'mai' },
+  { initial: 'J', short: 'Juin', name: 'juin' },
+  { initial: 'J', short: 'Juil', name: 'juillet' },
+  { initial: 'A', short: 'Août', name: 'août' },
+  { initial: 'S', short: 'Sept', name: 'septembre' },
+  { initial: 'O', short: 'Oct', name: 'octobre' },
+];
+
+export interface Stage {
+  from: number;
+  to: number;
+  when: string;
+  title: string;
+  text: string;
+  /** Travaux du vignoble pendant la période. */
+  works: string[];
+  harvest?: boolean;
+}
+
+export const stages: Stage[] = [
   {
-    from: 0, to: 3, when: 'Janvier à mars', title: 'La taille',
-    text: "La vigne dort. Le vigneron taille chaque pied pour choisir les bourgeons qui porteront les raisins de l'année.",
+    from: 0, to: 3, when: 'Novembre à janvier', title: 'Le repos hivernal',
+    text: "Les feuilles tombent et la vigne s'endort. Il ne reste que le bois de l'année, que le vigneron prépare pour l'hiver.",
+    works: ['Buttage', 'Retrait des agrafes', 'Démontage', 'Sarmentage'],
   },
   {
-    from: 3, to: 6, when: 'Avril à juin', title: 'Le réveil',
-    text: 'Les bourgeons éclosent, les premières feuilles se déploient, puis la vigne fleurit et les petites grappes se forment.',
+    from: 3, to: 4, when: 'Février', title: 'La taille',
+    text: "Chaque pied est taillé à la main. Le vigneron choisit les bourgeons qui porteront les raisins de l'année.",
+    works: ['Taille', 'Réparation du palissage'],
   },
   {
-    from: 6, to: 8, when: 'Juillet et août', title: 'La véraison',
+    from: 4, to: 6, when: 'Mars et avril', title: 'Les pleurs et le débourrement',
+    text: 'La sève remonte et perle au bout des bois taillés : la vigne pleure. Puis les bourgeons éclosent et les premiers rameaux poussent.',
+    works: ['Repiquage', 'Débuttage', 'Attachage', 'Épandage'],
+  },
+  {
+    from: 6, to: 8, when: 'Mai et juin', title: 'La floraison',
+    text: 'Les rameaux grandissent, les feuilles se déploient, puis la vigne fleurit. Chaque fleur deviendra un grain de raisin.',
+    works: ['Ébourgeonnage', 'Désherbage', 'Relevage', 'Labourage', 'Accolage'],
+  },
+  {
+    from: 8, to: 10, when: 'Juillet et août', title: 'La véraison',
     text: 'Les grappes grossissent sous le soleil et changent de couleur. Le raisin noir prend sa teinte et se gorge de sucre.',
+    works: ['Vendanges vertes', 'Traitements', 'Rognages'],
   },
   {
-    from: 8, to: 10, when: 'Septembre et octobre', title: 'Les vendanges', harvest: true,
+    from: 10, to: 12, when: 'Septembre et octobre', title: 'La maturité et les vendanges', harvest: true,
     text: 'Le raisin est mûr. Vous rejoignez le domaine pour vivre la récolte, approcher le travail de la vigne et partager un repas.',
-  },
-  {
-    from: 10, to: 12, when: 'Novembre et décembre', title: 'Le chai',
-    text: "La vigne se met au repos. Au chai, les vins de l'année prennent forme, et le cycle recommence.",
+    works: ['Vendanges', 'Repiquage'],
   },
 ];
 
@@ -104,6 +143,37 @@ export const perks = [
   { icon: 'bed-linear', value: 10, scope: "Sur les chambres d'hôtes et les gîtes" },
   { icon: 'shop-2-linear', value: 10, scope: 'Sur les vins en boutique, en ligne et au domaine' },
   { icon: 'key-linear', value: 5, scope: 'Sur la privatisation des salles ou du domaine' },
+];
+
+/** Le tee shirt de la formule domaine (section d'aperçu de l'accueil). */
+export const tee = {
+  eyebrow: 'Formule domaine',
+  title: 'Le tee shirt du parrain',
+  text: "Sur le cœur, le château. Au dos, l'année de votre inscription au cercle et le pied de vigne que vous parrainez.",
+  points: [
+    { icon: 't-shirt-linear', text: 'Devant : le logo du Château Moncassin' },
+    { icon: 'calendar-linear', text: "Au dos : votre année d'inscription" },
+    { icon: 'leaf-linear', text: 'Au dos : le pied de vigne à maturité' },
+  ],
+  note: 'Compris dans la formule domaine. Aperçu non contractuel : le modèle définitif peut différer.',
+  backTop: 'Le Cercle des parrains',
+  backBottom: "Parrain d'un pied de vigne",
+};
+
+/** Autour du château : ce que l'on trouve à Casteljaloux. Liste fournie par le château, sans distance ni nom d'établissement. */
+export const nearbyIntro = {
+  eyebrow: 'Autour du château',
+  title: 'Casteljaloux, à proximité du domaine',
+  text: 'Votre journée de vendanges peut devenir un séjour. À proximité du château, Casteljaloux a de quoi remplir un week end entier.',
+};
+
+export const nearby = [
+  { icon: 'golf-linear', title: 'Le golf', text: 'Pour une partie avant ou après votre journée au domaine.' },
+  { icon: 'bath-linear', title: 'Le centre thermal', text: 'Pour un moment de détente après les vendanges.' },
+  { icon: 'home-smile-linear', title: 'Center Parcs', text: 'Pour prolonger le séjour en famille.' },
+  { icon: 'route-linear', title: 'Le centre équestre', text: 'Pour une balade à cheval.' },
+  { icon: 'water-linear', title: 'Le lac', text: "Pour une promenade au bord de l'eau." },
+  { icon: 'chef-hat-linear', title: 'Les restaurants', text: 'Une multitude de tables pour prolonger la dégustation.' },
 ];
 
 export const steps = [
@@ -147,3 +217,20 @@ export const faq = [
     a: 'Ils sont nominatifs et valables pendant les douze mois suivant votre achat, selon les conditions de réservation et de vente du château.',
   },
 ];
+
+/** Textes du certificat de parrainage (aperçu, impression et PDF). Les accolades sont remplacées à la génération. */
+export const certificate = {
+  club: 'Le Cercle des parrains',
+  title: 'Certificat de parrainage',
+  certifies: 'Le Château Moncassin certifie que',
+  statement: 'parraine symboliquement un pied de vigne du domaine',
+  period: 'pour douze mois, du {start} au {end}.',
+  months: 12,
+  giftFrom: 'Un cadeau de {giver}',
+  formuleLabel: 'Formule',
+  dateLabel: 'Fait au château',
+  dated: 'le {date}',
+  house: 'Château Moncassin',
+  reference: 'Référence {reference}',
+  legal: "Parrainage symbolique : il ne confère aucun droit de propriété sur un pied de vigne. L'abus d'alcool est dangereux pour la santé. À consommer avec modération.",
+};

@@ -1,0 +1,19 @@
+---
+/** Dernière section de l'accueil : renvoie vers la page de souscription, où se trouve le formulaire. */
+import Icon from './Icon.astro';
+import { site, formatPrice } from '../data/site';
+import { href } from '../lib/url';
+---
+<section class="rejoindre" id="rejoindre" aria-labelledby="rejoindre-title">
+  <div class="wrap">
+    <div class="rejoindre-inner">
+      <p class="eyebrow" data-reveal>Rejoindre le cercle</p>
+      <h2 class="rejoindre-title" id="rejoindre-title" data-split>Votre année au rythme de la vigne commence ici</h2>
+      <p class="rejoindre-text" data-reveal>Devenez parrain symbolique d'un pied de vigne au Château Moncassin et partagez une expérience authentique autour du vin et du terroir.</p>
+      <div class="rejoindre-cta" data-reveal>
+        <a class="btn btn-primary" href={href('souscrire')}>Devenir parrain <Icon name="arrow-right-linear" class="i-arrow" /></a>
+        <p class="rejoindre-price"><strong>{formatPrice(site.offer.priceTTC)}</strong> pour {site.offer.months} mois, expédition incluse</p>
+      </div>
+    </div>
+  </div>
+</section>

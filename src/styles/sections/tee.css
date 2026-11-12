@@ -1,0 +1,36 @@
+/* Le tee shirt : tissu couleur pierre sur le fond sombre, impression à l'encre. */
+.tee-grid { display: grid; gap: var(--s-600); align-items: center }
+@media (min-width: 1024px) { .tee-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--s-900) } }
+.tee-copy { display: grid; gap: var(--s-300); max-width: 560px; justify-items: start }
+.tee-points { display: grid; width: 100% }
+.tee-points li { position: relative; display: flex; align-items: center; gap: var(--s-100); padding-block: var(--s-100) }
+.tee-points li::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line) }
+.tee-points .i { color: var(--gold) }
+.tee-visual { display: grid; gap: var(--s-300); justify-items: center }
+.tee-stage { width: 100%; max-width: 520px; perspective: 1400px }
+.tee-tilt, .tee { transform-style: preserve-3d }
+/* Sans script : les deux faces côte à côte. Avec script : superposées, le dos retourné. */
+.tee { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-200) }
+.tee svg { display: block; width: 100%; height: auto; overflow: visible }
+.js .tee { grid-template-columns: minmax(0, 1fr); gap: 0; cursor: pointer }
+.js .tee-face { grid-area: 1 / 1; -webkit-backface-visibility: hidden; backface-visibility: hidden }
+.js .tee-back { transform: rotateY(180deg) }
+.tee-fabric { fill: var(--stone); stroke: var(--stone-line-strong); stroke-width: 1.5; stroke-linejoin: round }
+.tee-inside { fill: var(--stone-muted) }
+.tee-rib, .tee-fold { fill: none; stroke: var(--stone-line-strong); stroke-width: 1.2; stroke-linecap: round }
+.tee-seam { fill: none; stroke: var(--stone-line-strong); stroke-width: 1; stroke-dasharray: 4 4 }
+.tee-print { fill: var(--stone-ink); color: var(--stone-ink) }
+.tee-print text { text-anchor: middle }
+/* Le trait du château est trop fin à cette échelle : un contour l'épaissit, comme sur le logo de la navigation. */
+.tee-logo { stroke: currentColor; stroke-width: 2; stroke-linejoin: round }
+.tee-name { font-family: var(--font-display); font-size: 20px; letter-spacing: 0.02em }
+.tee-year { font-family: var(--font-display); font-size: 60px; fill: var(--stone-wine) }
+.tee-label { font-family: var(--font); font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; fill: var(--stone-muted) }
+.tee .vine { --vine-wood: var(--stone-ink); --vine-green: var(--stone-ink); --vine-leaf: transparent; --vine-fruit: var(--stone-wine); --vine-line: var(--stone-line-strong); --vine-eye: var(--stone) }
+/* Sélecteur de face : deux boutons côte à côte dans une même pastille. */
+.tee-toggle { display: none; padding: var(--s-50); gap: var(--s-50); border-radius: var(--r-pill); border: 1px solid var(--line-strong) }
+.js .tee-toggle { display: inline-flex }
+.tee-toggle button { min-width: 88px; padding: var(--s-75) var(--s-200); border: 0; border-radius: var(--r-pill); background: transparent; color: var(--paper-2); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--dur-state) var(--ease), color var(--dur-state) var(--ease) }
+@media (hover: hover) and (pointer: fine) { .tee-toggle button:hover { color: var(--paper) } }
+.tee-toggle button[aria-pressed='true'] { background: var(--paper); color: var(--ink) }
+@media (max-width: 639px) { .tee-toggle button { min-height: 44px } }

@@ -1,12 +1,11 @@
 import { $, $$ } from '../lib/dom';
-import { gsap, ScrollTrigger, motion } from '../lib/motion';
+import { gsap, ScrollTrigger, motion, finePointer } from '../lib/motion';
 import { ease } from '../lib/ease';
 import { splitWords } from '../lib/split';
 import { initYearDial } from './year-dial';
 
 /**
- * Animations liées au défilement, créées dans l'ordre de la page pour que
- * l'épinglage du cadran décale correctement les déclencheurs qui le suivent.
+ * Animations liées au défilement, créées dans l'ordre de la page.
  * Les apparitions ne masquent que les éléments situés sous la ligne de flottaison au chargement,
  * et seulement par l'opacité : un élément en visibility hidden ne peut pas recevoir le focus,
  * ce qui rendrait la FAQ ou les boutons injoignables au clavier avant d'avoir défilé jusqu'à eux.
@@ -18,6 +17,7 @@ export function initChoreography(): void {
     gsap.fromTo('.principe-frame', { clipPath: 'inset(12% 10% 12% 10% round 2px)' }, { clipPath: 'inset(0% 0% 0% 0% round 2px)', ease: 'none', scrollTrigger: { trigger: '.principe-media', start: 'top 92%', end: 'top 35%', scrub: 0.8 } });
     gsap.fromTo('.principe-frame img', { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.principe-media', start: 'top bottom', end: 'bottom top', scrub: 0.8 } });
     gsap.fromTo('.stamp svg', { rotation: 0 }, { rotation: 300, ease: 'none', scrollTrigger: { trigger: '.principe', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+    gsap.fromTo('.priv-frame img', { scale: 1.2, yPercent: -4 }, { scale: 1.1, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '.priv-frame', start: 'top bottom', end: 'bottom top', scrub: true } });
   }
 
   initYearDial();
@@ -32,7 +32,6 @@ export function initChoreography(): void {
       duration: 1,
       scrollTrigger: { trigger: tagline, start: 'top 80%', end: 'bottom 45%', scrub: 0.5 },
     });
-    gsap.fromTo('.priv-frame img', { scale: 1.2, yPercent: -4 }, { scale: 1.1, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '.priv-frame', start: 'top bottom', end: 'bottom top', scrub: true } });
     gsap.fromTo('.steps-fill', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.steps-wrap', start: 'top 80%', end: 'bottom 55%', scrub: 0.6 } });
   }
 
@@ -64,8 +63,10 @@ export function initChoreography(): void {
     timelines.set(el, tl);
     io.observe(el);
   };
-  const hiddenState = { y: 64, opacity: 0, filter: 'blur(12px)' };
-  const shownState = { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease, clearProps: 'filter,transform,opacity' };
+  /* Le flou d'apparition est réservé aux écrans à souris : sur téléphone, flouter des blocs entiers pendant le défilement fait décrocher l'image. */
+  const blur = (px: number) => (finePointer ? { filter: `blur(${px}px)` } : {});
+  const hiddenState = { y: 64, opacity: 0, ...blur(12) };
+  const shownState = { y: 0, opacity: 1, ...blur(0), duration: 1.1, ease, clearProps: 'filter,transform,opacity' };
 
   $$('[data-split]').forEach((el) => {
     const words = splitWords(el);
