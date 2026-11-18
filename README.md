@@ -81,13 +81,12 @@ Le `Dockerfile` construit le site puis le sert avec nginx (`deploy/nginx.conf`) 
 
 Le site de production est servi par Coolify sur `https://parrains.chateaumoncassin.com`. Chaque push sur `main` y déclenche un déploiement : un webhook GitHub (événement push) appelle Coolify, qui reconstruit l'image et remplace le conteneur sans coupure. Le suivi se fait dans Coolify, onglet Deployment Logs de l'application.
 
-### GitHub Pages
+### Sous chemin et indexation
 
-Le workflow `.github/workflows/deploy.yml` publie le site sur GitHub Pages à chaque push sur `main` (ou à la demande depuis l'onglet Actions). L'adresse et le sous chemin (`/chateau-moncassin`) viennent de Pages : avec un domaine personnalisé, le build s'adapte sans modification.
+- `BASE_PATH` : sous chemin de publication, lu par `astro.config.mjs`, pour héberger le site ailleurs qu'à la racine d'un domaine ; tous les liens internes passent par `href()` (`src/lib/url.ts`). Aperçu local : `BASE_PATH=/sous-chemin npm run build && BASE_PATH=/sous-chemin npx astro preview`.
+- `PUBLIC_NOINDEX` : à `true`, chaque page porte `noindex`. C'est la valeur par défaut de l'image Docker tant que le contenu n'est pas validé.
 
-- `BASE_PATH` : sous chemin de publication, lu par `astro.config.mjs` ; tous les liens internes passent par `href()` (`src/lib/url.ts`).
-- `PUBLIC_NOINDEX` : `true` par défaut sur Pages, chaque page porte `noindex` tant que le contenu n'est pas validé. Créer la variable de dépôt `PUBLIC_NOINDEX=false` pour ouvrir le site aux moteurs.
-- Aperçu local identique à Pages : `BASE_PATH=/chateau-moncassin npm run build && BASE_PATH=/chateau-moncassin npx astro preview`, puis ouvrir `/chateau-moncassin/`.
+Le site n'est plus publié sur GitHub Pages : la production est sur Coolify (voir ci dessus).
 
 La CI GitHub Actions (`.github/workflows/ci.yml`) lance `npm run check` et `npm run build` à chaque push sur `main` et sur les pull requests. Les variables du dépôt `SITE_URL` et `PUBLIC_STRIPE_LINK_*` sont utilisées si elles existent.
 
