@@ -9,7 +9,7 @@ COPY . .
 # Variables lues par Astro pendant le build. Dans Coolify, les déclarer comme variables de build.
 ARG SITE_URL
 ARG BASE_PATH
-# « true » pour proposer le paiement en ligne (l'API du dossier api/ doit alors être déployée sous /api).
+# « true » pour proposer le paiement en ligne (l'API du dépôt chateau-moncassin-api doit alors être déployée sous /api).
 ARG PUBLIC_PAYMENT_ENABLED
 ARG PUBLIC_API_URL
 # Non indexé par défaut tant que le contenu n'est pas validé : passer PUBLIC_NOINDEX=false pour ouvrir le site aux moteurs.

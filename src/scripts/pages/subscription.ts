@@ -41,7 +41,7 @@ const API_FIELDS: Record<string, Key> = {
 /**
  * Formulaire de souscription et récapitulatif nominatif (page /souscrire).
  * La formule peut arriver par l'adresse (?formule=domaine) depuis les cartes de l'accueil.
- * Quand le paiement est activé, la validation ouvre une commande auprès de l'API (dossier api/), qui renvoie
+ * Quand le paiement est activé, la validation ouvre une commande auprès de l'API (dépôt chateau-moncassin-api), qui renvoie
  * un formulaire signé : le navigateur l'envoie tel quel à la page de paiement du Crédit Agricole.
  * Sinon le formulaire reste en mode démonstration et rien ne quitte le navigateur.
  */

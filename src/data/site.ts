@@ -33,7 +33,7 @@ export const site = {
 } as const;
 
 /**
- * Paiement en ligne (Up2pay e-Transactions, Crédit Agricole). Il passe par l'API du dossier api/,
+ * Paiement en ligne (Up2pay e-Transactions, Crédit Agricole). Il passe par l'API du dépôt chateau-moncassin-api,
  * qui signe la demande et reçoit la confirmation de la banque. Sans PUBLIC_PAYMENT_ENABLED=true,
  * le formulaire reste en mode démonstration : rien n'est envoyé.
  */

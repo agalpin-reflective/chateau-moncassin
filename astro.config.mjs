@@ -14,7 +14,7 @@ export default defineConfig({
   site: SITE_URL ?? 'http://localhost:4321',
   base: BASE_PATH,
   compressHTML: true,
-  // En développement, /api est relayé vers l'API locale (dossier api/, port 4100), comme le fait Traefik en production.
+  // En développement, /api est relayé vers l'API locale (dépôt chateau-moncassin-api, port 4100), comme le fait Traefik en production.
   vite: {
     server: {
       proxy: {

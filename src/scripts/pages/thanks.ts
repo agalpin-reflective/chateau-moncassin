@@ -42,7 +42,7 @@ const slug = (text: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
-/** Ce que l'API renvoie d'une commande au porteur de son lien (voir api/src/v1/routes/orders.ts). */
+/** Ce que l'API renvoie d'une commande au porteur de son lien (voir src/v1/routes/orders.ts du dépôt chateau-moncassin-api). */
 interface ServerOrder {
   reference: string;
   status: 'PENDING' | 'PAID';
