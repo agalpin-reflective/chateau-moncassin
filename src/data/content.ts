@@ -179,7 +179,7 @@ export const nearby = [
   { icon: 'golf-linear', title: 'Le golf', text: 'Pour une partie avant ou après votre journée au domaine.' },
   { icon: 'bath-linear', title: 'Le centre thermal', text: 'Pour un moment de détente après les vendanges.' },
   { icon: 'home-smile-linear', title: 'Center Parcs', text: 'Pour prolonger le séjour en famille.' },
-  { icon: 'route-linear', title: 'Le centre équestre', text: 'Pour une balade à cheval.' },
+  { icon: 'moon-stars-linear', title: 'Le casino', text: 'Pour finir la journée par une soirée de jeux.' },
   { icon: 'water-linear', title: 'Le lac', text: "Pour une promenade au bord de l'eau." },
   { icon: 'chef-hat-linear', title: 'Les restaurants', text: 'Une multitude de tables pour prolonger la dégustation.' },
 ];
