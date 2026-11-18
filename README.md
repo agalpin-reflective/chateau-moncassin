@@ -79,6 +79,8 @@ Le `Dockerfile` construit le site puis le sert avec nginx (`deploy/nginx.conf`) 
 - Les pages sont servies sans redirection (`/souscrire` et `/souscrire/`), toujours revalidées ; les fichiers de `/_astro/` sont mis en cache un an.
 - Essai local : `docker build --build-arg SITE_URL=http://localhost:8088 -t chateau-moncassin . && docker run --rm -p 8088:80 chateau-moncassin`.
 
+Le site de production est servi par Coolify sur `https://parrains.chateaumoncassin.com`. Chaque push sur `main` y déclenche un déploiement : un webhook GitHub (événement push) appelle Coolify, qui reconstruit l'image et remplace le conteneur sans coupure. Le suivi se fait dans Coolify, onglet Deployment Logs de l'application.
+
 ### GitHub Pages
 
 Le workflow `.github/workflows/deploy.yml` publie le site sur GitHub Pages à chaque push sur `main` (ou à la demande depuis l'onglet Actions). L'adresse et le sous chemin (`/chateau-moncassin`) viennent de Pages : avec un domaine personnalisé, le build s'adapte sans modification.
