@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site, formatPrice } from '../data/site';
-import { formules, perks } from '../data/content';
+import { formules, perks, deliveryDelay } from '../data/content';
 import { href } from '../lib/url';
 ---
 <BaseLayout
@@ -25,7 +25,7 @@ import { href } from '../lib/url';
           <ul>
             <li>Souscription annuelle de {site.offer.months} mois, au tarif de {formatPrice(site.offer.priceTTC)}.</li>
             <li>Abonnement nominatif, sans renouvellement automatique.</li>
-            <li>Expédition incluse.</li>
+            <li>Expédition incluse, livraison {deliveryDelay}.</li>
           </ul>
         </section>
         <section>

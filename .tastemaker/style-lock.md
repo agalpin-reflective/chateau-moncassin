@@ -48,14 +48,14 @@ Ajustements : `--wine-text` et `--paper-hint` ont été ajoutés le 2026-10-26, 
 - Section separation: padding fixe, plus une section pierre en rupture de teinte (Formules)
 
 ## Structure
-- Macrostructure: récit long en une page. Hero (verre WebGL), principe, privilèges, cadran épinglé des douze mois (novembre à octobre), contenu du parrainage, phrase manifeste, formules, tee shirt, Casteljaloux, étapes, FAQ, appel final. Le formulaire est sur une page dédiée (`/souscrire`)
+- Macrostructure: récit long en une page. Hero (verre de vin plein, vu de face), principe, privilèges, cadran épinglé des douze mois (novembre à octobre), contenu du parrainage, phrase manifeste, formules, tee shirt, Casteljaloux, étapes, FAQ, appel final. Le formulaire est sur une page dédiée (`/souscrire`)
 - Narrative arc: hook (hero) → solution (principe) → how it works (cadran, étapes) → proof (formules, privilèges) → close (souscription)
 - Shared chrome: barre pilule centrée et flottante ; pied de page en trois colonnes avec mention loi Évin
 
 ## Reference intelligence
 - Reference board: aucun, la DA préexistait à tastemaker
 - Design read: site vitrine pour amateurs de vin, mode Persuade, couloir éditorial sombre et chaleureux
-- Direction contract: Thèse « une année au rythme de la vigne » ; premier écran : le verre de vin vu du dessus ; système : le cercle partout (verre, cadran, cachet) ; risque : manque de photos du château
+- Direction contract: Thèse « une année au rythme de la vigne » ; premier écran : un verre de vin plein, vu de face, dont le vin bouge (demande du château le 2026-11-18, à la place du vin vu du dessus) ; système : le cercle partout (verre, cadran, cachet) ; risque : manque de photos du château
 
 ## Taste memory
 - Profile priors used: none (`~/.tastemaker/profile.md` absent)
@@ -67,7 +67,7 @@ Ajustements : `--wine-text` et `--paper-hint` ont été ajoutés le 2026-10-26, 
 cave, chaleureux, éditorial, retenu
 
 ## Assets
-- Anchor asset: `src/assets/robe-poster.webp` (le verre, rendu par le même calcul que le shader)
+- Anchor asset: le verre du hero, dessiné en SVG dans `Hero.astro` et animé par `home/glass.ts`
 - Asset style: icônes Solar linéaires, trait fin ; dessin au trait doré pour le cep du cadran (schéma, pas une illustration)
 - Illustration vs. photography split: photos du château uniquement (règle du projet : aucune image hors château) ; pas d'illustration de banque d'images
 - Logo: logo officiel du château (silhouette et monogramme CM), tracé dans `src/data/logo.ts`, affiché en or sur fond sombre
@@ -77,7 +77,7 @@ cave, chaleureux, éditorial, retenu
 - Curves: `--ease: cubic-bezier(0.32, 0.72, 0, 1)` partout, et la même courbe côté GSAP (`lib/ease.ts`)
 - Durations: `--dur-state` 0.2s (survol, focus, sélection), `--dur-panel` 0.7s (menu, barre, étapes du cadran), `--dur-reveal` 1.2s (verre), `--dur-pulse` 1.4s (squelette de chargement), `--stagger` 0.05s
 - Screen tracks: GSAP pour le récit (intro du hero, épinglage du cadran, apparitions), CSS pour les états
-- Reduced motion: pas de Lenis, pas d'épinglage, verre en image fixe, cadran et cep à l'état mûr, transitions CSS ramenées à 0.01ms
+- Reduced motion: pas de Lenis, pas d'épinglage, verre immobile, cadran et cep à l'état mûr, transitions CSS ramenées à 0.01ms
 - Verified by: `audit_motion.py src` sans HIGH, le 2026-10-26
 
 ## Do not

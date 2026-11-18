@@ -1,15 +1,13 @@
 ---
-import { getImage } from 'astro:assets';
 import Icon from './Icon.astro';
-import poster from '../assets/robe-poster.webp';
 import { site, formatPrice } from '../data/site';
+import { deliveryDelay, hero } from '../data/content';
 import { href } from '../lib/url';
 
-/* Le verre n'existe qu'à partir de 1024 px : sur mobile, l'image n'est pas téléchargée (la source ne correspond pas
-   et l'img retombe sur un pixel vide) et le WebGL ne démarre pas. */
-const DESKTOP = '(min-width: 1024px)';
-const posterImage = await getImage({ src: poster, width: 1000, height: 1000, quality: 86 });
-const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+/* Le verre, vu de face dans un repère de 400 × 600 (le cadre affiché se resserre sur le dessin). Le vin est découpé par l'intérieur du ballon ;
+   son niveau et sa surface sont redessinés par home/glass.ts, qui partage ces mesures. */
+const bowl = 'M122 48C104 120 84 190 92 240C100 300 160 344 192 352L208 352C240 344 300 300 308 240C316 190 296 120 278 48';
+const stem = 'M192 352C196 382 197 420 197 500C197 522 160 532 124 540M208 352C204 382 203 420 203 500C203 522 240 532 276 540';
 ---
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="wrap">
@@ -24,19 +22,28 @@ const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAI
         </div>
         <ul class="hero-proof">
           <li><Icon name="check-circle-linear" size="sm" /> Sans renouvellement automatique</li>
-          <li><Icon name="check-circle-linear" size="sm" /> Expédition incluse</li>
+          <li><Icon name="check-circle-linear" size="sm" /> Livraison incluse, {deliveryDelay}</li>
           <li><Icon name="check-circle-linear" size="sm" /> Deux formules au même tarif</li>
         </ul>
       </div>
       <div class="hero-visual">
         <div class="glass" aria-hidden="true">
-          <picture>
-            <source media={DESKTOP} srcset={posterImage.src} type="image/webp" />
-            <img class="glass-poster" src={BLANK} alt="" width="1000" height="1000" loading="eager" fetchpriority="high" decoding="async" />
-          </picture>
-          <canvas class="glass-canvas"></canvas>
+          <svg class="glass-svg" viewBox="64 28 272 532" focusable="false">
+            <defs><clipPath id="glass-bowl"><path d={`${bowl}Z`}></path></clipPath></defs>
+            <g class="glass-body">
+              <g clip-path="url(#glass-bowl)">
+                <path class="glass-wine" d="M72 172Q200 172 328 172V380H72Z"></path>
+                <ellipse class="glass-surface" cx="200" cy="172" rx="132" ry="9"></ellipse>
+              </g>
+              <ellipse class="glass-line glass-rim" cx="200" cy="48" rx="78" ry="7"></ellipse>
+              <path class="glass-line" d={bowl}></path>
+              <path class="glass-line" d={stem}></path>
+              <ellipse class="glass-line" cx="200" cy="541" rx="76" ry="8"></ellipse>
+              <path class="glass-shine" d="M112 104C100 152 97 196 104 236M286 92C293 118 297 142 299 162"></path>
+            </g>
+          </svg>
         </div>
-        <p class="glass-hint" aria-hidden="true"><Icon name="refresh-circle-linear" size="sm" /> Bougez le curseur pour faire tourner le verre</p>
+        <p class="glass-hint" aria-hidden="true"><Icon name="refresh-circle-linear" size="sm" /> {hero.glassHint}</p>
       </div>
     </div>
   </div>

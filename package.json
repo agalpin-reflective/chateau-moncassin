@@ -27,6 +27,7 @@
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@iconify-json/solar": "1.2.13",
+    "qrcode": "1.5.4",
     "typescript": "6.0.3"
   }
 }

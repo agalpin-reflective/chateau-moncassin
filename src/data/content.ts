@@ -4,6 +4,14 @@
  * (on écrit « tee shirt », et les questions évitent l'inversion du sujet).
  */
 
+/** Textes du premier écran qui ne viennent pas de site.ts. */
+export const hero = {
+  glassHint: 'Bougez le curseur pour faire danser le vin',
+};
+
+/** Délai de livraison annoncé par le château. */
+export const deliveryDelay = 'sous 7 jours ouvrés';
+
 export type FormuleId = 'decouverte' | 'domaine';
 
 export interface Formule {
@@ -29,7 +37,7 @@ export const formules: Formule[] = [
     items: [
       { icon: 'scissors-linear', text: '1 journée de vendanges' },
       { icon: 'chef-hat-minimalistic-linear', text: '1 repas pour une personne' },
-      { icon: 'delivery-linear', text: 'Livraison incluse' },
+      { icon: 'delivery-linear', text: `Livraison incluse, ${deliveryDelay}` },
     ],
     summary: '6 bouteilles de découverte, 1 journée de vendanges, 1 repas pour une personne',
     short: '6 bouteilles de découverte',
@@ -45,7 +53,7 @@ export const formules: Formule[] = [
       { icon: 't-shirt-linear', text: '1 tee shirt Château Moncassin' },
       { icon: 'scissors-linear', text: '1 journée de vendanges' },
       { icon: 'chef-hat-minimalistic-linear', text: '1 repas pour une personne' },
-      { icon: 'delivery-linear', text: 'Livraison incluse' },
+      { icon: 'delivery-linear', text: `Livraison incluse, ${deliveryDelay}` },
     ],
     summary: '3 bouteilles du domaine, 1 tee shirt Château Moncassin, 1 journée de vendanges, 1 repas pour une personne',
     short: '3 bouteilles et le tee shirt',
@@ -128,7 +136,7 @@ export const experiences = [
     title: 'Les vins du château, chez vous',
     text: 'Recevez une sélection de nos vins et prenez le temps de découvrir les cuvées du domaine, leurs caractères et leur histoire.',
     tagIcon: 'delivery-linear',
-    tag: 'Livraison incluse',
+    tag: `Livraison incluse, ${deliveryDelay}`,
   },
   {
     icon: 'key-linear',
@@ -149,15 +157,15 @@ export const perks = [
 export const tee = {
   eyebrow: 'Formule domaine',
   title: 'Le tee shirt du parrain',
-  text: "Sur le cœur, le château. Au dos, l'année de votre inscription au cercle et le pied de vigne que vous parrainez.",
+  text: "Sur le cœur, le logo du château, le nom du cercle et l'année de votre inscription. Le dos reste neutre.",
+  /** Texte imprimé sous le logo. */
+  print: 'Le Cercle des parrains',
   points: [
-    { icon: 't-shirt-linear', text: 'Devant : le logo du Château Moncassin' },
-    { icon: 'calendar-linear', text: "Au dos : votre année d'inscription" },
-    { icon: 'leaf-linear', text: 'Au dos : le pied de vigne à maturité' },
+    { icon: 't-shirt-linear', text: 'Sur le cœur : le logo du Château Moncassin' },
+    { icon: 'calendar-linear', text: "Le Cercle des parrains et votre année d'inscription" },
+    { icon: 'check-circle-linear', text: 'Dos neutre, sans impression' },
   ],
   note: 'Compris dans la formule domaine. Aperçu non contractuel : le modèle définitif peut différer.',
-  backTop: 'Le Cercle des parrains',
-  backBottom: "Parrain d'un pied de vigne",
 };
 
 /** Autour du château : ce que l'on trouve à Casteljaloux. Liste fournie par le château, sans distance ni nom d'établissement. */
@@ -178,7 +186,7 @@ export const nearby = [
 
 export const steps = [
   { title: 'Choisissez votre formule', text: "Sélectionnez votre coffret de découverte au moment de l'achat." },
-  { title: 'Recevez vos cadeaux', text: "Vos bouteilles et, selon la formule, votre tee shirt sont expédiés, frais d'envoi inclus." },
+  { title: 'Recevez vos cadeaux', text: `Vos bouteilles et, selon la formule, votre tee shirt sont livrés ${deliveryDelay}, frais d'envoi inclus.` },
   { title: 'Vivez votre journée au domaine', text: 'Réservez votre journée de vendanges auprès du Château Moncassin.' },
   { title: 'Profitez de vos privilèges', text: 'Utilisez vos réductions nominatives pendant les douze mois suivant votre achat.' },
 ];
@@ -194,7 +202,7 @@ export const faq = [
   },
   {
     q: 'Combien coûte le parrainage ?',
-    a: "150 € TTC pour douze mois de parrainage, quelle que soit la formule choisie. L'expédition est incluse.",
+    a: `150 € TTC pour douze mois de parrainage, quelle que soit la formule choisie. L'expédition est incluse, avec une livraison ${deliveryDelay}.`,
   },
   {
     q: 'Le parrainage se renouvelle automatiquement ?',
@@ -205,8 +213,8 @@ export const faq = [
     a: "Vous découvrez l'ambiance de la récolte, approchez le travail de la vigne et profitez d'une journée au domaine, accompagnée d'un repas pour une personne. Vous réservez votre journée directement auprès du Château Moncassin.",
   },
   {
-    q: 'Les frais de livraison sont compris ?',
-    a: "Oui. Vos bouteilles et, selon la formule, votre tee shirt sont expédiés frais d'envoi inclus.",
+    q: 'Quand vais je recevoir mes bouteilles ?',
+    a: `La livraison a lieu ${deliveryDelay} après votre commande. Vos bouteilles et, selon la formule, votre tee shirt sont expédiés frais d'envoi inclus.`,
   },
   {
     q: "Quelles réductions pendant l'année ?",
@@ -263,7 +271,7 @@ export const thanks = {
   ],
   nextTitle: 'Et maintenant',
   next: [
-    { title: 'Vos cadeaux sont préparés', text: "Les bouteilles et, selon la formule, le tee shirt sont expédiés à l'adresse indiquée au paiement, frais d'envoi inclus." },
+    { title: 'Vos cadeaux sont préparés', text: `Les bouteilles et, selon la formule, le tee shirt sont livrés ${deliveryDelay} à l'adresse indiquée au paiement, frais d'envoi inclus.` },
     { title: 'Réservez la journée de vendanges', text: 'Contactez le {house} pour choisir la journée au domaine, repas compris.' },
     { title: 'Profitez des privilèges', text: "Les réductions sont nominatives : elles sont au nom inscrit sur le certificat, pendant les douze mois qui suivent l'achat." },
   ],

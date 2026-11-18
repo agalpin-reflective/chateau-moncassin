@@ -1,7 +1,7 @@
 /**
  * Géométrie du pied de vigne : un cep taillé en cordon, quatre rameaux, huit feuilles, deux grappes.
  * Dessiné dans le repère du cadran (centre en 300, sol à 330). La même géométrie sert au cadran,
- * au dos du tee shirt (composant Vine.astro) et au certificat de parrainage (scripts/certificate).
+ * (composant Vine.astro) et au certificat de parrainage (scripts/certificate).
  */
 export const vine = {
   /** Boîte englobante du dessin à maturité, dans son repère. */

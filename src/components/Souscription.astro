@@ -1,7 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
-import { formules } from '../data/content';
+import { formules, deliveryDelay } from '../data/content';
 import { site, payment, paymentEnabled, formatPrice } from '../data/site';
 import { href } from '../lib/url';
 
@@ -146,7 +146,7 @@ const formulesData = JSON.stringify(
             <div class="perforation" aria-hidden="true"></div>
             <div class="ticket-foot">
               <p class="ticket-price">{formatPrice(site.offer.priceTTC)}</p>
-              <p>Expédition incluse</p>
+              <p>Livraison incluse, {deliveryDelay}</p>
             </div>
           </div>
         </div>

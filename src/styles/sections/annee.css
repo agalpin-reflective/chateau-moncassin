@@ -17,7 +17,7 @@
 .dial .head-dot { fill: var(--gold) }
 .dial .head-halo { fill: var(--gold-soft); stroke: var(--gold-line); stroke-width: 1 }
 /* Le pied de vigne occupe le haut du cercle intérieur ; le mois se place sous le sol (57 % de la hauteur du cadran).
-   Les couleurs passent par des variables : le même dessin est imprimé au dos du tee shirt avec d'autres teintes. */
+   Les couleurs passent par des variables, pour pouvoir reprendre le même dessin sur un autre fond. */
 .vine { --vine-wood: var(--paper-2); --vine-green: var(--gold); --vine-leaf: var(--gold-soft); --vine-fruit: var(--wine); --vine-line: var(--line-strong); --vine-eye: var(--ink); fill: none; stroke-linecap: round; stroke-linejoin: round }
 .vine-ground { stroke: var(--vine-line); stroke-width: 1 }
 .vine-wire { stroke: var(--vine-line); stroke-width: 1; opacity: 0.5 }

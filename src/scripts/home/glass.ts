@@ -1,247 +1,126 @@
-import fragmentSource from './glass.frag.glsl?raw';
 import { $ } from '../lib/dom';
-import { reduce, finePointer } from '../lib/motion';
+import { gsap, finePointer, motion } from '../lib/motion';
 
-const VERTEX_SOURCE = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}';
-const UNIFORMS = ['uRes', 'uTime', 'uSwirl', 'uAngle', 'uPointer'] as const;
-type UniformName = (typeof UNIFORMS)[number];
+/* Géométrie du dessin (Hero.astro) : niveau du vin au repos, demi largeur de la surface, pied du verre. */
+const LEVEL = 172;
+const HALF = 128;
+const FOOT = { x: 200, y: 548 };
+/** Inclinaison maximale du vin, en radians : au delà il déborderait du dessin. */
+const MAX_TILT = 0.2;
 
 /**
- * Le verre de vin du hero, en WebGL brut : un seul triangle plein écran, pas de scène 3D.
- * Le rendu s'arrête hors écran ou onglet masqué ; l'image fixe reste en place si WebGL manque
- * ou si l'utilisateur a demandé à réduire le mouvement.
+ * Le verre de vin du hero, vu de face et plein. Le verre se penche vers le curseur ; le vin, lui, reste
+ * à l'horizontale puis rattrape le mouvement comme un ressort amorti, ce qui le fait onduler dans le verre.
+ * Le défilement et l'arrivée sur la page lui donnent aussi une impulsion. Tout passe par le ticker de GSAP,
+ * arrêté hors écran ; avec le mouvement réduit, le verre reste immobile, le vin à l'horizontale.
  */
 export function createGlass() {
   const fig = $('.glass');
-  const canvas = $<HTMLCanvasElement>('.glass-canvas');
   const hero = $('.hero');
-  const root = document.documentElement;
+  const body = $<SVGGElement>('.glass-body');
+  const wine = $<SVGPathElement>('.glass-wine');
+  const surface = $<SVGEllipseElement>('.glass-surface');
 
-  let gl: WebGLRenderingContext | null = null;
-  let program: WebGLProgram | null = null;
-  let buffer: WebGLBuffer | null = null;
-  const uniforms = {} as Record<UniformName, WebGLUniformLocation | null>;
-  let raf = 0;
-  let firstFrame = true;
-  let onScreen = true;
-  let pageVisible = !document.hidden;
+  /* Verre : angle visé (curseur) et angle courant, en degrés. Vin : angle et vitesse par rapport à l'horizontale, en radians. */
+  let swayTarget = 0;
+  let sway = 0;
+  let tilt = 0;
+  let speed = 0;
+  let bulge = 0;
+  let bulgeSpeed = 0;
+  let time = 0;
+  let lastX: number | null = null;
+  let running = false;
   let initialized = false;
-
-  let energy = 0.35;
-  let swirl = 0.35;
-  let angle = 0.7;
-  let px = 0;
-  let py = 0;
-  let tx = 0;
-  let ty = 0;
-  let lastT = 0;
-  let lastPX: number | null = null;
-  let lastPY = 0;
-  let lastPT = 0;
-  let pointerDirty = false;
   const cleanups: (() => void)[] = [];
-  const listen = (target: EventTarget, type: string, handler: EventListener, options?: AddEventListenerOptions) => {
-    target.addEventListener(type, handler, options);
-    cleanups.push(() => target.removeEventListener(type, handler, options));
+
+  const draw = (liquid: number) => {
+    if (!body || !wine || !surface) return;
+    const slope = Math.tan(Math.max(-MAX_TILT, Math.min(MAX_TILT, liquid)));
+    const left = LEVEL + slope * HALF;
+    const right = LEVEL - slope * HALF;
+    body.setAttribute('transform', `rotate(${sway.toFixed(3)} ${FOOT.x} ${FOOT.y})`);
+    wine.setAttribute('d', `M${200 - HALF} ${left.toFixed(2)}Q200 ${(LEVEL + bulge).toFixed(2)} ${200 + HALF} ${right.toFixed(2)}V380H${200 - HALF}Z`);
+    surface.setAttribute('transform', `rotate(${((-Math.atan(slope) * 180) / Math.PI).toFixed(3)} 200 ${LEVEL})`);
+    surface.setAttribute('cy', (LEVEL + bulge * 0.5).toFixed(2));
   };
 
-  const compile = (ctx: WebGLRenderingContext, type: number, source: string) => {
-    const shader = ctx.createShader(type);
-    if (!shader) throw new Error('shader');
-    ctx.shaderSource(shader, source);
-    ctx.compileShader(shader);
-    if (!ctx.getShaderParameter(shader, ctx.COMPILE_STATUS)) throw new Error(ctx.getShaderInfoLog(shader) ?? 'shader');
-    return shader;
-  };
-
-  const setup = (ctx: WebGLRenderingContext) => {
-    const vs = compile(ctx, ctx.VERTEX_SHADER, VERTEX_SOURCE);
-    const fs = compile(ctx, ctx.FRAGMENT_SHADER, fragmentSource);
-    program = ctx.createProgram();
-    if (!program) throw new Error('program');
-    ctx.attachShader(program, vs);
-    ctx.attachShader(program, fs);
-    ctx.linkProgram(program);
-    if (!ctx.getProgramParameter(program, ctx.LINK_STATUS)) throw new Error('link');
-    ctx.deleteShader(vs);
-    ctx.deleteShader(fs);
-    ctx.useProgram(program);
-    buffer = ctx.createBuffer();
-    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
-    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), ctx.STATIC_DRAW);
-    const loc = ctx.getAttribLocation(program, 'a');
-    ctx.enableVertexAttribArray(loc);
-    ctx.vertexAttribPointer(loc, 2, ctx.FLOAT, false, 0, 0);
-    UNIFORMS.forEach((name) => {
-      uniforms[name] = ctx.getUniformLocation(program!, name);
-    });
-    ctx.clearColor(0, 0, 0, 0);
-  };
-
-  const resize = () => {
-    if (!gl || !fig || !canvas) return;
-    const rect = fig.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const w = Math.max(1, Math.round(rect.width * dpr));
-    const h = Math.max(1, Math.round(rect.height * dpr));
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w;
-      canvas.height = h;
-      gl.viewport(0, 0, w, h);
-    }
-  };
-
-  const running = () => Boolean(gl) && onScreen && pageVisible;
-
-  const frame = (now: number) => {
-    raf = 0;
-    if (!running() || !gl || !canvas || !fig) return;
-    raf = requestAnimationFrame(frame);
-    const t = now / 1000;
-    const dt = lastT ? Math.min(0.05, t - lastT) : 0.016;
-    lastT = t;
-    energy *= Math.pow(0.4, dt);
-    swirl += (Math.min(energy, 2.2) - swirl) * Math.min(1, dt * 2.5);
-    angle += dt * (0.1 + swirl * 1.4);
-    if (pointerDirty && lastPX !== null) {
-      /* Une seule lecture de layout par image, quel que soit le nombre d'événements pointeur reçus. */
-      pointerDirty = false;
-      const rect = fig.getBoundingClientRect();
-      const radius = rect.width * 0.42;
-      tx = Math.max(-1.2, Math.min(1.2, (lastPX - (rect.left + rect.width / 2)) / radius));
-      ty = Math.max(-1.2, Math.min(1.2, -(lastPY - (rect.top + rect.height / 2)) / radius));
-    }
-    px += (tx - px) * Math.min(1, dt * 4);
-    py += (ty - py) * Math.min(1, dt * 4);
-    gl.uniform2f(uniforms.uRes, canvas.width, canvas.height);
-    gl.uniform1f(uniforms.uTime, t % 1000);
-    gl.uniform1f(uniforms.uSwirl, swirl);
-    gl.uniform1f(uniforms.uAngle, angle);
-    gl.uniform2f(uniforms.uPointer, px, py);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    if (firstFrame) {
-      firstFrame = false;
-      fig.classList.add('is-live');
-    }
+  const tick = (_: number, deltaMs: number) => {
+    const dt = Math.min(0.05, deltaMs / 1000);
+    time += dt;
+    const previous = sway;
+    sway += (swayTarget - sway) * Math.min(1, dt * 3.2);
+    /* Le verre qui bouge entraîne le vin : son déplacement angulaire devient une vitesse pour le liquide. */
+    speed += (((sway - previous) * Math.PI) / 180) * 9;
+    speed += (-34 * tilt - 2.6 * speed) * dt;
+    tilt += speed * dt;
+    bulgeSpeed += (-60 * bulge - 5 * bulgeSpeed - speed * 26) * dt;
+    bulge += bulgeSpeed * dt;
+    /* Au repos, une houle lente : le vin ne se fige jamais tout à fait. */
+    const swell = Math.sin(time * 1.3) * 0.012;
+    /* Dans le repère du verre, le vin penche à l'opposé du verre. */
+    draw(tilt + swell - (sway * Math.PI) / 180);
   };
 
   const start = () => {
-    if (!raf && running()) {
-      lastT = 0;
-      raf = requestAnimationFrame(frame);
-    }
+    if (running || !initialized || !motion) return;
+    running = true;
+    gsap.ticker.add(tick);
   };
   const stop = () => {
-    if (raf) cancelAnimationFrame(raf);
-    raf = 0;
-  };
-  const resetPointer = () => {
-    tx = 0;
-    ty = 0;
-    lastPX = null;
-    pointerDirty = false;
-  };
-  const onPointer = (e: PointerEvent) => {
-    const now = e.timeStamp || performance.now();
-    if (lastPX !== null) {
-      const dist = Math.hypot(e.clientX - lastPX, e.clientY - lastPY);
-      const dtp = Math.max(8, now - lastPT);
-      energy = Math.min(2.4, energy + Math.min(0.35, (dist / dtp) * 0.05));
-    }
-    lastPX = e.clientX;
-    lastPY = e.clientY;
-    lastPT = now;
-    pointerDirty = true;
+    if (!running) return;
+    running = false;
+    gsap.ticker.remove(tick);
   };
 
   const init = () => {
-    if (initialized) return;
+    if (initialized || !fig || !hero || !body) return;
     initialized = true;
-    if (!fig || !canvas || !hero || reduce) {
-      root.classList.add('no-webgl');
-      return;
-    }
-    try {
-      gl = canvas.getContext('webgl', {
-        alpha: true,
-        premultipliedAlpha: true,
-        antialias: false,
-        depth: false,
-        stencil: false,
-        powerPreference: 'low-power',
-      });
-      if (!gl) throw new Error('webgl');
-      setup(gl);
-    } catch {
-      gl = null;
-      root.classList.add('no-webgl');
-      return;
-    }
-    resize();
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(fig);
-    cleanups.push(() => resizeObserver.disconnect());
+    draw(0);
+    if (!motion) return;
     if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(([entry]) => {
-        onScreen = entry.isIntersecting;
-        if (onScreen) start();
-        else stop();
-      });
+      const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
       io.observe(fig);
       cleanups.push(() => io.disconnect());
+    } else {
+      start();
     }
-    listen(document, 'visibilitychange', () => {
-      pageVisible = !document.hidden;
-      if (pageVisible) start();
-      else stop();
-    });
-    /* Au doigt, le verre tourne seul et réagit au défilement ; seule la souris le pilote. */
-    if (finePointer) {
-      listen(hero, 'pointermove', onPointer as EventListener, { passive: true });
-      listen(hero, 'pointerleave', resetPointer);
-      listen(window, 'blur', resetPointer);
-    }
-    listen(canvas, 'webglcontextlost', (e) => {
-      e.preventDefault();
-      stop();
-      fig.classList.remove('is-live');
-    });
-    listen(canvas, 'webglcontextrestored', () => {
-      try {
-        if (gl) setup(gl);
-        resize();
-        firstFrame = true;
-        start();
-      } catch {
-        gl = null;
-        root.classList.add('no-webgl');
-      }
-    });
-    start();
-  };
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener('visibilitychange', onVisibility);
+    cleanups.push(() => document.removeEventListener('visibilitychange', onVisibility));
 
-  const destroy = () => {
-    stop();
-    cleanups.splice(0).forEach((cleanup) => cleanup());
-    if (gl) {
-      if (buffer) gl.deleteBuffer(buffer);
-      if (program) gl.deleteProgram(program);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+    /* Au doigt, le verre ne suit pas le geste, qui sert à défiler : il réagit seulement au défilement. */
+    if (finePointer) {
+      const onMove = (e: PointerEvent) => {
+        const rect = fig.getBoundingClientRect();
+        swayTarget = Math.max(-1, Math.min(1, (e.clientX - (rect.left + rect.width / 2)) / (rect.width * 1.4))) * 7;
+        if (lastX !== null) speed += Math.max(-0.5, Math.min(0.5, (e.clientX - lastX) * 0.004));
+        lastX = e.clientX;
+      };
+      const onLeave = () => {
+        swayTarget = 0;
+        lastX = null;
+      };
+      hero.addEventListener('pointermove', onMove, { passive: true });
+      hero.addEventListener('pointerleave', onLeave);
+      window.addEventListener('blur', onLeave);
+      cleanups.push(() => {
+        hero.removeEventListener('pointermove', onMove);
+        hero.removeEventListener('pointerleave', onLeave);
+        window.removeEventListener('blur', onLeave);
+      });
     }
-    gl = null;
   };
 
   return {
     init,
-    destroy,
-    /** Donne un élan au tourbillon (arrivée sur la page). */
-    kick(value: number) {
-      energy = Math.max(energy, value);
+    destroy() {
+      stop();
+      cleanups.splice(0).forEach((cleanup) => cleanup());
     },
-    /** Ajoute de l'énergie au tourbillon (vitesse de défilement). */
-    add(value: number) {
-      energy = Math.min(2.4, energy + value);
+    /** Donne une impulsion au vin : positive vers la droite. L'arrivée sur la page et le défilement s'en servent. */
+    push(value: number) {
+      speed += Math.max(-1.4, Math.min(1.4, value));
     },
   };
 }

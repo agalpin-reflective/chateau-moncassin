@@ -6,7 +6,7 @@ Site du parrainage symbolique d'un pied de vigne au Château Moncassin (SAS CMEV
 
 - [Astro 7](https://astro.build) en sortie statique, TypeScript strict
 - GSAP + ScrollTrigger pour les animations, Lenis comme unique moteur de défilement
-- Shader WebGL brut pour le verre de vin du hero (image fixe de repli si WebGL manque ou si le mouvement réduit est demandé)
+- Verre de vin du hero dessiné en SVG, vu de face, animé par GSAP (immobile si le mouvement réduit est demandé)
 - Polices Vidaloka (titres) et Manrope (texte), icônes Solar, le tout auto-hébergé (aucune requête vers Google Fonts ou un CDN)
 - Images optimisées au build (AVIF, WebP) via `astro:assets`
 - Sitemap, `robots.txt`, balises Open Graph, données structurées FAQ
@@ -84,7 +84,7 @@ La CI GitHub Actions (`.github/workflows/ci.yml`) lance `npm run check` et `npm 
 
 ```
 src/
-  assets/            photos sources et image fixe du verre (optimisées au build)
+  assets/            photos sources (optimisées au build)
   components/        une section de la page d'accueil par composant, plus le logo, le cep (Vine) et le formulaire
   data/
     site.ts          informations du château, tarif, liens de paiement
@@ -96,11 +96,11 @@ src/
   scripts/
     app.ts           point d'entrée commun à toutes les pages
     core/            défilement, navigation, porte d'âge
-    home/            verre WebGL, intro du hero, cadran de l'année, cep, tee shirt, apparitions, FAQ
+    home/            verre du hero, intro du hero, cadran de l'année, cep, tee shirt, apparitions, FAQ
     pages/           formulaire de souscription, page du certificat
     certificate/     dessin du certificat, rendu SVG et rendu PDF
   styles/            tokens, base, une feuille par section
-tools/render-poster.py   régénère l'image fixe du verre à partir de la même formule que le shader
+tools/make-qr.mjs        génère le QR code du site (SVG et PNG) pour une adresse donnée
 tools/render-certificate.mjs   génère un certificat d'exemple en PDF avec le code de la page
 ```
 
@@ -114,6 +114,8 @@ Les champs manquants s'affichent « À compléter » en rouge sur les pages conc
 - Liens de paiement Stripe
 - Droits d'utilisation de la photo du château (source citée : tripadvisor.pt)
 - Photos originales du domaine si possible (vignes, chai, bouteilles du château)
+- Deux photos demandées par le château : une vue plus large du château (section Privilèges, `src/assets/chateau.jpg`) et une photo de vendanges avec le propriétaire (section Le parrainage, `src/assets/vendanges.jpg`)
+- Adresse définitive du site, pour générer le QR code à imprimer (`node tools/make-qr.mjs https://… dossier`) : un code imprimé ne se corrige plus
 - Visuel définitif du tee shirt (la section de l'accueil montre un aperçu dessiné, non contractuel)
 - Section Casteljaloux : noms des établissements, distances et liens, si le château souhaite les afficher
 - Calendrier des travaux du vignoble (`stages` dans `content.ts`), repris d'une frise générique : à valider par le vigneron

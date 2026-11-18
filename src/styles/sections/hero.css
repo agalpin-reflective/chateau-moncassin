@@ -20,22 +20,26 @@
 .hero-proof .i { color: var(--gold) }
 /* Le verre n'apparaît qu'en mise en page à deux colonnes : sur mobile, le hero commence directement par le message. */
 .hero-visual { display: none; position: relative }
-.glass { position: relative; aspect-ratio: 1 / 1; width: 100%; max-width: 100% }
-.glass-poster, .glass-canvas { position: absolute; inset: 0; width: 100%; height: 100% }
-.glass-canvas { opacity: 0; transition: opacity var(--dur-reveal) var(--ease) }
-.glass.is-live .glass-canvas { opacity: 1 }
+/* Dessin au trait doré, vin en aplat : le verre est vu de face, plein, et son vin bouge (home/glass.ts). */
+.glass { position: relative; width: 100%; aspect-ratio: 272 / 532 }
+.glass-svg { display: block; width: 100%; height: 100%; overflow: visible }
+.glass-line { fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round }
+.glass-rim { stroke: var(--gold-line) }
+.glass-wine { fill: var(--wine) }
+.glass-surface { fill: var(--wine-text) }
+.glass-shine { fill: none; stroke: var(--paper); stroke-width: 1.4; stroke-linecap: round; opacity: 0.32 }
 .glass-hint { display: flex; align-items: center; gap: var(--s-75); justify-content: center; margin-top: var(--s-100); font-size: 12px; line-height: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--paper-2) }
 .glass-hint .i { color: var(--gold) }
-/* Le verre ne réagit qu'à la souris : au doigt, le geste entrerait en conflit avec le défilement. */
+/* Le verre ne suit que la souris : au doigt, le geste sert à défiler. */
 @media (hover: none), (pointer: coarse) { .glass-hint { display: none } }
-.no-webgl .glass-hint { display: none }
 .scroll-cue { display: none }
 @media (min-width: 1024px) {
   .hero { min-height: min(100svh, 980px); display: flex; align-items: center; padding-top: var(--s-900); padding-bottom: var(--s-800) }
   .hero > .wrap { width: 100% }
   .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: var(--s-600) }
   .hero-copy { gap: var(--s-400) }
-  .hero-visual { display: block; width: min(46vw, 640px); margin-right: -6vw; justify-self: end }
+  .hero-visual { display: grid; justify-items: center; width: min(22vw, 300px); justify-self: center }
+  .glass-hint { white-space: nowrap }
   .scroll-cue { position: absolute; left: 50%; bottom: var(--s-400); transform: translateX(-50%); display: inline-flex; align-items: center; gap: var(--s-75); font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper-2); text-decoration: none; transition: color var(--dur-state) var(--ease) }
   .scroll-cue:active { color: var(--gold) }
 }

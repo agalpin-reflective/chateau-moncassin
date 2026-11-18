@@ -8,11 +8,12 @@ import { initTee } from './tee';
 
 export function initHome({ gateOpen }: { gateOpen: boolean }) {
   const glass = createGlass();
-  /* Le verre n'est affiché qu'à partir de 1024 px : le WebGL démarre seulement s'il devient visible. */
+  /* Le verre n'est affiché qu'à partir de 1024 px : il ne s'anime que s'il devient visible. */
   const desktop = window.matchMedia('(min-width: 1024px)');
   if (desktop.matches) glass.init();
   else desktop.addEventListener('change', (e) => e.matches && glass.init(), { once: true });
-  getLenis()?.on('scroll', (lenis) => glass.add(Math.min(0.06, Math.abs(lenis.velocity) * 0.004)));
+  /* Le défilement secoue le vin, d'un côté puis de l'autre selon le sens. */
+  getLenis()?.on('scroll', (lenis) => glass.push(lenis.velocity * 0.0016));
 
   const hero = createHero();
   if (gateOpen) hero.prepare();
@@ -39,7 +40,7 @@ export function initHome({ gateOpen }: { gateOpen: boolean }) {
   return {
     /** Lance l'entrée du hero une fois la porte du club franchie. */
     enter() {
-      glass.kick(1.6);
+      glass.push(1.1);
       hero.play();
     },
   };
