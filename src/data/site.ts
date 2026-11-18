@@ -32,12 +32,15 @@ export const site = {
   },
 } as const;
 
-export const payment = {
-  decouverte: import.meta.env.PUBLIC_STRIPE_LINK_DECOUVERTE ?? '',
-  domaine: import.meta.env.PUBLIC_STRIPE_LINK_DOMAINE ?? '',
-};
+/**
+ * Paiement en ligne (Up2pay e-Transactions, Crédit Agricole). Il passe par l'API du dossier api/,
+ * qui signe la demande et reçoit la confirmation de la banque. Sans PUBLIC_PAYMENT_ENABLED=true,
+ * le formulaire reste en mode démonstration : rien n'est envoyé.
+ */
+export const paymentEnabled = import.meta.env.PUBLIC_PAYMENT_ENABLED === 'true';
 
-export const paymentEnabled = Boolean(payment.decouverte && payment.domaine);
+/** Adresse de l'API : par défaut sur le même domaine que le site, sous /api. */
+export const apiUrl = (import.meta.env.PUBLIC_API_URL || '/api').replace(/\/$/, '');
 
 /** Version de prévisualisation : le site reste accessible par lien mais n'est pas indexé. */
 export const noindexAll = import.meta.env.PUBLIC_NOINDEX === 'true';

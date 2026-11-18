@@ -42,10 +42,30 @@ const slug = (text: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
+/** Ce que l'API renvoie d'une commande au porteur de son lien (voir api/src/v1/routes/orders.ts). */
+interface ServerOrder {
+  reference: string;
+  status: 'PENDING' | 'PAID';
+  formule: { id: string };
+  recipient: string;
+  gift: boolean;
+  buyerFirstName: string;
+  message: string | null;
+  startsAt: string;
+}
+
+/** La banque prévient l'API quelques secondes après le paiement : on réessaie pendant une trentaine de secondes. */
+const POLL_DELAY = 2000;
+const POLL_TRIES = 15;
+
 /**
- * Page du certificat, après la souscription. Elle relit la souscription mémorisée par /souscrire,
- * laisse corriger le nom, le mode (pour soi ou en cadeau) et la dédicace, affiche le certificat en direct,
+ * Page du certificat, après la souscription. Elle affiche le certificat en direct, laisse régler la dédicace,
  * puis le propose en PDF (fichier généré dans le navigateur) et à l'impression.
+ * Trois situations :
+ * - paiement activé et lien de commande (?ref=…&t=…) : la commande vient de l'API, le certificat n'est délivré
+ *   qu'une fois le paiement confirmé par la banque, et le nom, la formule et la date ne sont pas modifiables ;
+ * - paiement activé sans lien : aucun certificat, la page explique d'où vient le lien ;
+ * - mode démonstration : la souscription est relue dans le navigateur et tout reste modifiable.
  */
 export function initThanks(): void {
   const root = $('#certificat');
@@ -55,7 +75,16 @@ export function initThanks(): void {
 
   const formules = JSON.parse(root.dataset.formules ?? '{}') as Record<string, FormuleInfo>;
   const copy = JSON.parse(root.dataset.copy ?? '{}') as Record<string, string>;
-  const stored = loadOrder();
+  const api = root.dataset.api ?? '';
+  const params = new URLSearchParams(location.search);
+  const reference = params.get('ref') ?? '';
+  const accessToken = params.get('t') ?? '';
+  const serverMode = Boolean(api && reference && accessToken);
+  /* Sans API (démonstration), le certificat est libre. Avec, il attend la confirmation du paiement. */
+  let confirmed = !api;
+  let notice = '';
+
+  const stored = api ? null : loadOrder();
   const order: Order = stored ?? { buyer: '', gift: false, recipient: '', message: '', formule: '', date: new Date().toISOString(), reference: '' };
   if (!formules[order.formule]) order.formule = Object.keys(formules)[0];
 
@@ -91,7 +120,7 @@ export function initThanks(): void {
     start: new Date(order.date),
     reference: order.reference || undefined,
   });
-  const ready = () => Boolean(order.recipient.trim()) && (!order.gift || Boolean(order.buyer.trim()));
+  const ready = () => confirmed && Boolean(order.recipient.trim()) && (!order.gift || Boolean(order.buyer.trim()));
 
   const say = (text: string) => {
     if (status) status.textContent = text;
@@ -108,8 +137,10 @@ export function initThanks(): void {
     root.dataset.mode = order.gift ? 'cadeau' : 'moi';
     const first = order.buyer.trim().split(/\s+/)[0];
     const title = $('#merci-title');
-    if (title) title.textContent = (order.gift ? copy.titleGift : copy.titleSelf) + (first ? `, ${first}` : '');
-    say(ready() ? '' : copy.missing);
+    /* Tant que la banque n'a pas confirmé, le titre ne promet rien. */
+    const heading = api && !confirmed ? copy.titlePending : order.gift ? copy.titleGift : copy.titleSelf;
+    if (title) title.textContent = heading + (first && (confirmed || !api) ? `, ${first}` : '');
+    say(notice || (ready() ? '' : copy.missing));
   };
 
   /* Champs : le nom inscrit sur le certificat est celui du parrain ; en cadeau, l'acheteur signe la dédicace. */
@@ -136,19 +167,82 @@ export function initThanks(): void {
     });
   });
   const update = () => {
-    order.recipient = name.value;
+    /* Sur une commande payée, le nom inscrit vient du serveur : seule la dédicace se règle ici. */
+    if (!serverMode) order.recipient = name.value;
     if (order.gift) order.buyer = giver.value;
-    else order.buyer = name.value;
+    else if (!serverMode) order.buyer = name.value;
     order.message = message.value;
-    saveOrder(order);
+    if (!api) saveOrder(order);
     render();
   };
   [name, giver, message].forEach((field) => field.addEventListener('input', update));
   form.addEventListener('submit', (e) => e.preventDefault());
 
+  const lock = (all: boolean) => {
+    name.readOnly = true;
+    $$<HTMLInputElement>('input[name="pour"], input[name="formule"]', form).forEach((radio) => {
+      radio.disabled = true;
+    });
+    if (all) [giver, message].forEach((field) => (field.disabled = true));
+  };
+
+  const applyServerOrder = (data: ServerOrder) => {
+    order.recipient = data.recipient;
+    order.gift = data.gift;
+    order.buyer = data.buyerFirstName;
+    order.message = data.message ?? '';
+    order.formule = formules[data.formule.id] ? data.formule.id : order.formule;
+    order.date = data.startsAt;
+    order.reference = data.reference;
+    name.value = order.recipient;
+    giver.value = order.gift ? order.buyer : '';
+    message.value = order.message;
+    $$<HTMLInputElement>('input[name="pour"]', form).forEach((radio) => (radio.checked = (radio.value === 'cadeau') === order.gift));
+    $$<HTMLInputElement>('input[name="formule"]', form).forEach((radio) => (radio.checked = radio.value === order.formule));
+  };
+
+  /** Relit la commande auprès de l'API jusqu'à ce que la banque ait confirmé le paiement. */
+  const loadServerOrder = async (attempt = 0): Promise<void> => {
+    let response: Response;
+    try {
+      response = await fetch(`${api}/v1/orders/${encodeURIComponent(reference)}?t=${encodeURIComponent(accessToken)}`, { headers: { Accept: 'application/json' } });
+    } catch {
+      notice = copy.unreachable;
+      render();
+      return;
+    }
+    if (!response.ok) {
+      notice = response.status === 404 ? copy.invalidLink : copy.unreachable;
+      render();
+      return;
+    }
+    const data = (await response.json()) as ServerOrder;
+    applyServerOrder(data);
+    if (data.status === 'PAID') {
+      confirmed = true;
+      notice = '';
+      const eyebrow = $('#merci-eyebrow');
+      if (eyebrow) eyebrow.textContent = copy.eyebrowPaid;
+      render();
+      return;
+    }
+    notice = attempt >= POLL_TRIES ? copy.pendingTimeout : copy.pending;
+    render();
+    if (attempt < POLL_TRIES) window.setTimeout(() => loadServerOrder(attempt + 1), POLL_DELAY);
+  };
+
+  if (serverMode) {
+    lock(false);
+    notice = copy.pending;
+  } else if (api) {
+    lock(true);
+    notice = copy.locked;
+  }
+
   render();
   /* Les mesures dépendent des polices : on redessine quand elles sont chargées. */
   document.fonts?.ready.then(render);
+  if (serverMode) loadServerOrder();
 
   print.addEventListener('click', () => window.print());
 

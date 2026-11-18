@@ -22,7 +22,10 @@ import { site, paymentEnabled } from '../data/site';
         <section>
           <h2>Informations saisies sur le site</h2>
           {paymentEnabled ? (
-            <p>Votre adresse email et votre choix de formule sont transmis à notre prestataire de paiement Stripe pour préparer votre commande. Votre nom, votre adresse de livraison et vos informations de paiement sont saisis directement sur la page de paiement sécurisée de Stripe ; le château ne voit jamais vos coordonnées bancaires.</p>
+            <Fragment>
+              <p>Pour ouvrir votre commande, le site enregistre les informations saisies dans le formulaire : votre nom, votre adresse email, votre adresse postale, la formule choisie et, pour un parrainage offert, le nom de la personne, votre message et son adresse de livraison.</p>
+              <p>Le paiement se fait sur la page sécurisée du Crédit Agricole (Up2pay e-Transactions), à qui sont transmis le montant, la référence de la commande, votre adresse email et votre adresse de facturation, nécessaires à l'authentification du paiement. Vos coordonnées bancaires sont saisies sur cette page : le château et ce site ne les voient jamais.</p>
+            </Fragment>
           ) : (
             <p>Dans cette version de démonstration, les informations saisies dans le formulaire restent dans votre navigateur : elles ne sont ni envoyées ni enregistrées.</p>
           )}
@@ -31,7 +34,7 @@ import { site, paymentEnabled } from '../data/site';
         <section>
           <h2>Stockage dans votre navigateur</h2>
           <p>Votre confirmation d'âge est mémorisée dans votre navigateur pour ne pas vous la redemander. Le site n'utilise pas de cookie publicitaire ni d'outil de mesure d'audience.</p>
-          <p>Les informations de votre souscription utiles au certificat de parrainage (nom du parrain, nom de la personne qui offre, message, formule et date) sont elles aussi gardées dans votre navigateur. Le certificat est créé sur votre appareil : ces informations ne sont pas envoyées au château par le site, et vous pouvez les effacer en vidant les données du site dans votre navigateur.</p>
+          <p>Le certificat de parrainage est fabriqué sur votre appareil, à partir de votre commande. Le lien reçu après le paiement donne accès au nom inscrit, à la formule et à la date, jamais à vos coordonnées.</p>
         </section>
         <section>
           <h2>Durée de conservation et vos droits</h2>

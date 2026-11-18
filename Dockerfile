@@ -9,14 +9,15 @@ COPY . .
 # Variables lues par Astro pendant le build. Dans Coolify, les déclarer comme variables de build.
 ARG SITE_URL
 ARG BASE_PATH
-ARG PUBLIC_STRIPE_LINK_DECOUVERTE
-ARG PUBLIC_STRIPE_LINK_DOMAINE
+# « true » pour proposer le paiement en ligne (l'API du dossier api/ doit alors être déployée sous /api).
+ARG PUBLIC_PAYMENT_ENABLED
+ARG PUBLIC_API_URL
 # Non indexé par défaut tant que le contenu n'est pas validé : passer PUBLIC_NOINDEX=false pour ouvrir le site aux moteurs.
 ARG PUBLIC_NOINDEX=true
 ENV SITE_URL=$SITE_URL \
     BASE_PATH=$BASE_PATH \
-    PUBLIC_STRIPE_LINK_DECOUVERTE=$PUBLIC_STRIPE_LINK_DECOUVERTE \
-    PUBLIC_STRIPE_LINK_DOMAINE=$PUBLIC_STRIPE_LINK_DOMAINE \
+    PUBLIC_PAYMENT_ENABLED=$PUBLIC_PAYMENT_ENABLED \
+    PUBLIC_API_URL=$PUBLIC_API_URL \
     PUBLIC_NOINDEX=$PUBLIC_NOINDEX
 RUN npm run build
 

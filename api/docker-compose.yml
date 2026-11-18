@@ -1,0 +1,14 @@
+# Postgres de développement : `docker compose up -d`, puis `npm run start:dev`.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: moncassin
+      POSTGRES_PASSWORD: moncassin
+      POSTGRES_DB: moncassin
+    ports:
+      - "5433:5432"
+    volumes:
+      - moncassin-db:/var/lib/postgresql/data
+volumes:
+  moncassin-db:

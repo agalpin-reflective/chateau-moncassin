@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  site:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -19,5 +19,20 @@ jobs:
       - run: npm run build
         env:
           SITE_URL: ${{ vars.SITE_URL }}
-          PUBLIC_STRIPE_LINK_DECOUVERTE: ${{ vars.PUBLIC_STRIPE_LINK_DECOUVERTE }}
-          PUBLIC_STRIPE_LINK_DOMAINE: ${{ vars.PUBLIC_STRIPE_LINK_DOMAINE }}
+
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: api/.nvmrc
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

@@ -17,3 +17,8 @@ dist/
 
 # skills Claude Code installés localement (environ 90 Mo, démos comprises)
 /.claude/skills/
+
+# API : dépendances et build (voir api/)
+api/node_modules/
+api/dist/
+api/.env

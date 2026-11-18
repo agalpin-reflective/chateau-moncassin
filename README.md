@@ -29,35 +29,57 @@ npm run dev        # http://localhost:4321
 
 ## Configuration
 
-Variables d'environnement (voir `.env.example`) :
+Variables d'environnement du site (voir `.env.example`) :
 
 | Variable | Usage |
 | --- | --- |
 | `SITE_URL` | URL publique du site, utilisée pour le canonical, le sitemap et les images de partage |
-| `PUBLIC_STRIPE_LINK_DECOUVERTE` | lien de paiement Stripe de la formule découverte |
-| `PUBLIC_STRIPE_LINK_DOMAINE` | lien de paiement Stripe de la formule domaine |
+| `PUBLIC_PAYMENT_ENABLED` | `true` pour proposer le paiement en ligne ; vide, le formulaire reste en démonstration |
+| `PUBLIC_API_URL` | adresse de l'API de commande, `/api` par défaut (même domaine que le site) |
 
 ### Paiement
 
-Le formulaire de souscription se trouve sur une page dédiée, `/souscrire` ; les cartes des formules de l'accueil y renvoient avec la formule présélectionnée (`/souscrire?formule=domaine`).
+Le paiement passe par **Up2pay e-Transactions** du Crédit Agricole, la solution déjà utilisée par la boutique du château. La signature de chaque paiement demande une clé secrète et la banque confirme le résultat de serveur à serveur : c'est le rôle de l'API du dossier `api/`.
 
-Tant que les deux liens Stripe sont vides, le formulaire reste en **mode démonstration** : rien n'est envoyé, le visiteur voit un récapitulatif et un message l'indique.
+Tant que `PUBLIC_PAYMENT_ENABLED` n'est pas à `true`, le formulaire reste en **mode démonstration** : rien n'est envoyé, le visiteur voit un récapitulatif et un message l'indique.
 
-Pour activer le paiement :
+Le parcours, paiement activé :
 
-1. Dans Stripe, créer deux **Payment Links** à 150 € TTC (un par formule).
-2. Activer la collecte de l'adresse de livraison (France) et ajouter un champ personnalisé « Nom du parrain ».
-3. Définir la page de confirmation sur `https://<votre-domaine>/merci`.
-4. Renseigner les deux URL dans les variables d'environnement, puis redéployer.
+1. `/souscrire` envoie la commande à l'API (`POST /api/v1/orders`), qui l'enregistre « en attente » et renvoie un formulaire signé. Le prix est fixé par le serveur, jamais par le navigateur.
+2. Le navigateur envoie ce formulaire à la page de paiement de la banque.
+3. La banque notifie l'API (`/api/v1/payments/etransactions/notification`). L'API vérifie la signature de la banque et le montant, passe la commande à « payée », puis envoie un email au château et un à l'acheteur.
+4. L'acheteur revient sur `/merci?ref=…&t=…`, qui affiche son certificat.
 
-Le formulaire envoie vers Stripe l'email prérempli (`prefilled_email`), la langue (`locale=fr`) et une référence `client_reference_id` de la forme `domaine_MWDPE12X` : la formule, puis la référence imprimée sur le certificat.
+### API (`api/`)
+
+Service Node 24, TypeScript, Express 5, TypeORM et Postgres, sur le modèle de `split-api`. Il est déployé comme une seconde application dans le même Coolify, sous le chemin `/api` du domaine du site.
+
+```bash
+cd api
+nvm use                 # Node 24
+npm install
+cp .env.example .env
+docker compose up -d    # Postgres local sur le port 5433
+npm run start:dev       # http://localhost:4100
+npm test                # 33 tests, sans base de données
+```
+
+Pour essayer le paiement en local, créer un `.env` à la racine avec `PUBLIC_PAYMENT_ENABLED=true` : le serveur de développement du site relaie `/api` vers `localhost:4100`. Le fichier `api/.env.example` contient le compte de démonstration public de la banque, qui ouvre la page de paiement de test. La banque ne peut pas notifier une machine locale : le passage à « payée » se teste sur un serveur joignable.
+
+- **Identifiants du contrat** : `ETRANSACTIONS_SITE`, `ETRANSACTIONS_RANG`, `ETRANSACTIONS_IDENTIFIANT` et `ETRANSACTIONS_HMAC_KEY`, avec `ETRANSACTIONS_MODE=test` ou `production`.
+- **Ne jamais générer une nouvelle clé HMAC de production dans le back office Vision sans coordination** : dès qu'elle est confirmée, l'ancienne cesse de fonctionner, et la boutique du château qui l'utilise ne peut plus encaisser. Demander au Crédit Agricole un rang dédié à ce site, ou réutiliser la clé existante.
+- **Clé publique de la banque** : déposer `pubkey.pem` dans `api/keys/etransactions-pubkey.pem`. Sans elle, toute notification est rejetée et aucune commande ne passe à « payée ».
+- **Emails** : compte SMTP dans `SMTP_*`, expéditeur dans `MAIL_FROM`, adresse du château dans `ORDERS_EMAIL`.
+- **Schéma** : fichiers SQL de `api/migrations/`, appliqués au démarrage. Une évolution = un nouveau fichier, jamais une modification d'un fichier déjà appliqué.
+- **Vérifier la signature auprès de la banque** : `npx ts-node scripts/checkPaymentRequest.ts` envoie une demande à la plateforme de test et affiche sa réponse.
+- Le prix et les formules de `api/src/v1/catalogue.ts` doivent rester alignés avec `src/data/site.ts` et `src/data/content.ts`.
 
 ### Certificat de parrainage
 
-Après le paiement, la page `/merci` affiche le certificat, au nom du parrain et daté du jour de la souscription, et le propose en PDF (A4 paysage) ou à l'impression. Deux cas sont prévus dès le formulaire : « pour moi » (certificat au nom de l'acheteur) et « pour offrir » (certificat au nom de la personne, avec « Un cadeau de … » et un message facultatif).
+Après le paiement, la page `/merci` affiche le certificat, au nom du parrain et daté du jour du paiement, et le propose en PDF (A4 paysage) ou à l'impression. Deux cas sont prévus dès le formulaire : « pour moi » (certificat au nom de l'acheteur) et « pour offrir » (certificat au nom de la personne, avec « Un cadeau de … » et un message facultatif).
 
-- Le site est statique : la souscription est gardée dans le navigateur (`localStorage`, voir `src/scripts/lib/order.ts`) le temps du paiement. Sur un autre appareil, la page propose de saisir le nom.
-- Le certificat n'est donc **pas une preuve d'achat** : n'importe qui peut en créer un. La référence imprimée permet de le rapprocher d'un paiement Stripe. Pour un certificat émis par le château (envoi par email après paiement), il faudra un traitement côté serveur branché sur le webhook Stripe.
+- Paiement activé, le certificat n'est délivré que pour une commande payée : la page relit la commande auprès de l'API avec le lien personnel (`ref` et `t`), aussi envoyé par email. Le nom, la formule et la date viennent du serveur et ne sont pas modifiables ; seule la dédicace se règle.
+- En mode démonstration, la souscription est gardée dans le navigateur (`src/scripts/lib/order.ts`) et tout reste modifiable.
 - Le dessin est décrit une seule fois (`src/scripts/certificate/layout.ts`) et rendu deux fois : en SVG pour l'aperçu et l'impression, en PDF vectoriel avec `pdf-lib` pour le téléchargement (module chargé au clic seulement, environ 1 Mo).
 - Contrôle hors navigateur : `node tools/render-certificate.mjs exemple.pdf` (ajouter `cadeau` pour la variante offerte).
 
@@ -67,14 +89,14 @@ Le build est un site statique : Vercel, Netlify ou Cloudflare Pages détectent A
 
 1. Importer le dépôt dans l'hébergeur.
 2. Commande de build `npm run build`, dossier publié `dist`.
-3. Renseigner `SITE_URL` et, le moment venu, les liens Stripe.
+3. Renseigner `SITE_URL`. Le paiement en ligne demande en plus l'API du dossier `api/` (voir Paiement).
 4. Compléter l'hébergeur dans `src/data/site.ts` (mentions légales).
 
 ### Docker et Coolify
 
 Le `Dockerfile` construit le site puis le sert avec nginx (`deploy/nginx.conf`) sur le port 80. C'est le mode prévu pour Coolify : source « dépôt Git », build pack « Dockerfile », port exposé 80.
 
-- Variables à déclarer comme **variables de build** : `SITE_URL` (adresse publique, sans barre finale), les deux `PUBLIC_STRIPE_LINK_*`, et `PUBLIC_NOINDEX=false` le jour où le site peut être indexé (il ne l'est pas par défaut). Ne pas définir `BASE_PATH` sur un domaine dédié.
+- Variables à déclarer comme **variables de build** : `SITE_URL` (adresse publique, sans barre finale), `PUBLIC_PAYMENT_ENABLED=true` une fois l'API en place, et `PUBLIC_NOINDEX=false` le jour où le site peut être indexé (il ne l'est pas par défaut). Ne pas définir `BASE_PATH` sur un domaine dédié.
 - Le HTTPS est terminé par le proxy de Coolify ; nginx n'écoute qu'en HTTP.
 - Les pages sont servies sans redirection (`/souscrire` et `/souscrire/`), toujours revalidées ; les fichiers de `/_astro/` sont mis en cache un an.
 - Essai local : `docker build --build-arg SITE_URL=http://localhost:8088 -t chateau-moncassin . && docker run --rm -p 8088:80 chateau-moncassin`.
@@ -88,7 +110,7 @@ Le site de production est servi par Coolify sur `https://parrains.chateaumoncass
 
 Le site n'est plus publié sur GitHub Pages : la production est sur Coolify (voir ci dessus).
 
-La CI GitHub Actions (`.github/workflows/ci.yml`) lance `npm run check` et `npm run build` à chaque push sur `main` et sur les pull requests. Les variables du dépôt `SITE_URL` et `PUBLIC_STRIPE_LINK_*` sont utilisées si elles existent.
+La CI GitHub Actions (`.github/workflows/ci.yml`) lance `npm run check` et `npm run build` à chaque push sur `main` et sur les pull requests. Elle vérifie aussi l'API (types, tests, build). La variable de dépôt `SITE_URL` est utilisée si elle existe.
 
 ## Structure
 
@@ -111,6 +133,7 @@ src/
     certificate/     dessin du certificat, rendu SVG et rendu PDF
   styles/            tokens, base, une feuille par section
 tools/make-qr.mjs        génère le QR code du site (SVG et PNG) pour une adresse donnée
+api/                     API de commande et de paiement (Express, TypeORM, Postgres), déployée sous /api
 tools/render-certificate.mjs   génère un certificat d'exemple en PDF avec le code de la page
 ```
 
@@ -121,7 +144,8 @@ Les champs manquants s'affichent « À compléter » en rouge sur les pages conc
 - `src/data/site.ts` : capital, siège, RCS, SIRET, TVA, directeur de la publication, email, téléphone, hébergeur
 - Conditions générales de vente (page `conditions`)
 - Durée de conservation des données de commande (page `confidentialite`)
-- Liens de paiement Stripe
+- Identifiants du contrat Up2pay e-Transactions pour ce site, clé publique de la banque et compte SMTP d'envoi des emails (voir Paiement)
+- Durée de conservation des commandes enregistrées par l'API (aucune purge automatique pour l'instant)
 - Droits d'utilisation de la photo du château (source citée : tripadvisor.pt)
 - Photos originales du domaine si possible (vignes, chai, bouteilles du château)
 - Deux photos demandées par le château : une vue plus large du château (section Privilèges, `src/assets/chateau.jpg`) et une photo de vendanges avec le propriétaire (section Le parrainage, `src/assets/vendanges.jpg`)

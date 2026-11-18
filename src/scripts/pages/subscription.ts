@@ -3,7 +3,7 @@ import { gsap, ScrollTrigger, finePointer, motion } from '../lib/motion';
 import { ease } from '../lib/ease';
 import { newReference, saveOrder } from '../lib/order';
 
-type Key = 'prenom' | 'nom' | 'bprenom' | 'bnom' | 'email' | 'age';
+type Key = 'prenom' | 'nom' | 'adresse' | 'cp' | 'ville' | 'bprenom' | 'bnom' | 'email' | 'age';
 interface FormuleInfo {
   label: string;
   summary: string;
@@ -12,6 +12,10 @@ interface FormuleInfo {
 const MESSAGES = {
   prenom: 'Indiquez votre prénom.',
   nom: 'Indiquez votre nom.',
+  adresse: 'Indiquez votre adresse.',
+  cpEmpty: 'Indiquez votre code postal.',
+  cpBad: 'Le code postal compte cinq chiffres.',
+  ville: 'Indiquez votre ville.',
   bprenom: 'Indiquez le prénom de la personne.',
   bnom: 'Indiquez le nom de la personne.',
   emailEmpty: 'Indiquez votre adresse email.',
@@ -19,25 +23,40 @@ const MESSAGES = {
   age: 'Cochez cette case pour confirmer votre majorité et accepter les conditions.',
 };
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const ZIP = /^\d{5}$/;
+
+/** Messages affichés au retour de la page de paiement, ou quand la commande n'a pas pu être ouverte. */
+const ALERTS = {
+  refuse: "Le paiement a été refusé par la banque. Aucun montant n'a été débité : vous pouvez réessayer, avec une autre carte si besoin.",
+  annule: "Le paiement a été annulé. Aucun montant n'a été débité : votre demande reste à valider ci dessous.",
+  network: "La commande n'a pas pu être envoyée. Vérifiez votre connexion et réessayez.",
+  server: "La commande n'a pas pu être ouverte. Réessayez dans un instant.",
+};
+/** Champ du formulaire correspondant à chaque champ refusé par l'API. */
+const API_FIELDS: Record<string, Key> = {
+  firstName: 'prenom', lastName: 'nom', email: 'email', addressLine1: 'adresse', zipCode: 'cp', city: 'ville',
+  recipientFirstName: 'bprenom', recipientLastName: 'bnom', acceptTerms: 'age',
+};
 
 /**
  * Formulaire de souscription et récapitulatif nominatif (page /souscrire).
  * La formule peut arriver par l'adresse (?formule=domaine) depuis les cartes de l'accueil.
- * Si les liens de paiement Stripe sont configurés, la validation redirige vers le paiement
- * avec l'email prérempli ; sinon le formulaire reste en mode démonstration.
+ * Quand le paiement est activé, la validation ouvre une commande auprès de l'API (dossier api/), qui renvoie
+ * un formulaire signé : le navigateur l'envoie tel quel à la page de paiement du Crédit Agricole.
+ * Sinon le formulaire reste en mode démonstration et rien ne quitte le navigateur.
  */
 export function initSubscription(): void {
   const form = $<HTMLFormElement>('#form');
   if (!form) return;
 
   const formules = JSON.parse(form.dataset.formules ?? '{}') as Record<string, FormuleInfo>;
-  const links: Record<string, string | undefined> = {
-    decouverte: form.dataset.linkDecouverte,
-    domaine: form.dataset.linkDomaine,
-  };
+  const api = form.dataset.api ?? '';
   const fields = {
     prenom: $<HTMLInputElement>('#f-prenom', form)!,
     nom: $<HTMLInputElement>('#f-nom', form)!,
+    adresse: $<HTMLInputElement>('#f-adresse', form)!,
+    cp: $<HTMLInputElement>('#f-cp', form)!,
+    ville: $<HTMLInputElement>('#f-ville', form)!,
     bprenom: $<HTMLInputElement>('#f-bprenom', form)!,
     bnom: $<HTMLInputElement>('#f-bnom', form)!,
     email: $<HTMLInputElement>('#f-email', form)!,
@@ -52,6 +71,9 @@ export function initSubscription(): void {
   const ticketGiverRow = $('#t-giver-row');
   const giftFields = $('#gift-fields', form);
   const messageField = $<HTMLTextAreaElement>('#f-message', form);
+  const complement = $<HTMLInputElement>('#f-complement', form);
+  const delivery = $<HTMLTextAreaElement>('#f-livraison', form);
+  const alertBox = $('#form-alert', form);
   const submitButton = $<HTMLButtonElement>('#f-submit', form)!;
   const submitLabel = $('.btn-label', submitButton)!;
   const idleLabel = submitLabel.textContent ?? '';
@@ -70,6 +92,10 @@ export function initSubscription(): void {
     if (key === 'email') {
       if (!value) return MESSAGES.emailEmpty;
       return EMAIL.test(value) ? '' : MESSAGES.emailBad;
+    }
+    if (key === 'cp') {
+      if (!value) return MESSAGES.cpEmpty;
+      return ZIP.test(value) ? '' : MESSAGES.cpBad;
     }
     return value ? '' : MESSAGES[key];
   };
@@ -149,6 +175,58 @@ export function initSubscription(): void {
     submitLabel.textContent = label;
   };
 
+  const showAlert = (text: string) => {
+    if (!alertBox) return;
+    alertBox.textContent = text;
+    alertBox.hidden = !text;
+    if (text) alertBox.focus();
+  };
+
+  /**
+   * Ouvre la commande auprès de l'API, puis envoie à la banque le formulaire signé qu'elle renvoie.
+   * Le montant et la signature viennent du serveur : rien de ce que le navigateur envoie ne peut changer le prix.
+   */
+  const openPayment = async (body: Record<string, unknown>) => {
+    let response: Response;
+    try {
+      response = await fetch(`${api}/v1/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    } catch {
+      setBusy(false);
+      showAlert(ALERTS.network);
+      return;
+    }
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data?.payment) {
+      setBusy(false);
+      const field = API_FIELDS[String(data?.error?.details?.field ?? '')];
+      if (response.status === 400 && field) {
+        showError(field, errorFor(field) || data.error.message);
+        fields[field].focus();
+      } else {
+        showAlert(ALERTS.server);
+      }
+      return;
+    }
+    const payment = data.payment as { url: string; fields: { name: string; value: string }[] };
+    const bankForm = document.createElement('form');
+    bankForm.method = 'POST';
+    bankForm.action = payment.url;
+    bankForm.acceptCharset = 'UTF-8';
+    bankForm.hidden = true;
+    payment.fields.forEach(({ name, value }) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      bankForm.appendChild(input);
+    });
+    document.body.appendChild(bankForm);
+    bankForm.submit();
+  };
+
+  const returned = params.get('paiement');
+  if (returned === 'refuse' || returned === 'annule') showAlert(ALERTS[returned]);
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     submitted = true;
@@ -163,11 +241,33 @@ export function initSubscription(): void {
       return;
     }
 
-    /* La souscription reste dans le navigateur : la page du certificat la relit au retour du paiement. */
     const formule = selected();
     const gift = isGift();
     const buyer = fullName(fields.prenom, fields.nom);
-    const reference = newReference();
+    showAlert('');
+
+    if (api) {
+      setBusy(true, 'Ouverture du paiement sécurisé');
+      openPayment({
+        formule,
+        firstName: fields.prenom.value.trim(),
+        lastName: fields.nom.value.trim(),
+        email: fields.email.value.trim(),
+        addressLine1: fields.adresse.value.trim(),
+        addressLine2: complement?.value.trim() ?? '',
+        zipCode: fields.cp.value.trim(),
+        city: fields.ville.value.trim(),
+        isGift: gift,
+        recipientFirstName: fields.bprenom.value.trim(),
+        recipientLastName: fields.bnom.value.trim(),
+        giftMessage: messageField?.value.trim() ?? '',
+        deliveryAddress: delivery?.value.trim() ?? '',
+        acceptTerms: fields.age.checked,
+      });
+      return;
+    }
+
+    /* Mode démonstration : la souscription reste dans le navigateur, où la page du certificat la relit. */
     saveOrder({
       buyer,
       gift,
@@ -175,21 +275,9 @@ export function initSubscription(): void {
       message: gift ? (messageField?.value.trim() ?? '') : '',
       formule,
       date: new Date().toISOString(),
-      reference,
+      reference: newReference(),
     });
 
-    const link = links[formule];
-    if (link) {
-      const url = new URL(link);
-      url.searchParams.set('prefilled_email', fields.email.value.trim());
-      url.searchParams.set('client_reference_id', `${formule}_${reference}`);
-      url.searchParams.set('locale', 'fr');
-      setBusy(true, 'Redirection vers le paiement sécurisé');
-      window.location.assign(url.toString());
-      return;
-    }
-
-    /* Mode démonstration : aucun envoi, on montre le récapitulatif. */
     const skeleton = $('#form-skel');
     setBusy(true, 'Préparation du récapitulatif');
     if (skeleton) skeleton.hidden = false;

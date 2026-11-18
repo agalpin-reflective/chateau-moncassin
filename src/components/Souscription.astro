@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 import { formules, deliveryDelay } from '../data/content';
-import { site, payment, paymentEnabled, formatPrice } from '../data/site';
+import { site, paymentEnabled, apiUrl, formatPrice } from '../data/site';
 import { href } from '../lib/url';
 
 const first = formules[0];
@@ -23,9 +23,9 @@ const formulesData = JSON.stringify(
           id="form"
           novalidate
           data-formules={formulesData}
-          data-link-decouverte={payment.decouverte}
-          data-link-domaine={payment.domaine}
+          data-api={paymentEnabled ? apiUrl : ''}
         >
+          <p class="form-alert" id="form-alert" role="alert" tabindex="-1" hidden></p>
           <fieldset>
             <legend>Votre formule</legend>
             <div class="opts">
@@ -62,6 +62,33 @@ const formulesData = JSON.stringify(
               <p class="err" id="e-nom" hidden></p>
             </div>
           </div>
+          <fieldset>
+            <legend>Votre adresse</legend>
+            <div class="gift-grid">
+              <div class="field">
+                <label for="f-adresse">Adresse</label>
+                <input id="f-adresse" name="adresse" type="text" autocomplete="address-line1" required aria-describedby="e-adresse" />
+                <p class="err" id="e-adresse" hidden></p>
+              </div>
+              <div class="field">
+                <label for="f-complement">Complément d'adresse <span class="optional">facultatif</span></label>
+                <input id="f-complement" name="complement" type="text" autocomplete="address-line2" />
+              </div>
+              <div class="f-row">
+                <div class="field">
+                  <label for="f-cp">Code postal</label>
+                  <input id="f-cp" name="cp" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="5" required aria-describedby="e-cp" />
+                  <p class="err" id="e-cp" hidden></p>
+                </div>
+                <div class="field">
+                  <label for="f-ville">Ville</label>
+                  <input id="f-ville" name="ville" type="text" autocomplete="address-level2" required aria-describedby="e-ville" />
+                  <p class="err" id="e-ville" hidden></p>
+                </div>
+              </div>
+              <p class="hint">Vos bouteilles sont livrées à cette adresse, en France, {deliveryDelay}.</p>
+            </div>
+          </fieldset>
           <fieldset class="gift" id="gift-fields" hidden>
             <legend>La personne à qui vous offrez le parrainage</legend>
             <div class="gift-grid">
@@ -82,6 +109,11 @@ const formulesData = JSON.stringify(
                 <textarea id="f-message" name="message" rows="2" maxlength="140" aria-describedby="h-message"></textarea>
                 <p class="hint" id="h-message">140 caractères au plus. Vous pourrez encore le modifier avant de télécharger le certificat.</p>
               </div>
+              <div class="field">
+                <label for="f-livraison">Adresse de livraison du cadeau <span class="optional">facultatif</span></label>
+                <textarea id="f-livraison" name="livraison" rows="3" maxlength="400" aria-describedby="h-livraison"></textarea>
+                <p class="hint" id="h-livraison">À remplir si les bouteilles doivent être livrées chez la personne plutôt que chez vous.</p>
+              </div>
             </div>
           </fieldset>
           <div class="field">
@@ -101,7 +133,7 @@ const formulesData = JSON.stringify(
             </button>
           </div>
           {paymentEnabled ? (
-            <p class="form-note"><Icon name="shield-check-linear" size="sm" /> Paiement sécurisé par Stripe. Vous renseignez votre adresse de livraison à l'étape suivante.</p>
+            <p class="form-note"><Icon name="shield-check-linear" size="sm" /> Paiement par carte bancaire sur la page sécurisée du Crédit Agricole. Le château ne voit jamais vos coordonnées bancaires.</p>
           ) : (
             <p class="form-note"><Icon name="shield-check-linear" size="sm" /> Version de démonstration : rien n'est envoyé ni enregistré, aucun paiement n'est demandé.</p>
           )}

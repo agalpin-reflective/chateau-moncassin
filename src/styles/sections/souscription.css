@@ -40,6 +40,8 @@
 .check label { font-size: 14px; line-height: 20px; color: var(--paper-2); cursor: pointer }
 .check label a { color: var(--paper); text-underline-offset: 3px }
 .check .err { grid-column: 2 }
+.form-alert { display: flex; gap: var(--s-75); padding: var(--s-200); border: 1px solid var(--error); border-radius: var(--r-md); background: var(--wine-soft); color: var(--paper); font-size: 14px; line-height: 20px }
+.form-alert:focus { outline: none }
 .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-200) }
 .form-note { font-size: 12px; line-height: 16px; color: var(--paper-2); display: flex; align-items: center; gap: var(--s-75) }
 .form-skel { position: absolute; inset: 0; display: grid; gap: var(--s-300); align-content: start; background: var(--ink) }

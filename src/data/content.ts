@@ -245,7 +245,8 @@ export const certificate = {
 
 /** Page du certificat, affichée après la souscription (/merci). */
 export const thanks = {
-  eyebrow: 'Paiement confirmé',
+  /** Affiché tant que le paiement n'est pas confirmé ; le script le remplace par copy.eyebrowPaid ensuite. */
+  eyebrow: 'Votre parrainage',
   eyebrowDemo: 'Version de démonstration',
   intro: "Merci pour votre parrainage. Votre année au rythme de la vigne commence aujourd'hui, et votre certificat est prêt : vérifiez le nom, puis téléchargez ou imprimez la page.",
   formTitle: 'Personnalisez votre certificat',
@@ -253,6 +254,13 @@ export const thanks = {
   noscript: "L'aperçu et le téléchargement du certificat ont besoin de JavaScript.",
   /** Textes utilisés par le script de la page. */
   copy: {
+    eyebrowPaid: 'Paiement confirmé',
+    pending: 'Votre paiement est en cours de confirmation par la banque. Le certificat apparaît dans quelques secondes.',
+    pendingTimeout: "La banque n'a pas encore confirmé votre paiement. Rechargez cette page dans une minute : votre lien reste valable, et il vous est aussi envoyé par email.",
+    invalidLink: "Ce lien de certificat n'est pas valable. Utilisez le lien reçu par email après votre paiement.",
+    unreachable: 'Le certificat ne peut pas être chargé pour le moment. Réessayez dans un instant.',
+    locked: 'Le certificat est délivré après le paiement : ouvrez le lien reçu par email, ou devenez parrain depuis la page de souscription.',
+    titlePending: 'Merci pour votre commande',
     titleSelf: 'Bienvenue dans le cercle',
     titleGift: 'Votre cadeau est prêt',
     placeholder: 'Nom du parrain',
@@ -267,7 +275,7 @@ export const thanks = {
   tips: [
     { icon: 'gift-linear', gift: true, text: "Pour l'offrir : imprimez le certificat et glissez la page dans une enveloppe, ou envoyez le PDF par message." },
     { icon: 'printer-minimalistic-linear', gift: false, text: 'Impression : format A4, orientation paysage, sans marges si votre imprimante le permet.' },
-    { icon: 'shield-check-linear', gift: false, text: 'Le certificat est créé dans votre navigateur : les noms saisis ici ne sont envoyés nulle part.' },
+    { icon: 'shield-check-linear', gift: false, text: 'Le PDF est fabriqué dans votre navigateur, à partir de votre commande.' },
   ],
   nextTitle: 'Et maintenant',
   next: [

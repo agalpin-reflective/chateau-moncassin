@@ -2,7 +2,7 @@
 import '../styles/pages/certificat.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { site, paymentEnabled } from '../data/site';
+import { site, paymentEnabled, apiUrl } from '../data/site';
 import { formules, thanks } from '../data/content';
 import { href } from '../lib/url';
 
@@ -16,12 +16,12 @@ const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id
   <div class="page merci" id="top">
     <div class="wrap">
       <header class="page-head">
-        <p class="eyebrow">{paymentEnabled ? thanks.eyebrow : thanks.eyebrowDemo}</p>
+        <p class="eyebrow" id="merci-eyebrow">{paymentEnabled ? thanks.eyebrow : thanks.eyebrowDemo}</p>
         <h1 class="page-title" id="merci-title">{thanks.copy.titleSelf}</h1>
         <p class="page-intro">{thanks.intro}</p>
       </header>
 
-      <section class="cert" id="certificat" aria-label="Votre certificat de parrainage" data-formules={formulesData} data-copy={JSON.stringify(thanks.copy)}>
+      <section class="cert" id="certificat" aria-label="Votre certificat de parrainage" data-formules={formulesData} data-copy={JSON.stringify(thanks.copy)} data-api={paymentEnabled ? apiUrl : ''}>
         <div class="cert-stage">
           <div class="cert-tilt">
             <div class="cert-sheet" id="cert-sheet">
