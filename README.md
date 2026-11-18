@@ -70,6 +70,15 @@ Le build est un site statique : Vercel, Netlify ou Cloudflare Pages détectent A
 3. Renseigner `SITE_URL` et, le moment venu, les liens Stripe.
 4. Compléter l'hébergeur dans `src/data/site.ts` (mentions légales).
 
+### Docker et Coolify
+
+Le `Dockerfile` construit le site puis le sert avec nginx (`deploy/nginx.conf`) sur le port 80. C'est le mode prévu pour Coolify : source « dépôt Git », build pack « Dockerfile », port exposé 80.
+
+- Variables à déclarer comme **variables de build** : `SITE_URL` (adresse publique, sans barre finale), les deux `PUBLIC_STRIPE_LINK_*`, et `PUBLIC_NOINDEX=false` le jour où le site peut être indexé (il ne l'est pas par défaut). Ne pas définir `BASE_PATH` sur un domaine dédié.
+- Le HTTPS est terminé par le proxy de Coolify ; nginx n'écoute qu'en HTTP.
+- Les pages sont servies sans redirection (`/souscrire` et `/souscrire/`), toujours revalidées ; les fichiers de `/_astro/` sont mis en cache un an.
+- Essai local : `docker build --build-arg SITE_URL=http://localhost:8088 -t chateau-moncassin . && docker run --rm -p 8088:80 chateau-moncassin`.
+
 ### GitHub Pages
 
 Le workflow `.github/workflows/deploy.yml` publie le site sur GitHub Pages à chaque push sur `main` (ou à la demande depuis l'onglet Actions). L'adresse et le sous chemin (`/chateau-moncassin`) viennent de Pages : avec un domaine personnalisé, le build s'adapte sans modification.
