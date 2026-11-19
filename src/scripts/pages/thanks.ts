@@ -89,7 +89,6 @@ export function initThanks(): void {
   if (!formules[order.formule]) order.formule = Object.keys(formules)[0];
 
   const name = $<HTMLInputElement>('#c-name', form)!;
-  const nameHint = $('#c-name-hint', form);
   const giver = $<HTMLInputElement>('#c-giver', form)!;
   const message = $<HTMLTextAreaElement>('#c-message', form)!;
   const count = $('#c-count', form);
@@ -127,7 +126,36 @@ export function initThanks(): void {
     if (status) status.textContent = text;
   };
 
+  /** Récapitulatif figé d'une commande venue de l'API, et référence à rappeler dans le bloc de contact. */
+  const renderSummary = () => {
+    const summary = $('#cert-summary', form);
+    if (!summary || !serverMode || !order.reference) return;
+    const set = (id: string, text: string, row?: string) => {
+      const cell = $(`#${id}`, summary);
+      if (cell) cell.textContent = text;
+      const line = row ? $(`#${row}`, summary) : null;
+      if (line) line.hidden = !text;
+    };
+    set('s-name', order.recipient);
+    set('s-giver', order.gift ? order.buyer : '', 's-giver-row');
+    set('s-message', order.gift ? order.message : '', 's-message-row');
+    set('s-formule', formules[order.formule]?.label ?? '');
+    summary.hidden = false;
+
+    const help = $('#cert-help', form);
+    const ref = $('#cert-help-ref', form);
+    if (ref) {
+      ref.textContent = `${copy.helpReference} ${order.reference}`;
+      ref.hidden = false;
+    }
+    const link = $<HTMLAnchorElement>('#cert-help-link', form);
+    if (help && link && help.dataset.email) {
+      link.href = `mailto:${help.dataset.email}?subject=${encodeURIComponent(`${help.dataset.subject} ${order.reference}`)}`;
+    }
+  };
+
   const render = () => {
+    renderSummary();
     const current = data();
     sheet.replaceChildren(renderSvg(buildCertificate(current, env), `${copy.alt} ${current.recipient}`));
     sheet.classList.toggle('is-draft', !ready());
@@ -179,17 +207,17 @@ export function initThanks(): void {
   [name, giver, message].forEach((field) => field.addEventListener('input', update));
   form.addEventListener('submit', (e) => e.preventDefault());
 
-  const lock = (all: boolean) => {
+  const lock = () => {
     name.readOnly = true;
-    /* Le verrou doit se voir : sans cela le champ a l'air modifiable et ne réagit pas. */
-    if (!all && nameHint) {
-      nameHint.textContent = copy.nameLocked;
-      nameHint.hidden = false;
-    }
+    /* Avec le paiement, rien ne se règle ici : les champs laissent la place au récapitulatif de la commande. */
+    const edit = $('#cert-edit', form);
+    if (edit) edit.hidden = true;
+    const formTitle = $('#cert-form-title', form);
+    if (formTitle) formTitle.textContent = copy.formTitleFixed;
     $$<HTMLInputElement>('input[name="pour"], input[name="formule"]', form).forEach((radio) => {
       radio.disabled = true;
     });
-    if (all) [giver, message].forEach((field) => (field.disabled = true));
+    [giver, message].forEach((field) => (field.disabled = true));
   };
 
   const applyServerOrder = (data: ServerOrder) => {
@@ -238,10 +266,10 @@ export function initThanks(): void {
   };
 
   if (serverMode) {
-    lock(false);
+    lock();
     notice = copy.pending;
   } else if (api) {
-    lock(true);
+    lock();
     notice = copy.locked;
   }
 

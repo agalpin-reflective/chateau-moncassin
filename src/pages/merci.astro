@@ -2,10 +2,12 @@
 import '../styles/pages/certificat.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import Fill from '../components/Fill.astro';
 import { site, paymentEnabled, apiUrl } from '../data/site';
 import { formules, thanks } from '../data/content';
 import { href } from '../lib/url';
 
+const contactEmail = site.legal.email;
 const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id, { label: f.label, summary: f.summary }])));
 ---
 <BaseLayout
@@ -32,7 +34,17 @@ const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id
         </div>
 
         <form class="form cert-form" id="cert-form" novalidate>
-          <h2 class="cert-form-title">{thanks.formTitle}</h2>
+          <h2 class="cert-form-title" id="cert-form-title">{thanks.formTitle}</h2>
+          <div class="cert-summary" id="cert-summary" hidden>
+            <dl>
+              <div><dt>{thanks.summary.name}</dt><dd id="s-name"></dd></div>
+              <div id="s-giver-row" hidden><dt>{thanks.summary.giver}</dt><dd id="s-giver"></dd></div>
+              <div id="s-message-row" hidden><dt>{thanks.summary.message}</dt><dd id="s-message"></dd></div>
+              <div><dt>{thanks.summary.formule}</dt><dd id="s-formule"></dd></div>
+            </dl>
+            <p class="hint"><Icon name="lock-keyhole-minimalistic-linear" size="sm" /> {thanks.summary.fixed}</p>
+          </div>
+          <div class="cert-edit" id="cert-edit">
           <fieldset>
             <legend>Ce parrainage est</legend>
             <div class="opts">
@@ -48,8 +60,7 @@ const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id
           </fieldset>
           <div class="field">
             <label for="c-name">Nom inscrit sur le certificat</label>
-            <input id="c-name" name="name" type="text" autocomplete="off" maxlength="60" placeholder="Prénom et nom du parrain" aria-describedby="c-name-hint" />
-            <p class="hint" id="c-name-hint" hidden></p>
+            <input id="c-name" name="name" type="text" autocomplete="off" maxlength="60" placeholder="Prénom et nom du parrain" />
           </div>
           <div class="cert-gift" id="cert-gift" hidden>
             <div class="field">
@@ -73,6 +84,7 @@ const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id
               ))}
             </div>
           </fieldset>
+          </div>
           <div class="cert-actions">
             <button class="btn btn-primary" type="button" id="cert-download" disabled>
               <Icon name="download-minimalistic-linear" />
@@ -81,6 +93,19 @@ const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id
             <button class="btn btn-ghost" type="button" id="cert-print" disabled><Icon name="printer-minimalistic-linear" /> Imprimer</button>
           </div>
           <p class="cert-status" id="cert-status" role="status"></p>
+          {paymentEnabled && (
+            <aside class="cert-help" id="cert-help" data-email={contactEmail ?? ''} data-subject={thanks.help.subject}>
+              <Icon name="letter-linear" />
+              <div>
+                <h3>{thanks.help.title}</h3>
+                <p>{thanks.help.text}</p>
+                <p class="cert-help-ref" id="cert-help-ref" hidden></p>
+                {contactEmail
+                  ? <a class="btn btn-ghost" id="cert-help-link" href={`mailto:${contactEmail}`}><Icon name="letter-linear" /> {thanks.help.cta}</a>
+                  : <p>{thanks.help.cta} : <Fill value={contactEmail} /></p>}
+              </div>
+            </aside>
+          )}
           <ul class="cert-tips">
             {thanks.tips.map((tip) => <li class:list={[{ 'tip-gift': tip.gift }]}><Icon name={tip.icon} size="sm" /> {tip.text}</li>)}
           </ul>

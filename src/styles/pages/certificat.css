@@ -35,8 +35,22 @@
 @media (min-width: 768px) { .cert-form { padding: var(--s-400) } }
 .cert-form-title { font-size: 24px; line-height: 32px }
 .cert-form .field input, .cert-form .field textarea { background: var(--ink) }
-/* Nom verrouillé sur une commande payée. */
-.cert-form .field input:read-only { border-style: dashed; color: var(--paper-2); cursor: not-allowed }
+/* Commande payée : un récapitulatif figé remplace les champs. */
+.cert-edit { display: grid; gap: var(--s-300) }
+.cert-edit[hidden], .cert-summary[hidden] { display: none }
+.cert-summary { display: grid; gap: var(--s-200) }
+.cert-summary dl { display: grid; gap: var(--s-200) }
+.cert-summary dt { font-size: 12px; line-height: 16px; color: var(--paper-2) }
+.cert-summary dd { font-size: 18px; line-height: 28px; overflow-wrap: anywhere }
+.cert-summary .hint { display: flex; gap: var(--s-75); align-items: flex-start }
+.cert-summary .hint .i { color: var(--gold) }
+/* En cas de souci : le contact par email, mis en avant. */
+.cert-help { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-200); padding: var(--s-300); border: 1px solid var(--gold); border-radius: var(--r-md); background: var(--gold-soft) }
+.cert-help > .i { color: var(--gold) }
+.cert-help > div { display: grid; gap: var(--s-100); justify-items: start }
+.cert-help h3 { font-family: var(--font); font-size: 16px; line-height: 24px; font-weight: 600 }
+.cert-help p { font-size: 14px; line-height: 20px; color: var(--paper-2) }
+.cert-help .cert-help-ref { color: var(--paper); font-weight: 600 }
 .cert-gift { display: grid; gap: var(--s-300) }
 .cert-actions { display: flex; flex-wrap: wrap; gap: var(--s-100) }
 .cert-actions .btn { padding: var(--s-100) var(--s-200) }

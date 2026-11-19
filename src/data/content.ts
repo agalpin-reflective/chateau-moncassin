@@ -264,7 +264,8 @@ export const thanks = {
     titleSelf: 'Bienvenue dans le cercle',
     titleGift: 'Votre cadeau est prêt',
     placeholder: 'Nom du parrain',
-    nameLocked: 'Ce nom est celui de la commande. Il ne peut plus être modifié.',
+    formTitleFixed: 'Votre certificat',
+    helpReference: 'Indiquez votre référence :',
     giverPlaceholder: 'votre prénom',
     alt: 'Certificat de parrainage au nom de',
     missing: 'Indiquez le nom à inscrire pour télécharger le certificat.',
@@ -278,6 +279,10 @@ export const thanks = {
     { icon: 'printer-minimalistic-linear', gift: false, text: 'Impression : format A4, orientation paysage, sans marges si votre imprimante le permet.' },
     { icon: 'shield-check-linear', gift: false, text: 'Le PDF est fabriqué dans votre navigateur, à partir de votre commande.' },
   ],
+  /** Récapitulatif figé d'une commande payée : rien ne s'y modifie. */
+  summary: { name: 'Nom inscrit sur le certificat', giver: 'De la part de', message: 'Dédicace', formule: 'Formule', fixed: 'Ces informations sont celles de votre commande. Elles ne se modifient pas ici.' },
+  /** Bloc de contact, affiché quand le paiement est activé. */
+  help: { title: 'Une erreur ou un souci ?', text: 'Si le nom est mal orthographié ou si votre commande pose problème, écrivez au château. Nous corrigeons le certificat pour vous.', cta: 'Écrire au château', subject: 'Certificat de parrainage' },
   nextTitle: 'Et maintenant',
   next: [
     { title: 'Vos cadeaux sont préparés', text: `Les bouteilles et, selon la formule, le tee shirt sont livrés ${deliveryDelay} à l'adresse indiquée au paiement, frais d'envoi inclus.` },
