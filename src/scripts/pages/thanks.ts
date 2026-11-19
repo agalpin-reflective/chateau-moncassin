@@ -89,6 +89,7 @@ export function initThanks(): void {
   if (!formules[order.formule]) order.formule = Object.keys(formules)[0];
 
   const name = $<HTMLInputElement>('#c-name', form)!;
+  const nameHint = $('#c-name-hint', form);
   const giver = $<HTMLInputElement>('#c-giver', form)!;
   const message = $<HTMLTextAreaElement>('#c-message', form)!;
   const count = $('#c-count', form);
@@ -180,6 +181,11 @@ export function initThanks(): void {
 
   const lock = (all: boolean) => {
     name.readOnly = true;
+    /* Le verrou doit se voir : sans cela le champ a l'air modifiable et ne réagit pas. */
+    if (!all && nameHint) {
+      nameHint.textContent = copy.nameLocked;
+      nameHint.hidden = false;
+    }
     $$<HTMLInputElement>('input[name="pour"], input[name="formule"]', form).forEach((radio) => {
       radio.disabled = true;
     });

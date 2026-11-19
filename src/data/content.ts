@@ -264,6 +264,7 @@ export const thanks = {
     titleSelf: 'Bienvenue dans le cercle',
     titleGift: 'Votre cadeau est prêt',
     placeholder: 'Nom du parrain',
+    nameLocked: 'Ce nom est celui de la commande. Il ne peut plus être modifié.',
     giverPlaceholder: 'votre prénom',
     alt: 'Certificat de parrainage au nom de',
     missing: 'Indiquez le nom à inscrire pour télécharger le certificat.',

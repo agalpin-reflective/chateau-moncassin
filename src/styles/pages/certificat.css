@@ -35,6 +35,8 @@
 @media (min-width: 768px) { .cert-form { padding: var(--s-400) } }
 .cert-form-title { font-size: 24px; line-height: 32px }
 .cert-form .field input, .cert-form .field textarea { background: var(--ink) }
+/* Nom verrouillé sur une commande payée. */
+.cert-form .field input:read-only { border-style: dashed; color: var(--paper-2); cursor: not-allowed }
 .cert-gift { display: grid; gap: var(--s-300) }
 .cert-actions { display: flex; flex-wrap: wrap; gap: var(--s-100) }
 .cert-actions .btn { padding: var(--s-100) var(--s-200) }

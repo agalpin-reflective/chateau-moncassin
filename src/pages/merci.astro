@@ -48,7 +48,8 @@ const formulesData = JSON.stringify(Object.fromEntries(formules.map((f) => [f.id
           </fieldset>
           <div class="field">
             <label for="c-name">Nom inscrit sur le certificat</label>
-            <input id="c-name" name="name" type="text" autocomplete="off" maxlength="60" placeholder="Prénom et nom du parrain" />
+            <input id="c-name" name="name" type="text" autocomplete="off" maxlength="60" placeholder="Prénom et nom du parrain" aria-describedby="c-name-hint" />
+            <p class="hint" id="c-name-hint" hidden></p>
           </div>
           <div class="cert-gift" id="cert-gift" hidden>
             <div class="field">

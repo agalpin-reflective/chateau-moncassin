@@ -11,6 +11,13 @@
       "port": 4321
     },
     {
+      "name": "dev-paiement",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["astro", "dev", "--port", "4323"],
+      "port": 4323,
+      "env": { "PUBLIC_PAYMENT_ENABLED": "true" }
+    },
+    {
       "name": "pages-preview",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
