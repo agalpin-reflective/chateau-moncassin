@@ -22,7 +22,8 @@ const MESSAGES = {
   emailBad: 'Cette adresse semble incomplète. Exemple : prenom.nom@exemple.fr',
   age: 'Cochez cette case pour confirmer votre majorité et accepter les conditions.',
 };
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+/* Même règle que l'API : ni « & » ni « = », qui séparent les champs envoyés à la banque. */
+const EMAIL = /^[^\s@&=\x00-\x1f\x7f]+@[^\s@&=\x00-\x1f\x7f]+\.[^\s@&=\x00-\x1f\x7f]{2,}$/;
 const ZIP = /^\d{5}$/;
 
 /** Messages affichés au retour de la page de paiement, ou quand la commande n'a pas pu être ouverte. */
